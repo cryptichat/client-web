@@ -20,8 +20,10 @@ function Register() {
   ];
 
   const errors = {
-    uname: "invalid username",
-    pass1: "invalid password"
+    uname: "Username is already taken",
+    email: "Wrong email format",
+    pass1: "Passwords don't match"
+
 
   };
 
@@ -35,10 +37,10 @@ function Register() {
     const userData = database.find((user) => user.username === uname.value);
 
     // Compare user info
-    if (userData) {
-      if (userData.password !== pass1.value) {
+    if (!userData) {
+      if (pass1.value !== pass2.value) {
         // Invalid password
-        setErrorMessages({ name: "pass", message: errors.pass1 });
+        setErrorMessages({ name: "pass1", message: errors.pass1 });
       } else {
         setIsSubmitted(true);
       }
@@ -65,7 +67,7 @@ function Register() {
         </div>
         <div className="input-container">
           <label>Email </label>
-          <input type="text" name="uname" required />
+          <input type="email" name="email" required />
           {renderErrorMessage("email")}
         </div>
         <div className="input-container">
