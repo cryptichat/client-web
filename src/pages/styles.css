@@ -17,7 +17,7 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
   
-  input[type="submit"] {
+  input[type="submit"], button {
     margin-top: 10px;
     cursor: pointer;
     font-size: 15px;
@@ -28,7 +28,7 @@
     font-family: "Tilt Prism", sans-serif;
   }
   
-  input[type="submit"]:hover {
+  input[type="submit"], button:hover {
     background: #6cf0c2;
   }
   
@@ -49,6 +49,7 @@
   }
   
   .error {
+    margin-top: 8px;
     color: red;
     font-size: 12px;
   }
