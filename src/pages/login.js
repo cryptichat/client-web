@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLazyQuery, gql } from "@apollo/client";
+import { useMutation, gql } from "@apollo/client";
 
 import "./styles.css";
 
 const LOGIN = gql`
-  query Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      accessToken
+    }
   }
 `;
 function Login() {
@@ -18,13 +20,14 @@ function Login() {
     password: "",
   });
 
-  const [loginHandler] = useLazyQuery(LOGIN, {
-    onCompleted: ({ login }) => {
-      console.log(login);
-      localStorage.setItem("auth-token", login.token);
+  const [loginHandler] = useMutation(LOGIN, {
+    onCompleted: ({login}) => {
+      console.log(login)
+      localStorage.setItem("auth-token", login.accessToken);
       navigate("/");
     },
     onError: ({ graphQLErrors }) => {
+      console.error(graphQLErrors);
       setErrors(graphQLErrors);
     },
   });
@@ -102,9 +105,11 @@ function Login() {
         <input
           type="submit"
           class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-          onClick={() => loginHandler({
-            variables: formState
-          })}
+          onClick={() =>
+            loginHandler({
+              variables: formState,
+            })
+          }
         />
       </div>
       <div>
