@@ -23,7 +23,7 @@ function ChatMain() {
         <div
           class="flex pt-4"
         >
-          <div class="w-full">
+          <div class="w-full py-2">
             <input
               type="text"
               placeholder="Message"
@@ -32,7 +32,7 @@ function ChatMain() {
               required
             />
           </div>
-          <div className="px-5">
+          <div className="py-2">
             <Button link="#" text="Send" />
           </div>
         </div>

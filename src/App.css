@@ -56,3 +56,10 @@ body {
       border: 1px solid #58629c;
       transition: all 0.2s ease-in-out;
   }
+
+  section {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    min-height: 100vh;
+}
