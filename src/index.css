@@ -1,3 +1,10 @@
 @tailwind base;
+
+@layer base {
+  html {
+    @apply h-screen w-screen bg-zinc-900 text-neutral-50;
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
