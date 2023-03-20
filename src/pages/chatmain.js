@@ -1,7 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation, gql } from "@apollo/client";
 import ConvoListItem from "../components/convoListItem";
+import Button from'./Button'
 
 function ChatMain() {
   return (
@@ -18,14 +17,17 @@ function ChatMain() {
       <div className="flex w-full lg:w-5/6 lg:h-screen lg:mx-auto lg:my-auto shadow-md">
         {/* Messages */}
         <p className="font-black mt-4 mb-2 pl-4 text-2xl">Insert Username</p>
-        <div class="hidden lg:col-span-2 lg:block">
+        <div class="hidden lg:col-span-2 lg:block py-4" style={{ display: 'flex', alignItems: 'flex-end' }}>
           <div class="w-full">
             <input type="text" placeholder="Message"
                     class="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
                     name="message" required />
           </div>
+          <div className="px-5">
+            <Button link="#" text="Send"/>
+          </div>
+          
         </div>
-
       </div>
     </div> 
   );
