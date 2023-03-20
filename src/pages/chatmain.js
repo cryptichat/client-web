@@ -2,6 +2,8 @@ import React from "react";
 import ConvoListItem from "../components/convoListItem";
 import Button from "./Button";
 
+import "./styles.css";
+
 function ChatMain() {
   return (
     <div className="flex w-screen main-chat lg:h-screen divide-solid">
@@ -21,13 +23,14 @@ function ChatMain() {
         </div>
         <div className="grow"></div>
         <div
-          class="flex pt-4"
+          class="flex"
         >
-          <div class="w-full py-2">
+          <div class="flex-1 py-2">
             <input
               type="text"
               placeholder="Message"
-              class="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
+              className="py-2 pl-4 mx-3 bg-gray-100 rounded outline-none focus:text-gray-700"
+              style={{ width: "-webkit-fill-available" }}
               name="message"
               required
             />
