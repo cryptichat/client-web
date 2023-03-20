@@ -1,10 +1,7 @@
 import React from "react";
-<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
-=======
 import ConvoListItem from "../components/convoListItem";
->>>>>>> 825c55e40dbc9e466d8b5296e131c33c1aa36b59
 
 function ChatMain() {
   return (
