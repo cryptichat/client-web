@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLazyQuery, gql } from "@apollo/client";
+import { useMutation, gql } from "@apollo/client";
 
 import "./styles.css";
 
 const SIGNUP = gql`
-  query CreateAccount(
+  mutation CreateAccount(
     $username: String!
     $email: String!
     $password1: String!
@@ -17,8 +17,10 @@ const SIGNUP = gql`
       email: $email
       password1: $password1
       password2: $password2
-      publicKey: $publicKey
-    )
+      publickey: $publicKey
+    ) {
+      accessToken
+    }
   }
 `;
 
@@ -34,11 +36,12 @@ function Register() {
     pass2: "",
   });
 
-  const [signupHandler] = useLazyQuery(SIGNUP, {
+  const [signupHandler] = useMutation(SIGNUP, {
     onCompleted: ({ createAccount }) => {
-      if (createAccount.token) {
+      if (createAccount.accessToken) {
         setIsSubmitted(true);
-        localStorage.setItem("auth-token", createAccount.token);
+        localStorage.setItem("auth-token", createAccount.accessToken);
+        navigate("/")
       }
     },
     onError: ({ graphQLErrors }) => {
@@ -48,11 +51,11 @@ function Register() {
 
   // JSX code for login form
   const renderForm = (
-    <div className="form">
+    <div className="form px-2 mx-3 rounded-[10px]">
       <div className="input-container">
         <label
-          for="text"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+          for="text"  
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Username{" "}
         </label>
@@ -73,7 +76,7 @@ function Register() {
       <div className="input-container">
         <label
           for="email"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Email{" "}
         </label>
@@ -94,7 +97,7 @@ function Register() {
       <div className="input-container">
         <label
           for="password"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Password{" "}
         </label>
@@ -115,7 +118,7 @@ function Register() {
       <div className="input-container">
         <label
           for="password"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Confirm Password{" "}
         </label>
@@ -133,10 +136,10 @@ function Register() {
           required
         />
       </div>
-      <div className="button-container">
+      <div className="button-container p-2">
         <input
           type="submit"
-          class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-purple-600 dark:focus:ring-purple-900"
           onClick={() =>
             signupHandler({
               variables: {
@@ -156,7 +159,7 @@ function Register() {
         ))}
       </div>
       <p>&nbsp;</p>
-      <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+      <p class="my-2 pl-1 text-sm font-light text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <a
           href="#"
@@ -173,7 +176,7 @@ function Register() {
     <div className="app">
       <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-black">
+          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-4 mt-2">
             Register
           </h1>
         </div>
