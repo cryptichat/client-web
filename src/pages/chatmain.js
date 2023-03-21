@@ -36,8 +36,8 @@ function ChatMain() {
               required
             />
           </div>
-          <a href="#" className='hidden md:flex border border-[#58629c] px-2 py-1 mx-2 mt-2 text-[#ffffff] rounded-[10px] items-center gap-2
-                                        hover:bg-[#58629c] hover:text-white transition duration-200'>
+          <a href="#" className='hidden bg-[#8b5cf6] md:flex border border-[#000000] px-2 py-1 mx-2 mt-2 text-[#ffffff] rounded-[10px] items-center gap-2
+                                        hover:bg-[#4c1d95] hover:text-white transition duration-200'>
             Send
             <BsFillSendFill />
           </a>
