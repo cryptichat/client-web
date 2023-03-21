@@ -1,6 +1,7 @@
 import React from "react";
 import ConvoListItem from "../components/convoListItem";
 import Button from "./Button";
+import { BsFillSendFill } from 'react-icons/bs'
 
 import "./styles.css";
 
@@ -23,21 +24,23 @@ function ChatMain() {
         </div>
         <div className="grow"></div>
         <div
-          class="flex"
+          class="flex py-4"
         >
           <div class="flex-1 py-2">
             <input
               type="text"
               placeholder="Message"
-              className="py-2 pl-4 mx-3 bg-gray-100 rounded outline-none focus:text-gray-700"
+              className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="message"
               required
             />
           </div>
-          <div className="py-2">
-            <Button link="#" text="Send" />
-          </div>
+          <a href="#" className='hidden md:flex border border-[#58629c] px-2 py-1 mx-2 mt-2 text-[#ffffff] rounded-[10px] items-center gap-2
+                                        hover:bg-[#58629c] hover:text-white transition duration-200'>
+            Send
+            <BsFillSendFill />
+          </a>
         </div>
       </div>
     </div>
