@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLazyQuery, gql } from "@apollo/client";
+import { useMutation, gql } from "@apollo/client";
 
 import "./styles.css";
 
 const SIGNUP = gql`
-  query CreateAccount(
+  mutation CreateAccount(
     $username: String!
     $email: String!
     $password1: String!
@@ -17,8 +17,10 @@ const SIGNUP = gql`
       email: $email
       password1: $password1
       password2: $password2
-      publicKey: $publicKey
-    )
+      publickey: $publicKey
+    ) {
+      accessToken
+    }
   }
 `;
 
@@ -34,11 +36,13 @@ function Register() {
     pass2: "",
   });
 
-  const [signupHandler] = useLazyQuery(SIGNUP, {
+  const [signupHandler] = useMutation(SIGNUP, {
     onCompleted: ({ createAccount }) => {
-      if (createAccount.token) {
+      if (createAccount.accessToken) {
         setIsSubmitted(true);
-        localStorage.setItem("auth-token", createAccount.token);
+        localStorage.setItem("auth-token", createAccount.accessToken);
+        localStorage.setItem("username", formState.uname);
+        navigate("/add_user")
       }
     },
     onError: ({ graphQLErrors }) => {
@@ -51,7 +55,7 @@ function Register() {
     <div className="form">
       <div className="input-container">
         <label
-          for="text"
+          for="text"  
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
         >
           Username{" "}

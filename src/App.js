@@ -3,7 +3,7 @@ import Login from "./pages/login"
 import Register from "./pages/register"
 import Add_User from "./pages/add_user"
 import Friends from "./pages/friends"
-
+import Message from "./pages/message"
 function App() {
   return (
     <div className="App">
@@ -13,6 +13,7 @@ function App() {
         <Route path="register" element={ <Register/> } />
         <Route path="add_user" element={ <Add_User/> } />
         <Route path="friends" element={ <Friends/> } />
+        <Route path="message" element={ <Message/> } />
       </Routes>
     </div>
   )

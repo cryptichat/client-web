@@ -5,7 +5,6 @@ import { useQuery, gql } from "@apollo/client";
 const GET_USERS = gql`
     query ConversationsByUser($nConversation: Int!, $token: String!){
         conversationsByUser(nConversation: $nConversation,token: $token){
-            
             conversationId
             userId
         }
