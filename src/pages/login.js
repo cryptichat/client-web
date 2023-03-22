@@ -104,7 +104,7 @@ function Login() {
       <div className="button-container">
         <input
           type="submit"
-          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-purple-600 dark:focus:ring-purple-900 py-2"
+          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95] py-2"
           onClick={() =>
             loginHandler({
               variables: formState,

@@ -54,7 +54,7 @@ function Register() {
     <div className="form px-2 mx-3 rounded-[10px]">
       <div className="input-container">
         <label
-          for="text"  
+          for="text"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Username{" "}
@@ -139,7 +139,7 @@ function Register() {
       <div className="button-container p-2">
         <input
           type="submit"
-          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-purple-600 dark:focus:ring-purple-900"
+          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
           onClick={() =>
             signupHandler({
               variables: {
