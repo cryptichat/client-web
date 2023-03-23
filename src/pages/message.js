@@ -49,7 +49,7 @@ const Message = () => {
                 for="text"
                 class="block mb-1 text-sm font-medium text-gray-900 dark:text-black"
             >
-                User{" "}
+               
             </label>
             <input
                 type="text"

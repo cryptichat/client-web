@@ -44,7 +44,7 @@ const Add_User = () => {
                 for="text"
                 class="block mb-1 text-sm font-medium text-gray-900 dark:text-black"
             >
-                User{" "}
+                
             </label>
             <input
                 type="text"
@@ -67,9 +67,10 @@ const Add_User = () => {
                 onClick={() =>
                     AddUserHandler({
                         variables: {
-                            directMessage:true,
+                            
                             users: [get_username,formState.user],
-                            token: get_token
+                            token: get_token,
+                            directMessage:true
                         },
                     })
                     
