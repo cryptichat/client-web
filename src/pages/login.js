@@ -33,7 +33,7 @@ function Login() {
   });
   // JSX code for login form
   const renderForm = (
-    <div className="loginbox form px-2 mx-2 rounded-[10px]">
+    <div className="form px-2 mx-2 rounded-[10px]">
       <div className="input-container">
         <label
           for="text"
@@ -100,11 +100,10 @@ function Login() {
           Forgot password?
         </a>
       </div>
-      <p>&nbsp;</p>
       <div className="button-container">
         <input
           type="submit"
-          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95] py-2"
+          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
           onClick={() =>
             loginHandler({
               variables: formState,
@@ -117,8 +116,7 @@ function Login() {
           <div className="error">{error.message}</div>
         ))}
       </div>
-      <p>&nbsp;</p>
-      <p class="my-2 pl-1 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p class="my-2 pl-0.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Don’t have an account yet?{" "}
         <a
           href="#"
