@@ -94,3 +94,25 @@ button:hover {
   border: 1px solid #58629c;
   transition: all 0.2s ease-in-out;
 }
+
+.imgprofile{
+  width: 30px;
+  height: 30px;
+  border: none;
+}
+
+.sendpic{
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+label{
+  display:flex;
+  align-items: center;
+  cursor: pointer;
+  color:black;
+  font-size:14px;
+  font-weight: medium;
+  font-family: "Roboto", sans-serif;
+  justify-content: center;
+}

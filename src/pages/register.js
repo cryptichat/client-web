@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 
 import "./styles.css";
+import Add from '../image/profilephoto.png'
+
 
 const SIGNUP = gql`
   mutation CreateAccount(
@@ -136,6 +138,13 @@ function Register() {
           required
         />
       </div>
+      <div className="addpicture">
+      <input style={{display:"none"}} type="file" id="file"/>
+      <label htmlFor='file'>
+                    <img className='imgprofile' src ={Add} alt=""/>
+                    <span>Add a profile photo</span>
+                </label>
+                </div>
       <div className="mt-5 button-container p-2">
         <input
           type="submit"

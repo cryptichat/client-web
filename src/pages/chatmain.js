@@ -5,6 +5,7 @@ import { BsFillSendFill, BsPatchPlusFill } from "react-icons/bs";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import Add from '../image/clipimg.png'
 
 import "./styles.css";
 
@@ -78,6 +79,12 @@ function ChatMain() {
               name="message"
               required
             />
+          </div>
+          <div className="sendattach">
+          <input style={{display:"none"}} type="file" id="file"/>
+          <label htmlFor='file'>
+                    <img className='sendpic' src ={Add} alt=""/>
+                </label>
           </div>
           <a
             href="#"
