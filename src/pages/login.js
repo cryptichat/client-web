@@ -21,7 +21,7 @@ function Login() {
   });
 
   const [loginHandler] = useMutation(LOGIN, {
-    onCompleted: ({login}) => {
+    onCompleted: ({ login }) => {
       console.log(login)
       localStorage.setItem("auth-token", login.accessToken);
       navigate("/");
@@ -33,7 +33,7 @@ function Login() {
   });
   // JSX code for login form
   const renderForm = (
-    <div className="loginbox form px-2 mx-2 rounded-[10px]">
+    <div className="form px-2 mx-2 rounded-[10px]">
       <div className="input-container">
         <label
           for="text"
@@ -100,11 +100,10 @@ function Login() {
           Forgot password?
         </a>
       </div>
-      <p>&nbsp;</p>
       <div className="button-container">
         <input
           type="submit"
-          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-purple-600 dark:focus:ring-purple-900"
+          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
           onClick={() =>
             loginHandler({
               variables: formState,
@@ -117,8 +116,7 @@ function Login() {
           <div className="error">{error.message}</div>
         ))}
       </div>
-      <p>&nbsp;</p>
-      <p class="my-2 pl-1 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p class="my-2 pl-0.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Don’t have an account yet?{" "}
         <a
           href="#"
@@ -135,7 +133,7 @@ function Login() {
     <div className="app">
       <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-4 mt-2">
+          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
             Login to your Account
           </h1>
         </div>

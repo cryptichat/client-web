@@ -54,14 +54,14 @@ function Register() {
     <div className="form px-2 mx-3 rounded-[10px]">
       <div className="input-container">
         <label
-          for="text"  
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          for="text"
+          class="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Username{" "}
         </label>
         <input
           type="text"
-          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="uname"
           value={formState.uname}
           onChange={(e) =>
@@ -76,13 +76,13 @@ function Register() {
       <div className="input-container">
         <label
           for="email"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Email{" "}
         </label>
         <input
           type="email"
-          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="email"
           value={formState.email}
           onChange={(e) =>
@@ -97,13 +97,13 @@ function Register() {
       <div className="input-container">
         <label
           for="password"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Password{" "}
         </label>
         <input
           type="password"
-          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="pass1"
           value={formState.pass1}
           onChange={(e) =>
@@ -118,7 +118,7 @@ function Register() {
       <div className="input-container">
         <label
           for="password"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Confirm Password{" "}
         </label>
@@ -136,10 +136,10 @@ function Register() {
           required
         />
       </div>
-      <div className="button-container p-2">
+      <div className="mt-5 button-container p-2">
         <input
           type="submit"
-          class="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-purple-600 dark:focus:ring-purple-900"
+          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
           onClick={() =>
             signupHandler({
               variables: {
@@ -158,8 +158,8 @@ function Register() {
           <div className="error">{error.message}</div>
         ))}
       </div>
-      <p>&nbsp;</p>
-      <p class="my-2 pl-1 text-sm font-light text-gray-500 dark:text-gray-400">
+
+      <p class="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <a
           href="#"
@@ -176,7 +176,7 @@ function Register() {
     <div className="app">
       <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-4 mt-2">
+          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2">
             Register
           </h1>
         </div>
