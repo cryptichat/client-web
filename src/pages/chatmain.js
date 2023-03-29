@@ -6,11 +6,18 @@ import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import Add from '../image/clipimg.png'
+import { useNavigate } from "react-router-dom";
 
 import "./styles.css";
 
 function ChatMain() {
   const [addChatOpen, setAddChatOpen] = useState(false);
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem("auth-token");
+    navigate("/login");
+  }
 
   return (
     <div className="flex w-screen main-chat lg:h-screen divide-solid">
@@ -53,13 +60,13 @@ function ChatMain() {
                                   text-[#ffffff] rounded-[10px] items-center gap-2
                                     hover:bg-zinc-900 hover:text-white transition duration-200"
           >
-            <Link
+            <p
               className="flex px-3 scale-90 hover:scale-100 ease-in duration-200"
-              href="/"
+              onClick={handleLogout}
             >
               <BiLogOut className="text-[25px] mr-2" />
               User 1
-            </Link>
+            </p>
           </a>
         </div>
       </div>
