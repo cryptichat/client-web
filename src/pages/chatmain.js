@@ -9,8 +9,8 @@ import { useMutation, gql } from "@apollo/client";
 import "./styles.css";
 
 const CREATE_CONVO = gql`
-  mutation CreateConversation($directMessage: Boolean!, $token: String!, $users: [String]!) {
-    createConversation(directMessage: $directMessage, token: $token, users: $users) {
+  mutation CreateConversation($directMessage: Boolean!, $token: String!, $users: [String]!, $keys: [String]!) {
+    createConversation(directMessage: $directMessage, token: $token, users: $users, keys: $keys) {
         conversation{
             id
             }
@@ -24,7 +24,7 @@ function ChatMain() {
   const [addChatOpen, setAddChatOpen] = useState(false);
   const [errors, setErrors] = useState([]);
   const [conversations, setConversations] = useState([])
-  const [createConvoText, setCreateConvoText] = useState('')
+  const [createConvoText, setCreateConvoText] = useState('');
 
   const navigate = useNavigate();
 
@@ -70,8 +70,7 @@ function ChatMain() {
               className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="message"
-              onChange={setCreateConvoText}
-              value={createConvoText}
+              onChange={(e) => setCreateConvoText(e.target.value)}
               required
             />
             <a
@@ -79,13 +78,17 @@ function ChatMain() {
               className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-1
                                   text-[#ffffff] rounded-[10px] items-center gap-2
                                     hover:bg-[#4c1d95] hover:text-white transition duration-200"
-              onClick={(e) => CreateConvoHandler({
-                variables: {
-                  directMessage: true,
-                  token: localStorage.getItem("auth-token"),
-                  users: [loggedInUsername, createConvoText]
-                }
-              })}
+              onClick={() => {
+                console.log("add user to convo", createConvoText)
+                CreateConvoHandler({
+                  variables: {
+                    directMessage: true,
+                    token: localStorage.getItem("auth-token"),
+                    users: [loggedInUsername, createConvoText],
+                    keys: ['XXX', 'XXX']
+                  }
+                })
+              }}
             >Start</a>
           </div>
         )}
