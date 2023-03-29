@@ -5,17 +5,49 @@ import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import Add from '../image/clipimg.png'
 import { useNavigate } from "react-router-dom";
-
+import { useMutation, gql } from "@apollo/client";
 import "./styles.css";
+
+const CREATE_CONVO = gql`
+  mutation CreateConversation($directMessage: Boolean!, $token: String!, $users: [String]!) {
+    createConversation(directMessage: $directMessage, token: $token, users: $users) {
+        conversation{
+            id
+            }
+        }
+    }
+`;
+
+
 
 function ChatMain() {
   const [addChatOpen, setAddChatOpen] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [conversations, setConversations] = useState([])
+  const [createConvoText, setCreateConvoText] = useState('')
+
   const navigate = useNavigate();
 
   function handleLogout() {
     localStorage.removeItem("auth-token");
+    localStorage.removeItem("dsmessenger-username");
     navigate("/login");
   }
+
+  const loggedInUsername = localStorage.getItem("dsmessenger-username");
+
+
+  const [CreateConvoHandler] = useMutation(CREATE_CONVO, {
+    onCompleted: ({ createConversation }) => {
+      console.log(createConversation)
+      localStorage.setItem("conversationId", createConversation.conversation.id);
+      navigate("/");
+    },
+    onError: ({ graphQLErrors }) => {
+      console.error(graphQLErrors);
+      setErrors(graphQLErrors);
+    },
+  });
 
   return (
     <div className="flex w-screen main-chat lg:h-screen divide-solid">
@@ -31,15 +63,30 @@ function ChatMain() {
           </div>
         </div>
         {addChatOpen && (
-          <div className="bg-slate-600 py-2">
+          <div className="bg-slate-600 py-2 mb-2">
             <input
               type="text"
               placeholder="Enter username"
               className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="message"
+              onChange={setCreateConvoText}
+              value={createConvoText}
               required
             />
+            <a
+              href="#"
+              className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-1
+                                  text-[#ffffff] rounded-[10px] items-center gap-2
+                                    hover:bg-[#4c1d95] hover:text-white transition duration-200"
+              onClick={(e) => CreateConvoHandler({
+                variables: {
+                  directMessage: true,
+                  token: localStorage.getItem("auth-token"),
+                  users: [loggedInUsername, createConvoText]
+                }
+              })}
+            >Start</a>
           </div>
         )}
         <div className="hidden lg:block pl-4 pr-4 text-white hover:rounded-md">
@@ -63,7 +110,7 @@ function ChatMain() {
               onClick={handleLogout}
             >
               <BiLogOut className="text-[25px] mr-2" />
-              User 1
+              {loggedInUsername}
             </p>
           </a>
         </div>
@@ -86,10 +133,10 @@ function ChatMain() {
             />
           </div>
           <div className="sendattach">
-          <input style={{display:"none"}} type="file" id="file"/>
-          <label htmlFor='file'>
-                    <img className='sendpic' src ={Add} alt=""/>
-                </label>
+            <input style={{ display: "none" }} type="file" id="file" />
+            <label htmlFor='file'>
+              <img className='sendpic' src={Add} alt="" />
+            </label>
           </div>
           <a
             href="#"
