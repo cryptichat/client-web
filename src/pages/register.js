@@ -43,6 +43,7 @@ function Register() {
       if (createAccount.accessToken) {
         setIsSubmitted(true);
         localStorage.setItem("auth-token", createAccount.accessToken);
+        localStorage.setItem("dsmessenger-username", formState.uname) // TODO: replace localStorage call with global state management
         navigate("/")
       }
     },
