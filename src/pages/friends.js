@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, useLazyQuery , gql } from "@apollo/client";
 
 const GET_CONV = gql`
     query ConversationsByUser($nConversations: Int!, $token: String!){
@@ -15,42 +15,73 @@ const GET_USERS = gql`
         passwordHash,
         publicKey
       }
-      
      }
 `;
 
 const  Friends = () => {
+    const navigate = useNavigate();
     let get_token = localStorage.getItem("auth-token");
-    let get_id = localStorage.getItem("conversationId");
-    const users = useQuery(GET_USERS);
+    const [errors, setErrors] = useState([]);
+    let user = "";
+    const [GetUsers] = useLazyQuery(GET_USERS, {
+
+      fetchPolicy:'cache-and-network',
+      // fetchPolicy: "no-cache",
+      onCompleted: ( GetUsers ) => {
+        console.log(GetUsers.conversationParticipants[0].username)
+        user = GetUsers.conversationParticipants[0].username;
+        getValues();
+      },
+      notifyOnNetworkStatusChange: true,
+      onError: ( graphQLErrors ) => {
+        console.error(graphQLErrors);
+        setErrors(graphQLErrors);
+      },
+    });
+
     const { loading:conv_loading, error:conv_error, data:conv_data } = useQuery(GET_CONV, {
         variables: { nConversations:10,token:get_token },
+        fetchPolicy:'cache-and-network', 
     });
-    const { loading:user_loading, error:user_error, data:user_data } = useQuery(GET_USERS, {
-      variables: { conversationId:1,token:get_token },
-    });
-    if (conv_loading) return null;
-    if (conv_error) return `Error! ${conv_error}`;
+    let arr = [1,2,5];
+    useEffect(async () => {
+      if (conv_data) {
+        console.log(conv_data);
+        let length = conv_data['conversationsByUser'].length;
+        console.log(length);
 
-    if (conv_data) {
-    
-    if (user_loading) return null;
-    if (user_error) return `Error! ${user_error}`;
-    console.log(user_data.conversationParticipants[0])
-    var x = user_data.conversationParticipants[0]
-    var vals = Object.keys(x).sort().reduce(function (arr, key) {
-      arr = arr.concat(x[key]);
-      return arr;
-    }, []).join('\n');
-    console.log(vals )
+        for(var i = 0; i < length; i++){
+          
+          const res = await GetUsers({ variables: { conversationId:arr[i],token:get_token },
+            fetchPolicy: 'cache-and-network',
+            notifyOnNetworkStatusChange: true,
+          });
+          console.log(conv_data['conversationsByUser'][i]);
+          console.log("res");
+          console.log(res);
+        }
+      }
+    }, [conv_data]);
+
+    function getValues() {
+      document.getElementById("result").innerHTML += user + "\n" +"</pre>";
+    }
+   
+  
   return (
     <div>
-      {conv_data.conversationsByUser}
-      {/* {user_data.conversationParticipants[0]} */}
-      {/* {username} */}
-      {vals}
+      
+      {conv_loading && <p>Loading...</p>}
+      {conv_error && <p>Error! {conv_error}</p>}
+      {!conv_loading && !conv_error && <p>Content goes here...</p> && conv_data.conversationsByUser[0]}
+    
+  
+      <div id="result" ></div>
+      
     </div>
+   
+    
   )
-}}
+};
 
-export default Friends
+export default Friends;

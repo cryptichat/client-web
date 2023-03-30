@@ -7,8 +7,8 @@ import "./styles.css";
 
 const ADDUSER = gql`
   
-  mutation CreateConversation($directMessage: Boolean!, $token: String!, $users: [String]!) {
-    createConversation(directMessage: $directMessage, token: $token, users: $users) {
+  mutation CreateConversation($directMessage: Boolean!, $token: String!, $users: [String]!, $keys: [String]!) {
+    createConversation(directMessage: $directMessage, token: $token, users: $users, keys: $keys) {
         conversation{
             id
             }
@@ -70,7 +70,8 @@ const Add_User = () => {
                             
                             users: [get_username,formState.user],
                             token: get_token,
-                            directMessage:true
+                            directMessage:true,
+                            keys: ["xxx","xxx"]
                         },
                     })
                     

@@ -26,12 +26,14 @@ function Login() {
       localStorage.setItem("auth-token", login.accessToken);
       localStorage.setItem("username", formState.username);
       navigate("/add_user");
+      
     },
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
       setErrors(graphQLErrors);
     },
   });
+  
   // JSX code for login form
   const renderForm = (
     <div className="form">
