@@ -23,13 +23,12 @@ const  Friends = () => {
     let get_token = localStorage.getItem("auth-token");
     const [errors, setErrors] = useState([]);
     let arr = [];
-    let user = "";
+    
     const [GetUsers] = useLazyQuery(GET_USERS, {
 
       fetchPolicy:'cache-and-network',
       onCompleted: ( GetUsers ) => {
-        user = GetUsers.conversationParticipants[0].username;
-        getValues();
+        
       },
       notifyOnNetworkStatusChange: true,
       onError: ( graphQLErrors ) => {
@@ -58,6 +57,7 @@ const  Friends = () => {
               console.log(res.data['conversationParticipants'][0]['username']);
               arr.push(res.data['conversationParticipants'][0]['username']);
               console.log(arr);
+              document.getElementById("array").innerHTML = arr.join(" ");
             }
           }
         }
@@ -66,18 +66,14 @@ const  Friends = () => {
       }
     }, [conv_data]);
    
-    function getValues() {
-      document.getElementById("result").innerHTML += user + "\n" +"</pre>";
-    }
-   
   return (
     <div>
       
       {conv_loading && <p>Loading...</p>}
       {conv_error && <p>Error! {conv_error}</p>}
-      {!conv_loading && !conv_error && <p>Content goes here...</p> && conv_data.conversationsByUser[0]}
+      {!conv_loading && !conv_error && <p>Content goes here...</p>}
     
-      <div id="result" ></div>
+      <div id="array" ></div>
       
     </div>
   )
