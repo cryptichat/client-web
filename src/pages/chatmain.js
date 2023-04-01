@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ConvoListItem from "../components/convoListItem";
 import { BsFillSendFill } from "react-icons/bs";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import Add from '../image/clipimg.png'
 import { useNavigate } from "react-router-dom";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
 import "./styles.css";
 
 const CREATE_CONVO = gql`
@@ -18,7 +18,47 @@ const CREATE_CONVO = gql`
     }
 `;
 
+const GET_CONVO = gql`
+    query ConversationsByUser($nConversations: Int!, $token: String!){
+        conversationsByUser(nConversations: $nConversations,token: $token)
+     }
+`;
 
+const GET_USERS = gql`
+    query ConversationParticipants($conversationId: Int!, $token: String!){
+      conversationParticipants(conversationId: $conversationId,token: $token){
+        username,
+        passwordHash,
+        publicKey
+      }
+     }
+`;
+
+const ADD_MESSAGE = gql`
+  mutation CreateMessage($content: String!, $conversationId: Int!, $token: String!) {
+    createMessage(content: $content, conversationId: $conversationId, token: $token) {
+        message{
+            # senderId,
+            # conversationId,
+            timestamp,
+            revision,
+            content
+        }
+    }
+}
+`;
+
+const GET_MESSAGE = gql`
+    query MessagesByConversation($conversationId:Int!,$nMessages:Int!,$token:String!){
+        messagesByConversation(conversationId:$conversationId,nMessages:$nMessages,token:$token){
+            # senderId,
+            # conversationId,
+            timestamp,
+            revision,
+            content
+        }
+    }
+`;
 
 function ChatMain() {
   const [addChatOpen, setAddChatOpen] = useState(false);
@@ -35,6 +75,8 @@ function ChatMain() {
   }
 
   const loggedInUsername = localStorage.getItem("dsmessenger-username");
+  let get_token = localStorage.getItem("auth-token");
+  let conv_uname = [];
 
 
   const [CreateConvoHandler] = useMutation(CREATE_CONVO, {
@@ -48,6 +90,50 @@ function ChatMain() {
       setErrors(graphQLErrors);
     },
   });
+
+  const [GetUsers] = useLazyQuery(GET_USERS, {
+
+    fetchPolicy:'cache-and-network',
+    onCompleted: ( GetUsers ) => {
+      console.log(GetUsers);
+    },
+    notifyOnNetworkStatusChange: true,
+    onError: ( graphQLErrors ) => {
+      console.error(graphQLErrors);
+      setErrors(graphQLErrors);
+    },
+  });
+
+  const { loading:conv_loading, error:conv_error, data:conv_data } = useQuery(GET_CONVO, {
+    variables: { nConversations:10,token:get_token },
+    fetchPolicy:'cache-and-network', 
+  });
+
+  useEffect( () => {
+    {
+      async function  func() {
+        if (conv_data) {
+  
+          for(var i = 0; i < conv_data['conversationsByUser'].length; i++){
+            
+            const res = await GetUsers({ variables: { conversationId:conv_data['conversationsByUser'][i],token:get_token },
+              fetchPolicy: 'cache-and-network',
+              notifyOnNetworkStatusChange: true,
+            });
+            
+            conv_uname.push(res.data['conversationParticipants'][0]['username']);
+            console.log(conv_uname);
+           
+          }
+        }
+      }
+      func();
+    
+    }
+  }, [conv_data]);
+
+  let arr = ["user 1", "user 2", "user 3", "user 4", "user 5", "user 6"];
+  
 
   return (
     <div className="flex w-screen main-chat lg:h-screen divide-solid">
@@ -92,11 +178,23 @@ function ChatMain() {
             >Start</a>
           </div>
         )}
+
+
+
+
+
         <div className="hidden lg:block pl-4 pr-4 text-white hover:rounded-md">
           <ul className="divide-y divide-gray-300 truncate">
-            <ConvoListItem username={"User 1"} />
+            {arr.map(indx => <ConvoListItem username={indx}/> )}
           </ul>
         </div>
+
+
+
+
+
+
+
         <div className="grow"></div>
         <div
           class="flex py-4 items-center"
