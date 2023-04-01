@@ -3,68 +3,102 @@ import ConvoListItem from "../components/convoListItem";
 import { BsFillSendFill } from "react-icons/bs";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
-import Add from '../image/clipimg.png'
+import { CgAttachment } from "react-icons/cg";
+import Add from "../image/clipimg.png";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
 import "./styles.css";
 
 const CREATE_CONVO = gql`
-  mutation CreateConversation($directMessage: Boolean!, $token: String!, $users: [String]!, $keys: [String]!) {
-    createConversation(directMessage: $directMessage, token: $token, users: $users, keys: $keys) {
-        conversation{
-            id
-            }
-        }
+  mutation CreateConversation(
+    $directMessage: Boolean!
+    $token: String!
+    $users: [String]!
+    $keys: [String]!
+  ) {
+    createConversation(
+      directMessage: $directMessage
+      token: $token
+      users: $users
+      keys: $keys
+    ) {
+      conversation {
+        id
+      }
     }
+  }
 `;
 
 const GET_CONVO = gql`
-    query ConversationsByUser($nConversations: Int!, $token: String!){
-        conversationsByUser(nConversations: $nConversations,token: $token)
-     }
+  query ConversationsByUser($nConversations: Int!, $token: String!) {
+    conversationsByUser(nConversations: $nConversations, token: $token)
+  }
 `;
 
 const GET_USERS = gql`
-    query ConversationParticipants($conversationId: Int!, $token: String!){
-      conversationParticipants(conversationId: $conversationId,token: $token){
-        username,
-        passwordHash,
-        publicKey
-      }
-     }
+  query ConversationParticipants($conversationId: Int!, $token: String!) {
+    conversationParticipants(conversationId: $conversationId, token: $token) {
+      username,
+      publicKey
+    }
+  }
 `;
 
 const ADD_MESSAGE = gql`
-  mutation CreateMessage($content: String!, $conversationId: Int!, $token: String!) {
-    createMessage(content: $content, conversationId: $conversationId, token: $token) {
-        message{
-            # senderId,
-            # conversationId,
-            timestamp,
-            revision,
-            content
+  mutation CreateMessage(
+    $content: String!
+    $conversationId: Int!
+    $token: String!
+  ) {
+    createMessage(
+      content: $content
+      conversationId: $conversationId
+      token: $token
+    ) {
+      message {
+        sender {
+          username
         }
+        conversation {
+          id
+        }
+        timestamp
+        revision
+        content
+      }
     }
-}
+  }
 `;
 
 const GET_MESSAGE = gql`
-    query MessagesByConversation($conversationId:Int!,$nMessages:Int!,$token:String!){
-        messagesByConversation(conversationId:$conversationId,nMessages:$nMessages,token:$token){
-            # senderId,
-            # conversationId,
-            timestamp,
-            revision,
-            content
-        }
+  query MessagesByConversation(
+    $conversationId: Int!
+    $nMessages: Int!
+    $token: String!
+  ) {
+    messagesByConversation(
+      conversationId: $conversationId
+      nMessages: $nMessages
+      token: $token
+    ) {
+      sender {
+        username
+      }
+      conversation {
+        id
+      }
+      timestamp
+      revision
+      content
     }
+  }
 `;
 
 function ChatMain() {
   const [addChatOpen, setAddChatOpen] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [conversations, setConversations] = useState([])
-  const [createConvoText, setCreateConvoText] = useState('');
+  const [conversations, setConversations] = useState([]);
+  const [createConvoText, setCreateConvoText] = useState("");
 
   const navigate = useNavigate();
 
@@ -78,11 +112,13 @@ function ChatMain() {
   let get_token = localStorage.getItem("auth-token");
   let conv_uname = [];
 
-
   const [CreateConvoHandler] = useMutation(CREATE_CONVO, {
     onCompleted: ({ createConversation }) => {
-      console.log(createConversation)
-      localStorage.setItem("conversationId", createConversation.conversation.id);
+      console.log(createConversation);
+      localStorage.setItem(
+        "conversationId",
+        createConversation.conversation.id
+      );
       navigate("/");
     },
     onError: ({ graphQLErrors }) => {
@@ -92,48 +128,56 @@ function ChatMain() {
   });
 
   const [GetUsers] = useLazyQuery(GET_USERS, {
-
-    fetchPolicy:'cache-and-network',
-    onCompleted: ( GetUsers ) => {
-      console.log(GetUsers);
+    fetchPolicy: "cache-and-network",
+    onCompleted: (GetUsers) => {
+      
     },
     notifyOnNetworkStatusChange: true,
-    onError: ( graphQLErrors ) => {
+    onError: (graphQLErrors) => {
       console.error(graphQLErrors);
       setErrors(graphQLErrors);
     },
   });
 
-  const { loading:conv_loading, error:conv_error, data:conv_data } = useQuery(GET_CONVO, {
-    variables: { nConversations:10,token:get_token },
-    fetchPolicy:'cache-and-network', 
+  const {
+    loading: conv_loading,
+    error: conv_error,
+    data: conv_data,
+  } = useQuery(GET_CONVO, {
+    variables: { nConversations: 10, token: get_token },
+    fetchPolicy: "cache-and-network",
   });
 
-  useEffect( () => {
-    {
-      async function  func() {
-        if (conv_data) {
-  
-          for(var i = 0; i < conv_data['conversationsByUser'].length; i++){
-            
-            const res = await GetUsers({ variables: { conversationId:conv_data['conversationsByUser'][i],token:get_token },
-              fetchPolicy: 'cache-and-network',
-              notifyOnNetworkStatusChange: true,
-            });
-            
-            conv_uname.push(res.data['conversationParticipants'][0]['username']);
-            console.log(conv_uname);
-           
-          }
+  const[conv_users, setConv_users] = useState([]);
+ 
+  useEffect(() => {
+    async function func() {
+      if (conv_data) {
+      
+        for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
+          const res = await GetUsers({
+            variables: {
+              conversationId: conv_data["conversationsByUser"][i],
+              token: get_token,
+            },
+            fetchPolicy: "cache-and-network",
+            notifyOnNetworkStatusChange: true,
+          });
+
+          conv_uname.push(res.data["conversationParticipants"][0]["username"]);
+          
+          setConv_users(prevConv_user => [...prevConv_user,{
+            id: prevConv_user.length,
+            value: res.data["conversationParticipants"][0]["username"]
+          }])
+          
         }
+        
       }
-      func();
-    
     }
+    func();
   }, [conv_data]);
 
-  let arr = ["user 1", "user 2", "user 3", "user 4", "user 5", "user 6"];
-  
 
   return (
     <div className="flex w-screen main-chat lg:h-screen divide-solid">
@@ -141,7 +185,11 @@ function ChatMain() {
         {/* Convo list */}
         <div className="flex items-center justify-between">
           <p className="font-black mt-4 mb-3 pl-4 text-2xl">Conversations</p>
-          <div className={`p-2 rounded mt-1 mr-2 cursor-pointer hover:bg-slate-600 ${addChatOpen && "bg-slate-600"}`}>
+          <div
+            className={`p-2 rounded mt-1 mr-2 cursor-pointer hover:bg-slate-600 ${
+              addChatOpen && "bg-slate-600"
+            }`}
+          >
             <BiMessageRoundedAdd
               size={24}
               onClick={() => setAddChatOpen(!addChatOpen)}
@@ -165,35 +213,29 @@ function ChatMain() {
                                   text-[#ffffff] rounded-[10px] items-center gap-2
                                     hover:bg-[#4c1d95] hover:text-white transition duration-200"
               onClick={() => {
-                console.log("add user to convo", createConvoText)
+                console.log("add user to convo", createConvoText);
                 CreateConvoHandler({
                   variables: {
                     directMessage: true,
                     token: localStorage.getItem("auth-token"),
                     users: [loggedInUsername, createConvoText],
-                    keys: ['XXX', 'XXX']
-                  }
-                })
+                    keys: ["XXX", "XXX"],
+                  },
+                });
               }}
-            >Start</a>
+            >
+              Start
+            </a>
           </div>
         )}
 
-
-
-
-
         <div className="hidden lg:block pl-4 pr-4 text-white hover:rounded-md">
           <ul className="divide-y divide-gray-300 truncate">
-            {arr.map(indx => <ConvoListItem username={indx}/> )}
+            {conv_users.map((indx) => (
+              <ConvoListItem username={indx.value} />
+            ))}
           </ul>
         </div>
-
-
-
-
-
-
 
         <div className="grow"></div>
         <div
@@ -227,22 +269,25 @@ function ChatMain() {
             <input
               type="text"
               placeholder="Message"
-              className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
+              className="mt-1 py-5 pl-4 mx-2 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="message"
               required
             />
           </div>
-          <div className="sendattach">
+          <div className="sendattach hidden bg-[#8b5cf6] md:flex border border-[#000000] px-2 p-2.5
+                                  text-[#ffffff] rounded-[10px] items-center 
+                                    hover:bg-[#4c1d95] hover:text-white transition duration-200">
             <input style={{ display: "none" }} type="file" id="file" />
-            <label htmlFor='file'>
-              <img className='sendpic' src={Add} alt="" />
+            <label htmlFor="file">
+              {/* <img className="sendpic" src={Add} alt="" /> */}
+              <CgAttachment className="text-[20px] text-white"/>
             </label>
           </div>
           <a
             href="#"
-            className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-1
-                                  text-[#ffffff] rounded-[10px] items-center gap-2
+            className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-2
+                                  text-[#ffffff] rounded-[10px] items-center gap-1.5
                                     hover:bg-[#4c1d95] hover:text-white transition duration-200"
           >
             Send
