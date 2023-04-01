@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
+import { IoPersonAddSharp } from "react-icons/io5";
 
 import "./styles.css";
-import Add from '../image/profilephoto.png'
-
+import Add from "../image/profilephoto.png";
 
 const SIGNUP = gql`
   mutation CreateAccount(
@@ -43,8 +43,8 @@ function Register() {
       if (createAccount.accessToken) {
         setIsSubmitted(true);
         localStorage.setItem("auth-token", createAccount.accessToken);
-        localStorage.setItem("dsmessenger-username", formState.uname) // TODO: replace localStorage call with global state management
-        navigate("/")
+        localStorage.setItem("dsmessenger-username", formState.uname); // TODO: replace localStorage call with global state management
+        navigate("/");
       }
     },
     onError: ({ graphQLErrors }) => {
@@ -139,13 +139,22 @@ function Register() {
           required
         />
       </div>
-      <div className="addpicture">
-      <input style={{display:"none"}} type="file" id="file"/>
-      <label htmlFor='file'>
-                    <img className='imgprofile' src ={Add} alt=""/>
-                    <span>Add a profile photo</span>
-                </label>
-                </div>
+      <div className="propic py-2" style={{ display: 'flex', justifyContent: 'center' }}>
+        <div
+          className="addpicture hidden bg-[#8b5cf6] md:flex border border-[#000000]
+                                  text-[#ffffff] rounded-[10px] items-center 
+                                    hover:bg-[#4c1d95] hover:text-white transition duration-200"
+        >
+          <input style={{ display: "none" }} type="file" id="file" />
+          <label htmlFor="file">
+            {/* <img className='imgprofile' src ={Add} alt=""/> */}
+            <IoPersonAddSharp className="text-[20px] text-white" />
+            <span className="text-[15px] text-white px-2">
+              Add a profile photo
+            </span>
+          </label>
+        </div>
+      </div>
       <div className="mt-5 button-container p-2">
         <input
           type="submit"
