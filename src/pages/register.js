@@ -139,7 +139,7 @@ function Register() {
           required
         />
       </div>
-      <div className="propic py-2" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className="propic px-2 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
         <div
           className="addpicture hidden bg-[#8b5cf6] md:flex border border-[#000000]
                                   text-[#ffffff] rounded-[10px] items-center 
