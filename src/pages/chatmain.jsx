@@ -170,10 +170,10 @@ function ChatMain() {
           setConv_users(prevConv_user => [...prevConv_user,{
             id: prevConv_user.length,
             user: res.data["conversationParticipants"][0]["username"],
-            conv_id: conv_data["conversationsByUser"][i]
+            // conv_id: conv_data["conversationsByUser"][i]
           }])
 
-          console.log(res.data["conversationParticipants"][0]);
+          console.log(res.data["conversationParticipants"][0]["username"]);
           
         }
         
