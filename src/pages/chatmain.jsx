@@ -193,8 +193,6 @@ function ChatMain() {
             fetchPolicy: "cache-and-network",
             notifyOnNetworkStatusChange: true,
           });
-<<<<<<< HEAD
-          
           console.log("raw data", res.data)
           conv_uname.push(res.data["conversationParticipants"][0]["username"]);
           
@@ -205,8 +203,6 @@ function ChatMain() {
           }])
 
           console.log(res.data["conversationParticipants"][0]["username"]);
-          
-=======
 
           // skip adding convo to array if it already exists
           if (
@@ -225,7 +221,6 @@ function ChatMain() {
               conv_id: conv_data["conversationsByUser"][i],
             },
           ]);
->>>>>>> 0b467abede422b8a602f26ea09abcedecf402094
         }
       }
     }
