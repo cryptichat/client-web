@@ -305,6 +305,7 @@ function ChatMain() {
               return (
                 <ConvoListItem
                   username={convo.user}
+                  active={activeConvo && activeConvo.conv_id === convo.conv_id}
                   onClick={() => setActiveConvo(convo)}
                 />
               );
