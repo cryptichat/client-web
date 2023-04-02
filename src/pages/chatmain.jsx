@@ -163,13 +163,17 @@ function ChatMain() {
             fetchPolicy: "cache-and-network",
             notifyOnNetworkStatusChange: true,
           });
-
+          
+          console.log("raw data", res.data)
           conv_uname.push(res.data["conversationParticipants"][0]["username"]);
           
           setConv_users(prevConv_user => [...prevConv_user,{
             id: prevConv_user.length,
-            value: res.data["conversationParticipants"][0]["username"]
+            user: res.data["conversationParticipants"][0]["username"],
+            conv_id: conv_data["conversationsByUser"][i]
           }])
+
+          console.log(res.data["conversationParticipants"][0]);
           
         }
         
@@ -232,7 +236,7 @@ function ChatMain() {
         <div className="hidden lg:block pl-4 pr-4 text-white hover:rounded-md">
           <ul className="divide-y divide-gray-300 truncate">
             {conv_users.map((indx) => (
-              <ConvoListItem username={indx.value} />
+              <ConvoListItem username={indx.user} />
             ))}
           </ul>
         </div>
