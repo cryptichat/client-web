@@ -169,7 +169,13 @@ function ChatMain() {
       return;
     }
 
-    SendMessage().then(() => console.log("sent message"));
+    SendMessage().then((res) => {
+      console.log("sent message", res.data);
+      setActiveMessages([
+        ...activeMessages,
+        res.data["createMessage"]["message"],
+      ]);
+    });
   }
 
   const {
@@ -231,8 +237,12 @@ function ChatMain() {
           notifyOnNetworkStatusChange: true,
         });
 
-        console.log("messages", res.data.messagesByConversation);
-        setActiveMessages(res.data.messagesByConversation);
+        // sort messages array with most recent message last
+        const sortedMessages = [...res.data.messagesByConversation].sort((a, b) => {
+          return new Date(a.timestamp) - new Date(b.timestamp);
+        });
+        console.log("sorted",sortedMessages);
+        setActiveMessages(sortedMessages);
       }
     }
     func();
