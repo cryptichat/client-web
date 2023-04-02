@@ -340,7 +340,7 @@ function ChatMain() {
             {activeConvo.user}
           </p>
         </div>
-        <div className="grow">
+        <div className="grow px-4">
           {activeMessages.map((message) => (
             <MessageItem message={message} />
           ))}
