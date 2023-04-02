@@ -239,7 +239,7 @@ function ChatMain() {
 
         <div className="grow"></div>
         <div
-          class="flex py-4 items-center"
+          class="flex py-4 items-center mb-3.5"
           style={{ display: "flex", justifyContent: "center" }}
         >
           <a
