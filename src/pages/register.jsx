@@ -139,23 +139,23 @@ function Register() {
           required
         />
       </div>
-      <div className="propic py-2" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className="propic px-2 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
         <div
-          className="addpicture hidden bg-[#8b5cf6] md:flex border border-[#000000]
+          className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#000000]
                                   text-[#ffffff] rounded-[10px] items-center 
-                                    hover:bg-[#4c1d95] hover:text-white transition duration-200"
+                                    hover:bg-[#000000] hover:text-white transition duration-200"
         >
           <input style={{ display: "none" }} type="file" id="file" />
           <label htmlFor="file">
             {/* <img className='imgprofile' src ={Add} alt=""/> */}
             <IoPersonAddSharp className="text-[20px] text-white" />
             <span className="text-[15px] text-white px-2">
-              Add a profile photo
+              Add a profile picture
             </span>
           </label>
         </div>
       </div>
-      <div className="mt-5 button-container p-2">
+      <div className="button-container p-2">
         <input
           type="submit"
           class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
