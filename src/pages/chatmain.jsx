@@ -175,6 +175,7 @@ function ChatMain() {
         ...activeMessages,
         res.data["createMessage"]["message"],
       ]);
+      setMessageText("");
     });
   }
 
@@ -349,10 +350,11 @@ function ChatMain() {
             <input
               type="text"
               placeholder="Message"
-              className="mt-1 py-5 pl-4 mx-2 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
+              className="mt-1 py-5 pl-4 mx-2 bg-gray-100 rounded-[10px] outline-none text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="message"
               onChange={(e) => setMessageText(e.target.value)}
+              value={messageText}
               required
             />
           </div>
