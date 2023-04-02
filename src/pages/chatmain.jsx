@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ConvoListItem from "../components/convoListItem";
-import {MessageItem} from "../components/MessageItem";
+import MessageItem from "../components/MessageItem";
 import { BsFillSendFill } from "react-icons/bs";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
@@ -102,6 +102,7 @@ function ChatMain() {
   const [userConversations, setUserConversations] = useState([]);
   const [activeConvo, setActiveConvo] = useState({});
   const [activeMessages, setActiveMessages] = useState([]);
+  const [messageText, setMessageText] = useState("");
 
   const navigate = useNavigate();
 
@@ -110,7 +111,6 @@ function ChatMain() {
     localStorage.removeItem("dsmessenger-username");
     navigate("/login");
   }
-
   const loggedInUsername = localStorage.getItem("dsmessenger-username");
   let get_token = localStorage.getItem("auth-token");
 
@@ -148,6 +148,29 @@ function ChatMain() {
       setErrors(graphQLErrors);
     },
   });
+
+  const [SendMessage] = useMutation(SEND_MESSAGE, {
+    variables: {
+      content: messageText,
+      conversationId: activeConvo.conv_id,
+      token: get_token,
+    },
+    onCompleted: (SendMessage) => {},
+    notifyOnNetworkStatusChange: true,
+    onError: (graphQLErrors) => {
+      console.error(graphQLErrors);
+      setErrors(graphQLErrors);
+    },
+  });
+
+  function handleSendMessage() {
+    console.log("message to send: " + messageText);
+    if (messageText === "") {
+      return;
+    }
+
+    SendMessage().then(() => console.log("sent message"));
+  }
 
   const {
     loading: conv_loading,
@@ -319,6 +342,7 @@ function ChatMain() {
               className="mt-1 py-5 pl-4 mx-2 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="message"
+              onChange={(e) => setMessageText(e.target.value)}
               required
             />
           </div>
@@ -333,15 +357,15 @@ function ChatMain() {
               <CgAttachment className="text-[20px] text-white" />
             </label>
           </div>
-          <a
-            href="#"
+          <div
+            onClick={handleSendMessage}
             className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-2
                                   text-[#ffffff] rounded-[10px] items-center gap-1.5
                                     hover:bg-[#4c1d95] hover:text-white transition duration-200"
           >
             Send
             <BsFillSendFill />
-          </a>
+          </div>
         </div>
       </div>
     </div>

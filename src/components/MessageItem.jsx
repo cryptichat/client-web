@@ -7,3 +7,5 @@ function MessageItem({ message }) {
     </p>
   );
 }
+
+export default MessageItem;
