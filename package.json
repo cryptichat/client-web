@@ -10,6 +10,7 @@
     "bcrypt": "^5.1.0",
     "graphql": "^16.6.0",
     "link-react": "^3.0.0",
+    "next-img": "^0.3.2",
     "next-link": "^2.0.0",
     "react": "^18.2.0",
     "react-animations": "^1.0.0",
