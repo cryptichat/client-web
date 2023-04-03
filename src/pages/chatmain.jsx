@@ -194,6 +194,7 @@ function ChatMain() {
   } = useQuery(GET_CONVO, {
     variables: { nConversations: 10, token: get_token },
     fetchPolicy: "cache-and-network",
+    pollInterval: 3000
   });
 
   useEffect(() => {
