@@ -5,9 +5,11 @@ import { BsFillSendFill } from "react-icons/bs";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import { CgAttachment } from "react-icons/cg";
-import Add from "../image/clipimg.png";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import "./styles.css";
 
 const CREATE_CONVO = gql`
@@ -125,7 +127,8 @@ function ChatMain() {
     },
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
-      setErrors(graphQLErrors);
+      toast.error("Error creating conversation, please check console");
+
     },
   });
 
@@ -135,7 +138,7 @@ function ChatMain() {
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
-      setErrors(graphQLErrors);
+      toast.error("Internal error, please check console");
     },
   });
 
@@ -146,14 +149,14 @@ function ChatMain() {
       const sortedMessages = [...res.messagesByConversation].sort((a, b) => {
         return new Date(a.timestamp) - new Date(b.timestamp);
       });
-      console.log("sorted from poll",sortedMessages);
+      console.log("sorted from poll", sortedMessages);
       setActiveMessages(sortedMessages);
     },
     pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
-      setErrors(graphQLErrors);
+      toast.error("Error retrieving messages, please check console");
     },
   });
 
@@ -165,11 +168,12 @@ function ChatMain() {
     },
     onCompleted: (SendMessage) => {},
     notifyOnNetworkStatusChange: true,
-    onError: (graphQLErrors) => {
-      console.error(graphQLErrors);
-      setErrors(graphQLErrors);
+    onError: (err) => {
+      console.error(err);
+      toast.error("Error sending message, please check console");
     },
   });
+
 
   function handleSendMessage() {
     console.log("message to send: " + messageText);
@@ -194,10 +198,11 @@ function ChatMain() {
   } = useQuery(GET_CONVO, {
     variables: { nConversations: 10, token: get_token },
     fetchPolicy: "cache-and-network",
-    pollInterval: 3000
+    pollInterval: 3000,
   });
 
   useEffect(() => {
+    toast("Welcome to CrypticChat!");
     async function func() {
       if (conv_data) {
         for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
@@ -248,10 +253,12 @@ function ChatMain() {
         });
 
         // sort messages array with most recent message last
-        const sortedMessages = [...res.data.messagesByConversation].sort((a, b) => {
-          return new Date(a.timestamp) - new Date(b.timestamp);
-        });
-        console.log("sorted",sortedMessages);
+        const sortedMessages = [...res.data.messagesByConversation].sort(
+          (a, b) => {
+            return new Date(a.timestamp) - new Date(b.timestamp);
+          }
+        );
+        console.log("sorted", sortedMessages);
         setActiveMessages(sortedMessages);
       }
     }
@@ -260,6 +267,7 @@ function ChatMain() {
 
   return (
     <div className="flex w-screen main-chat lg:h-screen divide-solid">
+      <ToastContainer theme="dark" />
       <div className="flex flex-col flex-grow lg:max-w-full border border-white border-t-0 border-l-0 border-b-0">
         {/* Convo list */}
         <div className="flex items-center justify-between">
