@@ -141,7 +141,15 @@ function ChatMain() {
 
   const [GetMessages] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
-    onCompleted: (GetUsers) => {},
+    onCompleted: (res) => {
+      // sort messages array with most recent message last
+      const sortedMessages = [...res.messagesByConversation].sort((a, b) => {
+        return new Date(a.timestamp) - new Date(b.timestamp);
+      });
+      console.log("sorted from poll",sortedMessages);
+      setActiveMessages(sortedMessages);
+    },
+    pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
