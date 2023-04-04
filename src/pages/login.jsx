@@ -132,7 +132,7 @@ function Login() {
 
   return (
     <div className="app">
-      <div className="ml-7">
+      <div className="ml-6">
         <div className="container mx-auto py-5" style={{ display: "flex", justifyContent: 'center' }}>
         <img src={lock192} width="100px" height="100px" alt="ChatApp logo"/>
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-7">
