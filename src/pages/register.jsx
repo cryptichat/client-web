@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
+
+// import { subtle } from "crypto"
 import { IoPersonAddSharp } from "react-icons/io5";
 
 import "./styles.css";
@@ -51,6 +53,100 @@ function Register() {
       setErrors(graphQLErrors);
     },
   });
+
+  function arrayBufferToBase64(buffer) {
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    return btoa(binary);
+  }
+
+  // function handleRegister() {
+  //   crypto.subtle.generateKey({
+  //     name: 'RSA-OAEP',
+  //     modulusLength: 2048,
+  //     publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+  //     hash: 'SHA-256',
+  //   }, true, ['encrypt', 'decrypt']).then((keyPair) => {
+  //     crypto.subtle.exportKey('spki', keyPair.publicKey)
+  //       .then(publicKeyDer => {
+  //         const publicKeyPem = arrayBufferToBase64(publicKeyDer);
+  //         signupHandler({
+  //           variables: {
+  //             username: formState.uname,
+  //             email: formState.email,
+  //             password1: formState.pass1,
+  //             password2: formState.pass2,
+  //             publicKey: publicKeyPem,
+  //           }
+  //         }).then(() => {
+  //           console.log("Account created successfully");
+  //           // store private key in browser keystore
+  //           crypto.subtle.exportKey('pkcs8', keyPair.privateKey).then(privateKeyDer => {
+  //             const privateKeyPem = arrayBufferToBase64(privateKeyDer);
+  //             localStorage.setItem('privateKey', privateKeyPem);
+  //           })
+  //         })
+  //       });
+  //   })
+  // }
+
+  async function handleRegister() {
+    try {
+      // Generate key pair
+      const keyPair = await crypto.subtle.generateKey(
+        {
+          name: 'RSA-OAEP',
+          modulusLength: 2048,
+          publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+          hash: 'SHA-256',
+        },
+        true,
+        ['encrypt', 'decrypt']
+      );
+
+      // Export public key
+      const publicKeyDer = await crypto.subtle.exportKey('spki', keyPair.publicKey);
+      const publicKeyPem = arrayBufferToBase64(publicKeyDer);
+
+      // Export private key
+      const privateKeyJwk = await crypto.subtle.exportKey('jwk', keyPair.privateKey);
+
+      // Sign up
+      await signupHandler({
+        variables: {
+          username: formState.uname,
+          email: formState.email,
+          password1: formState.pass1,
+          password2: formState.pass2,
+          publicKey: publicKeyPem,
+        },
+      });
+
+      console.log('Account created successfully');
+
+      // Generate AES-GCM key
+      const aesGcmKey = await crypto.subtle.generateKey(
+        { name: 'AES-GCM', length: 256 },
+        true,
+        ['wrapKey', 'unwrapKey']
+      );
+
+      // Export the private key as a wrapped key
+      const wrappedPrivateKey = await crypto.subtle.wrapKey(
+        'pkcs8',
+        keyPair.privateKey, // Pass the actual CryptoKey object here
+        aesGcmKey,
+        { name: 'AES-GCM', iv: crypto.getRandomValues(new Uint8Array(12)) }
+      );
+
+      // Store the wrapped private key in local storage
+      localStorage.setItem('privateKey', arrayBufferToBase64(wrappedPrivateKey));
+      console.log('Private key stored securely in local storage');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
 
   // JSX code for login form
   const renderForm = (
@@ -159,16 +255,8 @@ function Register() {
         <input
           type="submit"
           class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
-          onClick={() =>
-            signupHandler({
-              variables: {
-                username: formState.uname,
-                email: formState.email,
-                password1: formState.pass1,
-                password2: formState.pass2,
-                publicKey: "XXX",
-              },
-            })
+          onClick={async () =>
+            await handleRegister()
           }
         />
       </div>
