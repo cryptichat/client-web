@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
+
+// import { subtle } from "crypto"
 import { IoPersonAddSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
 import lock192 from "./lock192.png";
@@ -82,6 +84,81 @@ function Register() {
       setErrors(graphQLErrors);
     },
   });
+
+  function arrayBufferToBase64(buffer) {
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    return btoa(binary);
+  }
+
+  async function handleRegister() {
+    if (formState.pass1 !== formState.pass2) {
+      console.log("Passwords do not match");
+      setErrors([...errors, { message: "Passwords do not match" }]);
+    } else {
+      try {
+        // Generate key pair
+        const keyPair = await crypto.subtle.generateKey(
+          {
+            name: "RSA-OAEP",
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+            hash: "SHA-256",
+          },
+          true,
+          ["encrypt", "decrypt"]
+        );
+
+        // Export public key
+        const publicKeyDer = await crypto.subtle.exportKey(
+          "spki",
+          keyPair.publicKey
+        );
+        const publicKeyPem = arrayBufferToBase64(publicKeyDer);
+
+        // Export private key
+        const privateKeyJwk = await crypto.subtle.exportKey(
+          "jwk",
+          keyPair.privateKey
+        );
+
+        // Sign up
+        await signupHandler({
+          variables: {
+            username: formState.uname,
+            email: formState.email,
+            password: formState.pass1,
+            publicKey: publicKeyPem,
+          },
+        });
+
+        console.log("Account created successfully");
+
+        // Generate AES-GCM key
+        const aesGcmKey = await crypto.subtle.generateKey(
+          { name: "AES-GCM", length: 256 },
+          true,
+          ["wrapKey", "unwrapKey"]
+        );
+
+        // Export the private key as a wrapped key
+        const wrappedPrivateKey = await crypto.subtle.wrapKey(
+          "pkcs8",
+          keyPair.privateKey, // Pass the actual CryptoKey object here
+          aesGcmKey,
+          { name: "AES-GCM", iv: crypto.getRandomValues(new Uint8Array(12)) }
+        );
+
+        // Store the wrapped private key in local storage
+        localStorage.setItem(
+          "privateKey",
+          arrayBufferToBase64(wrappedPrivateKey)
+        );
+        console.log("Private key stored securely in local storage");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
 
   // JSX code for login form
   const renderForm = (
@@ -191,24 +268,8 @@ function Register() {
       <div className="button-container p-2">
         <input
           type="submit"
-          value="Register"
-          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
-          onClick={() => {
-            if (formState.pass1 !== formState.pass2) {
-              console.log("Passwords do not match");
-              setErrors([...errors, { message: "Passwords do not match" }]);
-            } else {
-              setErrors([]);
-              signupHandler({
-                variables: {
-                  username: formState.uname,
-                  email: formState.email,
-                  password: formState.pass1,
-                  publicKey: "XXX",
-                },
-              });
-            }
-          }}
+          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
+          onClick={async () => await handleRegister()}
         />
       </div>
       <div>
