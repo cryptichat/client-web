@@ -40,10 +40,7 @@ const GET_USERS = gql`
   }
 `;
 
-export default function ChatActionsView({
-  activeConvo,
-  setActiveConvo,
-}) {
+export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   const loggedInUsername = localStorage.getItem("dsmessenger-username");
   let token = localStorage.getItem("auth-token");
 
@@ -178,7 +175,7 @@ export default function ChatActionsView({
         </div>
       )}
 
-      <div className="hidden lg:block pl-4 pr-4 text-white hover:rounded-md">
+      <div className="block pl-4 pr-4 text-white hover:rounded-md">
         <ul className="divide-y divide-gray-300 truncate">
           {userConversations.map((convo) => {
             return (
@@ -199,7 +196,7 @@ export default function ChatActionsView({
       >
         <a
           href="#"
-          className="hidden bg-zinc-900 md:flex
+          className="bg-zinc-900 flex
                               text-[#ffffff] rounded-[10px] items-center gap-2
                                 hover:bg-zinc-900 hover:text-white transition duration-200"
         >
