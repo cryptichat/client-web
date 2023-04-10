@@ -360,11 +360,11 @@ function ChatMain() {
         </div>
         <div className="grow px-4">
           {activeMessages.map((message) => (
-            <MessageItem message={message} />
+            <MessageItem message={message}/>
           ))}
         </div>
         <div class="flex py-4 items-center">
-          <div class="flex-1 py-2">
+          <form className="inputContainer flex-1 py-2">
             <input
               type="text"
               placeholder="Message"
@@ -375,7 +375,7 @@ function ChatMain() {
               value={messageText}
               required
             />
-          </div>
+          </form>
           <div
             className="sendattach hidden bg-[#8b5cf6] md:flex border border-[#000000] px-2 p-2.5
                                   text-[#ffffff] rounded-[10px] items-center 

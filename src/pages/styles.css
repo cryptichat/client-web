@@ -178,3 +178,31 @@ label {
   font-family: "Roboto", sans-serif;
   justify-content: center;
 }
+
+.inputContainer {
+  width: 100%;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputContainer input {
+  width: 90%;
+  height: 60%;
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 1.1rem;
+  background-color: #ffffff34;
+}
+
+.inputContainer input::selection {
+  background-color: #9a86f3;
+}
+
+.inputContainer input:focus {
+  outline: none;
+}
