@@ -53,14 +53,14 @@ section {
   margin-left: -50px;
 
   padding: 8px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   inset: -10px 100px;
   background: linear-gradient(310deg,
-      #9277d2,
-      #6b34eb,
-      #9365ee);
+      #d2c7fc,
+ 
+      #ffffff);
   transition: 0.5s;
-  animation: animate 4s linear infinite;
+  animation: animate 3.5s linear infinite;
 }
 
 .chatcontainer:hover::after {
