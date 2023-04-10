@@ -60,7 +60,7 @@ section {
  
       #ffffff);
   transition: 0.5s;
-  animation: animate 2s linear infinite;
+  animation: animate 3s linear infinite;
 }
 
 .chatcontainer:hover::after {
