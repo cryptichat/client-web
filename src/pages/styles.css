@@ -31,7 +31,7 @@ section {
       #171b1f);
 }
 
-.chatcontainer {
+/* .chatcontainer {
   position: absolute;
   left: 47%;
   top: 14.7%;
@@ -65,12 +65,11 @@ section {
 
 .chatcontainer:hover::after {
   inset: -20px 0px;
-}
+} */
 
 .container{
   position: relative;
   border-radius: 50%;
-  overflow: hidden;
 }
 
 @keyframes animate {

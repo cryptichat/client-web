@@ -163,7 +163,7 @@ function Login() {
     >
       <div className="ml-6">
         <div className="chatcontainer"></div>
-        <div className="container mx-auto py-5" style={{ display: "flex", justifyContent: 'center' }}>
+        <div className="container mx-auto" style={{ display: "flex", justifyContent: 'center' }}>
         <motion.img
             src={lock192}
             width="100px"
