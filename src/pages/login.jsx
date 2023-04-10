@@ -119,7 +119,7 @@ function Login() {
         </div>
         <a
           href="#"
-          class="px-3 text-sm font-medium text-primary-600 hover:underline dark:text-white-300"
+          class="px-2 text-sm font-medium text-primary-600 hover:underline dark:text-white-300"
         >
           Forgot password?
         </a>
@@ -163,7 +163,7 @@ function Login() {
     >
       <div className="ml-6">
         <div className="chatcontainer"></div>
-        <div className="container mx-auto" style={{ display: "flex", justifyContent: 'center' }}>
+        <div className="container mx-auto" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
         <motion.img
             src={lock192}
             width="100px"

@@ -70,7 +70,11 @@ section {
 .container{
   position: relative;
   border-radius: 50%;
-}
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  box-shadow: 0 2px 0.3 rgba(0, 0, 0, 0.3);
+  }
 
 @keyframes animate {
   0% {
