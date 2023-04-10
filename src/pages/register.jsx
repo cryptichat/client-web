@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 import { IoPersonAddSharp } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 import "./styles.css";
 import Add from "../image/profilephoto.png";
@@ -25,6 +26,22 @@ const SIGNUP = gql`
     }
   }
 `;
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+  exit: { opacity: 0, transition: { ease: "easeInOut" } },
+};
+
+const titleVariants = {
+  hidden: { y: -50, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
+
+const formVariants = {
+  hidden: { y: 50, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
 
 function Register() {
   const navigate = useNavigate();
@@ -191,7 +208,13 @@ function Register() {
   );
 
   return (
-    <div className="app">
+    <motion.div
+      className="app"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2">
@@ -199,7 +222,7 @@ function Register() {
           </h1>
         </div>
         {isSubmitted ? (
-          <div>
+          <motion.div>
             User is successfully registered
             <div className="button-container">
               <button
@@ -209,13 +232,13 @@ function Register() {
                 Continue
               </button>
             </div>
-          </div>
+          </motion.div>
         ) : (
           renderForm
         )}
       </div>
-    </div>
+    </motion.div>
   );
-}
+};
 
 export default Register;
