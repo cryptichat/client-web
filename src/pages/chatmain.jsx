@@ -24,7 +24,7 @@ function ChatMain() {
   }
 
   function renderMessageView() {
-    return <ChatMessageView activeConvo={activeConvo} />;
+    return <ChatMessageView activeConvo={activeConvo} setActiveConvo={setActiveConvo}/>;
   }
 
   function renderResponsive() {

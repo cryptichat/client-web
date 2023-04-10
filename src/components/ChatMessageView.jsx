@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useMutation, useLazyQuery, gql } from "@apollo/client";
 import MessageItem from "../components/MessageItem";
 import { BsFillSendFill } from "react-icons/bs";
+import { BiArrowBack } from "react-icons/bi";
 import { CgAttachment } from "react-icons/cg";
+import useWindowSize from "../hooks/useWindowSize";
 
 const GET_MESSAGE = gql`
   query MessagesByConversation(
@@ -54,8 +56,10 @@ const SEND_MESSAGE = gql`
   }
 `;
 
-export default function ChatMessageView({ activeConvo }) {
+export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   let token = localStorage.getItem("auth-token");
+
+  const { width: windowWidth } = useWindowSize();
 
   const [messageText, setMessageText] = useState("");
   const [activeMessages, setActiveMessages] = useState([]);
@@ -137,8 +141,13 @@ export default function ChatMessageView({ activeConvo }) {
   return (
     <div className="flex flex-col w-full lg:w-5/6 lg:h-screen lg:mx-auto lg:my-auto shadow-md">
       {/* Messages */}
-      <div>
-        <p className="font-black mt-4 mb-2 pl-4 text-2xl">{activeConvo.user}</p>
+      <div className="flex items-center mx-2 my-2 md:my-3.5">
+        {windowWidth < 768 && <div
+          className={`p-2 rounded mt-1 mr-2 cursor-pointer hover:bg-slate-600`}
+        >
+          <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
+        </div>}
+        <p className="font-black pl-1 text-2xl">{activeConvo.user}</p>
       </div>
       <div className="grow px-4">
         {activeMessages.map((message) => (
