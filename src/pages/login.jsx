@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
-
+import { motion } from "framer-motion";
+import lock192 from "./lock192.png";
 import "./styles.css";
 
 const LOGIN = gql`
@@ -11,6 +12,28 @@ const LOGIN = gql`
     }
   }
 `;
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+  exit: { opacity: 0, transition: { ease: "easeInOut" } },
+};
+
+const titleVariants = {
+  hidden: { y: -50, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
+
+const formVariants = {
+  hidden: { y: 50, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
+
+const lock192Variants = {
+  hidden: { scale: 0, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
+
 function Login() {
   const navigate = useNavigate();
   // React States
@@ -131,16 +154,42 @@ function Login() {
   );
 
   return (
-    <div className="app">
-      <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-        <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
-            Login to your Account
+    <motion.div
+      className="app"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
+      <div className="ml-6">
+        <div className="chatcontainer"></div>
+        <div className="container mx-auto py-5" style={{ display: "flex", justifyContent: 'center' }}>
+        <motion.img
+            src={lock192}
+            width="100px"
+            height="99.88px"
+            alt="ChatApp logo"
+            variants={lock192Variants}
+          /></div>
+          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-7">
+            Welcome to CrypticChat
           </h1>
+
+        <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <motion.div
+            className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+            variants={formVariants}
+          >
+            <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white" variants={titleVariants}>
+              <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
+                Login to your Account
+              </h1>
+            </motion.div>
+            {renderForm}
+          </motion.div>
         </div>
-        {renderForm}
-      </div>
-    </div>
+        </div>
+    </motion.div>
   );
 }
 

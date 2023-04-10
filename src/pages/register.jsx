@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 import { IoPersonAddSharp } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 import "./styles.css";
 import Add from "../image/profilephoto.png";
@@ -25,6 +26,22 @@ const SIGNUP = gql`
     }
   }
 `;
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+  exit: { opacity: 0, transition: { ease: "easeInOut" } },
+};
+
+const titleVariants = {
+  hidden: { y: -50, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
+
+const formVariants = {
+  hidden: { y: 50, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
 
 function Register() {
   const navigate = useNavigate();
@@ -141,13 +158,12 @@ function Register() {
       </div>
       <div className="propic px-2 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
         <div
-          className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#000000]
+          className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
                                   text-[#ffffff] rounded-[10px] items-center 
                                     hover:bg-[#000000] hover:text-white transition duration-200"
         >
           <input style={{ display: "none" }} type="file" id="file" />
           <label htmlFor="file">
-            {/* <img className='imgprofile' src ={Add} alt=""/> */}
             <IoPersonAddSharp className="text-[20px] text-white" />
             <span className="text-[15px] text-white px-2">
               Add a profile picture
@@ -158,7 +174,7 @@ function Register() {
       <div className="button-container p-2">
         <input
           type="submit"
-          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
+          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
           onClick={() =>
             signupHandler({
               variables: {
@@ -192,7 +208,13 @@ function Register() {
   );
 
   return (
-    <div className="app">
+    <motion.div
+      className="app"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2">
@@ -200,7 +222,7 @@ function Register() {
           </h1>
         </div>
         {isSubmitted ? (
-          <div>
+          <motion.div>
             User is successfully registered
             <div className="button-container">
               <button
@@ -210,13 +232,13 @@ function Register() {
                 Continue
               </button>
             </div>
-          </div>
+          </motion.div>
         ) : (
           renderForm
         )}
       </div>
-    </div>
+    </motion.div>
   );
-}
+};
 
 export default Register;
