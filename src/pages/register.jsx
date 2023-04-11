@@ -4,6 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 
 // import { subtle } from "crypto"
 import { IoPersonAddSharp } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 import "./styles.css";
 import Add from "../image/profilephoto.png";
@@ -27,6 +28,30 @@ const SIGNUP = gql`
     }
   }
 `;
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+  exit: { opacity: 0, transition: { ease: "easeInOut" } },
+};
+
+const titleVariants = {
+  hidden: { y: -50, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
+};
+
+const formVariants = {
+  hidden: { y: 50, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
+};
 
 function Register() {
   const navigate = useNavigate();
@@ -59,56 +84,32 @@ function Register() {
     return btoa(binary);
   }
 
-  // function handleRegister() {
-  //   crypto.subtle.generateKey({
-  //     name: 'RSA-OAEP',
-  //     modulusLength: 2048,
-  //     publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-  //     hash: 'SHA-256',
-  //   }, true, ['encrypt', 'decrypt']).then((keyPair) => {
-  //     crypto.subtle.exportKey('spki', keyPair.publicKey)
-  //       .then(publicKeyDer => {
-  //         const publicKeyPem = arrayBufferToBase64(publicKeyDer);
-  //         signupHandler({
-  //           variables: {
-  //             username: formState.uname,
-  //             email: formState.email,
-  //             password1: formState.pass1,
-  //             password2: formState.pass2,
-  //             publicKey: publicKeyPem,
-  //           }
-  //         }).then(() => {
-  //           console.log("Account created successfully");
-  //           // store private key in browser keystore
-  //           crypto.subtle.exportKey('pkcs8', keyPair.privateKey).then(privateKeyDer => {
-  //             const privateKeyPem = arrayBufferToBase64(privateKeyDer);
-  //             localStorage.setItem('privateKey', privateKeyPem);
-  //           })
-  //         })
-  //       });
-  //   })
-  // }
-
   async function handleRegister() {
     try {
       // Generate key pair
       const keyPair = await crypto.subtle.generateKey(
         {
-          name: 'RSA-OAEP',
+          name: "RSA-OAEP",
           modulusLength: 2048,
           publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-          hash: 'SHA-256',
+          hash: "SHA-256",
         },
         true,
-        ['encrypt', 'decrypt']
+        ["encrypt", "decrypt"]
       );
 
       // Export public key
-      const publicKeyDer = await crypto.subtle.exportKey('spki', keyPair.publicKey);
+      const publicKeyDer = await crypto.subtle.exportKey(
+        "spki",
+        keyPair.publicKey
+      );
       const publicKeyPem = arrayBufferToBase64(publicKeyDer);
 
       // Export private key
-      const privateKeyJwk = await crypto.subtle.exportKey('jwk', keyPair.privateKey);
+      const privateKeyJwk = await crypto.subtle.exportKey(
+        "jwk",
+        keyPair.privateKey
+      );
 
       // Sign up
       await signupHandler({
@@ -121,32 +122,33 @@ function Register() {
         },
       });
 
-      console.log('Account created successfully');
+      console.log("Account created successfully");
 
       // Generate AES-GCM key
       const aesGcmKey = await crypto.subtle.generateKey(
-        { name: 'AES-GCM', length: 256 },
+        { name: "AES-GCM", length: 256 },
         true,
-        ['wrapKey', 'unwrapKey']
+        ["wrapKey", "unwrapKey"]
       );
 
       // Export the private key as a wrapped key
       const wrappedPrivateKey = await crypto.subtle.wrapKey(
-        'pkcs8',
+        "pkcs8",
         keyPair.privateKey, // Pass the actual CryptoKey object here
         aesGcmKey,
-        { name: 'AES-GCM', iv: crypto.getRandomValues(new Uint8Array(12)) }
+        { name: "AES-GCM", iv: crypto.getRandomValues(new Uint8Array(12)) }
       );
 
       // Store the wrapped private key in local storage
-      localStorage.setItem('privateKey', arrayBufferToBase64(wrappedPrivateKey));
-      console.log('Private key stored securely in local storage');
+      localStorage.setItem(
+        "privateKey",
+        arrayBufferToBase64(wrappedPrivateKey)
+      );
+      console.log("Private key stored securely in local storage");
     } catch (error) {
       console.error(error);
     }
   }
-
-
 
   // JSX code for login form
   const renderForm = (
@@ -235,15 +237,17 @@ function Register() {
           required
         />
       </div>
-      <div className="propic px-2 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        className="propic px-2 py-2"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
         <div
-          className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#000000]
+          className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
                                   text-[#ffffff] rounded-[10px] items-center 
                                     hover:bg-[#000000] hover:text-white transition duration-200"
         >
           <input style={{ display: "none" }} type="file" id="file" />
           <label htmlFor="file">
-            {/* <img className='imgprofile' src ={Add} alt=""/> */}
             <IoPersonAddSharp className="text-[20px] text-white" />
             <span className="text-[15px] text-white px-2">
               Add a profile picture
@@ -255,9 +259,7 @@ function Register() {
         <input
           type="submit"
           class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
-          onClick={async () =>
-            await handleRegister()
-          }
+          onClick={async () => await handleRegister()}
         />
       </div>
       <div>
@@ -280,7 +282,13 @@ function Register() {
   );
 
   return (
-    <div className="app">
+    <motion.div
+      className="app"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2">
@@ -288,7 +296,7 @@ function Register() {
           </h1>
         </div>
         {isSubmitted ? (
-          <div>
+          <motion.div>
             User is successfully registered
             <div className="button-container">
               <button
@@ -298,12 +306,12 @@ function Register() {
                 Continue
               </button>
             </div>
-          </div>
+          </motion.div>
         ) : (
           renderForm
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

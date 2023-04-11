@@ -8,6 +8,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bcrypt": "^5.1.0",
+    "classnames": "^2.3.2",
+    "framer-motion": "^10.11.2",
     "graphql": "^16.6.0",
     "link-react": "^3.0.0",
     "next-img": "^0.3.2",
@@ -45,7 +47,7 @@
     ]
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^3.1.0",
+    "@vitejs/plugin-react-swc": "^3.3.0",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.1",
