@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# keys for blockchain
+/mvp/keys/*
+!/mvp/keys/readme.txt
+
 # testing
 /coverage
 
