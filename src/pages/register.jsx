@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 
@@ -6,8 +6,9 @@ import { useMutation, gql } from "@apollo/client";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
 
+import { ContractContext } from "../utils/ContractProvider";
+
 import "./styles.css";
-import Add from "../image/profilephoto.png";
 
 const SIGNUP = gql`
   mutation CreateAccount(
@@ -55,6 +56,9 @@ const formVariants = {
 
 function Register() {
   const navigate = useNavigate();
+  const { web3, contract } = useContext(ContractContext);
+
+  
   // React States
   const [errors, setErrors] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
