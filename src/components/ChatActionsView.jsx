@@ -84,7 +84,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   });
 
   useEffect(() => {
-    toast("Welcome to CrypticChat!");
     async function func() {
       if (conv_data) {
         for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
