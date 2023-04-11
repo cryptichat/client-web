@@ -149,7 +149,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         </div>}
         <p className="font-black pl-1 text-2xl">{activeConvo.user}</p>
       </div>
-      <div className="grow px-4 md:max-h-full max-h-[85%]">
+      <div className="grow px-4 md:max-h-full max-h-[85%] overflow-scroll">
         {activeMessages.map((message, index) => (
           <MessageItem message={message} index={index}/>
         ))}
