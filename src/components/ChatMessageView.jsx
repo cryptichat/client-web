@@ -168,7 +168,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           />
         </form>
         <div
-          className="sendattach hidden bg-[#8b5cf6] md:flex border border-[#000000] px-2 p-2.5
+          className="sendattach bg-[#8b5cf6] md:flex border border-[#000000] px-2 p-2.5
                                   text-[#ffffff] rounded-[10px] items-center 
                                     hover:bg-[#4c1d95] hover:text-white transition duration-200"
         >
@@ -180,7 +180,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         </div>
         <div
           onClick={handleSendMessage}
-          className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-2
+          className="bg-[#8b5cf6] flex border border-[#000000] p-2 mx-2 mt-2 mb-2
                                   text-[#ffffff] rounded-[10px] items-center gap-1.5
                                     hover:bg-[#4c1d95] hover:text-white transition duration-200"
         >
