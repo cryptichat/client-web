@@ -1,13 +1,24 @@
 import React from "react";
 import { motion } from "framer-motion";
+import classNames from "classnames";
 
 function ConvoListItem({ username, key, onClick, active }) {
+  const listItemClasses = classNames(
+    "w-full",
+    "flex",
+    "justify-start",
+    "pl-1",
+    "py-2",
+    "hover:bg-slate-600",
+    { "bg-slate-600": active },
+    "cursor-pointer",
+    "rounded-md"
+  );
+
   return (
     <motion.li
       key={key}
-      className={`w-full flex justify-start pl-1 py-2 hover:bg-slate-600 ${
-        active ? "bg-slate-600" : null
-      } cursor-pointer rounded-md`}
+      className={listItemClasses}
       onClick={onClick}
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}

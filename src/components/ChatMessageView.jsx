@@ -143,7 +143,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       {/* Messages */}
       <div className="flex items-center mx-2 my-2 md:my-3.5">
         {windowWidth < 768 && <div
-          className={`p-2 rounded mt-1 mr-2 cursor-pointer hover:bg-slate-600`}
+          className="p-2 rounded mt-1 mr-2 cursor-pointer hover:bg-slate-600"
         >
           <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
         </div>}
