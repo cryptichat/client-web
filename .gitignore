@@ -6,8 +6,8 @@
 .pnp.js
 
 # keys for blockchain
-/mvp/keys/*
-!/mvp/keys/readme.txt
+keys/*
+!keys/readme.txt
 
 # testing
 /coverage
