@@ -5,6 +5,7 @@ import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { BiGroup } from "react-icons/bi";
+import { MdGroupAdd } from "react-icons/md";
 
 const CREATE_CONVO = gql`
   mutation CreateConversation(
@@ -189,7 +190,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
             className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addGroupChatOpen ? "bg-slate-600" : "hover:bg-slate-600"
               }`}
           >
-            <BiGroup
+            <MdGroupAdd
               size={24}
               onClick={() => {
                 setAddGroupChatOpen(!addGroupChatOpen);
@@ -239,7 +240,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
           <>
             <input
               type="text"
-              placeholder="Enter username(s)"
+              placeholder="Enter usernames"
               className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="groupMessage"
