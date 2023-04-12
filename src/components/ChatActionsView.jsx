@@ -174,7 +174,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
         <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>
         <div className="flex items-center space-x-1 mt-1 mr-3">
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addChatOpen ? "bg-slate-600" : "hover:bg-slate-600"
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addChatOpen && "bg-slate-600" 
               }`}
           >
             <BiMessageRoundedAdd
@@ -187,7 +187,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
           </div>
           {/* Add new button to start a group chat */}
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addGroupChatOpen ? "bg-slate-600" : "hover:bg-slate-600"
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addGroupChatOpen && "bg-slate-600"  
               }`}
           >
             <MdGroupAdd
@@ -201,7 +201,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
         </div>
       </div>
 
-      <div className={`py-2 mb-2 ${(addChatOpen || addGroupChatOpen) && "bg-slate-600"}`}>
+      <div className={`py-2 mb-2 ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"}`}>
         {addChatOpen && (
           <>
             <input
