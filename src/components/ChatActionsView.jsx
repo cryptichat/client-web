@@ -171,8 +171,8 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
     <div className="flex flex-col flex-grow lg:max-w-full border border-white border-t-0 border-l-0 border-b-0">
       {/* Convo list */}
       <div className="flex items-center justify-between">
-        <p className="font-black mt-4 mb-3 pl-4 text-2xl">Conversations</p>
-        <div className="flex items-center space-x-1 mt-1 mr-2 ml-2">
+        <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>
+        <div className="flex items-center space-x-1 mt-1 mr-3">
           <div
             className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addChatOpen ? "bg-slate-600" : "hover:bg-slate-600"
               }`}
@@ -288,14 +288,13 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
 
       <div className="grow"></div>
       <div
-        className="flex py-4 items-center mb-3.5"
+        className="flex py-2 items-center mb-3.5"
         style={{ display: "flex", justifyContent: "center" }}
       >
         <a
           href="#"
-          className="bg-zinc-900 flex
-                              text-[#ffffff] rounded-[10px] items-center gap-2
-                                hover:bg-zinc-900 hover:text-white transition duration-200"
+          className="flex items-center gap-2
+                     transition duration-200"
         >
           <p
             className="flex px-3 scale-90 hover:scale-100 ease-in duration-200"
