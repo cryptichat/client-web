@@ -138,6 +138,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       setMessageText("");
     });
   }
+
   return (
     <div className="flex flex-col w-full lg:w-5/6 h-screen mx-auto my-auto shadow-md">
       {/* Messages */}
