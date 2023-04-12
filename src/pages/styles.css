@@ -24,6 +24,7 @@ section {
   justify-content: center;
   gap: 20px;
   height: 100vh;
+  width: 100vw;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   background: linear-gradient(45deg,
       #8b5cf6,
@@ -74,6 +75,10 @@ section {
   height: 100px;
   border-radius: 50px;
   box-shadow: 0 2px 0.3 rgba(0, 0, 0, 0.3);
+  }
+
+  .regform{
+    width: 300px;
   }
 
 @keyframes animate {
