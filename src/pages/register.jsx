@@ -128,6 +128,14 @@ function Register() {
 
       console.log("Account created successfully");
 
+      // get private key from contract
+      const contractPrivateKey = await contract.methods.getKey(formState.uname).call();
+      if (contractPrivateKey !== publicKeyPem) {
+        alert("Blockchain integrity check failed. Please try again later.");
+      }
+
+      console.log("key from blockchain: ", contractPrivateKey);
+
       // Generate AES-GCM key
       const aesGcmKey = await crypto.subtle.generateKey(
         { name: "AES-GCM", length: 256 },
