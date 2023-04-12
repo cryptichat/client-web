@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
-
+import lock192 from "./lock192.png";
 import "./styles.css";
 import Add from "../image/profilephoto.png";
 
@@ -41,6 +41,11 @@ const titleVariants = {
 const formVariants = {
   hidden: { y: 50, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+};
+
+const lock192Variants = {
+  hidden: { scale: 0, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
 };
 
 function Register() {
@@ -215,27 +220,48 @@ function Register() {
       animate="visible"
       exit="exit"
     >
-      <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-        <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2">
-            Register
+      <div className="logo">
+        <div 
+          className="flex items-center" 
+          style={{ display: "flex", alignItems: "center" }}
+        >
+        <div className=" mx-2 my-5 " style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)", borderRadius: 25 }}>
+        <motion.img
+            src={lock192}
+            width="60px"
+            height="59.928px"
+            alt="ChatApp logo"
+            variants={lock192Variants}
+          /></div>
+          <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+            CrypticChat
           </h1>
+
         </div>
-        {isSubmitted ? (
-          <motion.div>
-            User is successfully registered
-            <div className="button-container">
-              <button
-                onClick={() => navigate("/")}
-                class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Continue
-              </button>
-            </div>
-          </motion.div>
-        ) : (
-          renderForm
-        )}
+        <div className="regform w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
+          <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white ">
+            
+          
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
+              Register
+            </h1>
+          </div>
+          {isSubmitted ? (
+            <motion.div>
+              User is successfully registered
+              <div className="button-container">
+                <button
+                  onClick={() => navigate("/")}
+                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Continue
+                </button>
+              </div>
+            </motion.div>
+          ) : (
+            renderForm
+          )}
+        </div>
       </div>
     </motion.div>
   );
