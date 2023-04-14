@@ -164,7 +164,7 @@ function Register() {
       <div className="propic px-2 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
         <div
           className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
-                                  text-[#ffffff] rounded-[10px] items-center 
+                                  text-[#ffffff] rounded-[5px] items-center 
                                     hover:bg-[#000000] hover:text-white transition duration-200"
         >
           <input style={{ display: "none" }} type="file" id="file" />
