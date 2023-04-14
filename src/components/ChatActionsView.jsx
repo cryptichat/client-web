@@ -141,7 +141,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
       toast.error("User already added");
       return;
     }
-
     setGroupChatUsers([...groupChatUsers, username]);
   }
 
@@ -207,7 +206,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
             <input
               type="text"
               placeholder="Enter username"
-              className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
+              className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="message"
               onChange={(e) => setCreateConvoText(e.target.value)}
@@ -241,7 +240,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
             <input
               type="text"
               placeholder="Enter usernames"
-              className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[10px] outline-none focus:text-gray-700"
+              className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700"
               style={{ width: "-webkit-fill-available" }}
               name="groupMessage"
               onKeyDown={(e) => {
