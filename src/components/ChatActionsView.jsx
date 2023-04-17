@@ -167,7 +167,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   // END Group Convo Creation
 
   return (
-    <div className="flex flex-col flex-grow lg:max-w-full border border-white border-t-0 border-l-0 border-b-0">
+    <div className="actionview flex flex-col flex-grow lg:max-w-full border border-white border-t-0 border-l-0 border-b-0">
       {/* Convo list */}
       <div className="flex items-center justify-between">
         <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>

@@ -214,3 +214,8 @@ label {
 .inputContainer input:focus {
   outline: none;
 }
+
+.scroll.grow {
+  overflow: hidden;
+  height: 85%;
+}

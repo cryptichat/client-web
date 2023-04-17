@@ -140,7 +140,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   }
 
   return (
-    <div className="flex flex-col w-full lg:w-5/6 h-screen mx-auto my-auto shadow-md">
+    <div className="messageview flex flex-col w-full lg:w-5/6 h-screen mx-auto my-auto shadow-md">
       {/* Messages */}
       <div className="flex items-center mx-2 my-2 md:my-3.5">
         {windowWidth < 768 && <div
@@ -150,7 +150,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         </div>}
         <p className="font-black pl-1 text-2xl">{activeConvo.user}</p>
       </div>
-      <div className="grow px-4 md:max-h-full max-h-[85%] overflow-scroll">
+      <div className="scroll grow px-4 md:max-h-full max-h-[85%] overflow-scroll">
         {activeMessages.map((message, index) => (
           <MessageItem message={message} index={index}/>
         ))}

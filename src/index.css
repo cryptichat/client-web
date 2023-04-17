@@ -8,3 +8,7 @@
 
 @tailwind components;
 @tailwind utilities;
+
+.messageview {
+background-color: #161e2b47;
+}
