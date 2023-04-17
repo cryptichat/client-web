@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 
+# blockchain contract
+public/contract.json
 # testing
 /coverage
 
