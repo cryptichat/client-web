@@ -155,7 +155,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           <MessageItem message={message} index={index}/>
         ))}
       </div>
-      <div className="flex h pb-2 items-center">
+      <div className="flex h pb-2 items-center pr-2 ml-2">
         <form className="inputContainer flex-1 py-2">
           <input
             type="text"
