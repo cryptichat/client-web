@@ -53,14 +53,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   const [groupChatUsers, setGroupChatUsers] = useState([]);
 
   const [CreateConvoHandler] = useMutation(CREATE_CONVO, {
-    onCompleted: ({ createConversation }) => {
-      console.log(createConversation);
-      localStorage.setItem(
-        "conversationId",
-        createConversation.conversation.id
-      );
-      navigate("/");
-    },
+    onCompleted: ({ createConversation }) => {},
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
       toast.error("Error creating conversation, please check console");
@@ -84,7 +77,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
           let otherUsers = convo["users"].filter(
             (user) => user["username"] !== loggedInUsername
           );
-          console.log("other users", otherUsers)
+          console.log("other users", otherUsers);
           return {
             id: index,
             user: otherUsers[0].username,
