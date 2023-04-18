@@ -40,15 +40,6 @@ const GET_CONVO = gql`
   }
 `;
 
-const GET_USERS = gql`
-  query ConversationParticipants($conversationId: Int!, $token: String!) {
-    conversationParticipants(conversationId: $conversationId, token: $token) {
-      username
-      publicKey
-    }
-  }
-`;
-
 export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   const loggedInUsername = localStorage.getItem("dsmessenger-username");
   let token = localStorage.getItem("auth-token");
@@ -73,16 +64,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
       toast.error("Error creating conversation, please check console");
-    },
-  });
-
-  const [GetUsers] = useLazyQuery(GET_USERS, {
-    fetchPolicy: "cache-and-network",
-    onCompleted: (GetUsers) => {},
-    notifyOnNetworkStatusChange: true,
-    onError: (graphQLErrors) => {
-      console.error(graphQLErrors);
-      toast.error("Internal error, please check console");
     },
   });
 
@@ -113,42 +94,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
       );
     }
   }, [conv_data]);
-
-  // useEffect(() => {
-  //   async function func() {
-  //     if (conv_data) {
-  //       for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
-  //         const res = await GetUsers({
-  //           variables: {
-  //             conversationId: conv_data["conversationsByUser"][i],
-  //             token: token,
-  //           },
-  //           fetchPolicy: "cache-and-network",
-  //           notifyOnNetworkStatusChange: true,
-  //         });
-
-  //         // skip adding convo to array if it already exists
-  //         if (
-  //           userConversations.filter(
-  //             (convo) => convo.conv_id === conv_data["conversationsByUser"][i]
-  //           ).length > 0
-  //         ) {
-  //           continue;
-  //         }
-
-  //         setUserConversations([
-  //           ...userConversations,
-  //           {
-  //             id: userConversations.length,
-  //             user: res.data["conversationParticipants"][0]["username"],
-  //             conv_id: conv_data["conversationsByUser"][i],
-  //           },
-  //         ]);
-  //       }
-  //     }
-  //   }
-  //   func();
-  // }, [conv_data]);
 
   function handleLogout() {
     localStorage.removeItem("auth-token");
