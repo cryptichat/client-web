@@ -29,7 +29,14 @@ const CREATE_CONVO = gql`
 
 const GET_CONVO = gql`
   query ConversationsByUser($nConversations: Int!, $token: String!) {
-    conversationsByUser(nConversations: $nConversations, token: $token)
+    me(token: $token) {
+      conversations(nConversations: $nConversations, token: $token) {
+        id
+        users {
+          username
+        }
+      }
+    }
   }
 `;
 
@@ -71,7 +78,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
 
   const [GetUsers] = useLazyQuery(GET_USERS, {
     fetchPolicy: "cache-and-network",
-    onCompleted: (GetUsers) => { },
+    onCompleted: (GetUsers) => {},
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
@@ -90,40 +97,58 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   });
 
   useEffect(() => {
-    async function func() {
-      if (conv_data) {
-        for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
-          const res = await GetUsers({
-            variables: {
-              conversationId: conv_data["conversationsByUser"][i],
-              token: token,
-            },
-            fetchPolicy: "cache-and-network",
-            notifyOnNetworkStatusChange: true,
-          });
-
-          // skip adding convo to array if it already exists
-          if (
-            userConversations.filter(
-              (convo) => convo.conv_id === conv_data["conversationsByUser"][i]
-            ).length > 0
-          ) {
-            continue;
-          }
-
-          setUserConversations([
-            ...userConversations,
-            {
-              id: userConversations.length,
-              user: res.data["conversationParticipants"][0]["username"],
-              conv_id: conv_data["conversationsByUser"][i],
-            },
-          ]);
-        }
-      }
+    if (conv_data) {
+      setUserConversations(
+        conv_data["me"]["conversations"].map((convo, index) => {
+          let otherUsers = convo["users"].filter(
+            (user) => user["username"] !== loggedInUsername
+          );
+          console.log("other users", otherUsers)
+          return {
+            id: index,
+            user: otherUsers[0].username,
+            conv_id: convo["id"],
+          };
+        })
+      );
     }
-    func();
   }, [conv_data]);
+
+  // useEffect(() => {
+  //   async function func() {
+  //     if (conv_data) {
+  //       for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
+  //         const res = await GetUsers({
+  //           variables: {
+  //             conversationId: conv_data["conversationsByUser"][i],
+  //             token: token,
+  //           },
+  //           fetchPolicy: "cache-and-network",
+  //           notifyOnNetworkStatusChange: true,
+  //         });
+
+  //         // skip adding convo to array if it already exists
+  //         if (
+  //           userConversations.filter(
+  //             (convo) => convo.conv_id === conv_data["conversationsByUser"][i]
+  //           ).length > 0
+  //         ) {
+  //           continue;
+  //         }
+
+  //         setUserConversations([
+  //           ...userConversations,
+  //           {
+  //             id: userConversations.length,
+  //             user: res.data["conversationParticipants"][0]["username"],
+  //             conv_id: conv_data["conversationsByUser"][i],
+  //           },
+  //         ]);
+  //       }
+  //     }
+  //   }
+  //   func();
+  // }, [conv_data]);
 
   function handleLogout() {
     localStorage.removeItem("auth-token");
@@ -173,8 +198,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
         <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>
         <div className="flex items-center space-x-1 mt-1 mr-3">
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addChatOpen && "bg-slate-600" 
-              }`}
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${
+              addChatOpen && "bg-slate-600"
+            }`}
           >
             <BiMessageRoundedAdd
               size={24}
@@ -186,8 +212,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
           </div>
           {/* Add new button to start a group chat */}
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addGroupChatOpen && "bg-slate-600"  
-              }`}
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${
+              addGroupChatOpen && "bg-slate-600"
+            }`}
           >
             <MdGroupAdd
               size={24}
@@ -200,7 +227,11 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
         </div>
       </div>
 
-      <div className={`py-2 mb-2 ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"}`}>
+      <div
+        className={`py-2 mb-2 ${
+          (addChatOpen || addGroupChatOpen) && "bg-neutral-800"
+        }`}
+      >
         {addChatOpen && (
           <>
             <input
@@ -233,7 +264,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
             </a>
           </>
         )}
-
 
         {addGroupChatOpen && (
           <>
