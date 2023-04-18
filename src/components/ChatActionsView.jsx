@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import ConvoListItem from "../components/convoListItem";
 import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
+import { ContractContext } from "../utils/ContractProvider";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import { toast } from "react-toastify";
@@ -41,8 +42,18 @@ const GET_CONVO = gql`
   }
 `;
 
+const GET_USER_PUBLIC_KEY = gql`
+  query UserPublicKey($username: String!) {
+    user(username: $username) {
+      publicKey
+    }
+  }
+`;
+
 export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   let token = localStorage.getItem("auth-token");
+
+  const { web3, contract } = useContext(ContractContext);
 
   const [addChatOpen, setAddChatOpen] = useState(false);
   const [createConvoText, setCreateConvoText] = useState("");
@@ -59,6 +70,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
       toast.error("Error creating conversation, please check console");
     },
   });
+
+  const [getUserPublicKey, { error: key_error }] =
+    useLazyQuery(GET_USER_PUBLIC_KEY);
 
   const {
     loading: conv_loading,
@@ -190,13 +204,48 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                               hover:bg-[#4c1d95] hover:text-white transition duration-200"
               onClick={() => {
                 console.log("add user to convo", createConvoText);
-                CreateConvoHandler({
+                // get the public key of the user
+                getUserPublicKey({
                   variables: {
-                    directMessage: true,
-                    token: localStorage.getItem("auth-token"),
-                    users: [user.username, createConvoText],
-                    keys: ["XXX", "XXX"],
+                    username: createConvoText,
                   },
+                }).then((res) => {
+                  if (!res.loading) {
+                    console.log("other user key", res.data.user.publicKey);
+                    CreateConvoHandler({
+                      variables: {
+                        directMessage: true,
+                        token: localStorage.getItem("auth-token"),
+                        users: [user.username, createConvoText],
+                        keys: [user.publicKey, res.data.user.publicKey],
+                      },
+                    });
+                  }
+                  // verify other user key with smart contract
+                  // TODO: uncomment this once blockchain bug is fixed
+                  //   contract.methods.getKey(createConvoText).call((error, result) => {
+                  //     if (error) {
+                  //       console.error(error);
+                  //       toast.error("Error verifying user encrpytion key");
+                  //       return;
+                  //     }
+                  //     console.log("other user key from contract", result);
+                  //     if (result === res.data.user.publicKey) {
+                  //       // create convo with other user
+                  //       CreateConvoHandler({
+                  //         variables: {
+                  //           directMessage: true,
+                  //           token: localStorage.getItem("auth-token"),
+                  //           users: [user.username, createConvoText],
+                  //           keys: ["XXX", "XXX"],
+                  //         },
+                  //       });
+                  //     } else {
+                  //       toast.error("User key does not match smart contract");
+                  //     }
+                  //   })
+
+                  // }
                 });
               }}
             >
