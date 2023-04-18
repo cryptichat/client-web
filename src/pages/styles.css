@@ -32,42 +32,6 @@ section {
       #171b1f);
 }
 
-.chatcontainer {
-  position: absolute;
-  left: 47%;
-  top: 14.7%;
-  width: 7.5%;
-  height: 15.2%;
-  padding: 50px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-  overflow: hidden;
-  
-}
-
-.chatcontainer::before {
-  content: "";
-  position: absolute;
-  width: 10%;
-  height: 100%;
-  margin-top: 10px;
-  margin-left: -50px;
-
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.4);
-  inset: -10px 100px;
-  background: linear-gradient(310deg,
-      #d2c7fc,
- 
-      #ffffff);
-  transition: 0.5s;
-  animation: animate 3s linear infinite;
-}
-
-.chatcontainer:hover::after {
-  inset: -20px 0px;
-}
-
 .container{
   position: relative;
   border-radius: 50%;
@@ -215,7 +179,15 @@ label {
   outline: none;
 }
 
-.scroll.grow {
+.userblock ul li {
+  margin-bottom: 5px;
+}
+
+.userblock--hidden {
+  display: none;
+}
+
+/* .scroll.grow {
   overflow: hidden;
   height: 85%;
-}
+} */
