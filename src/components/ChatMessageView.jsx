@@ -12,20 +12,15 @@ const GET_MESSAGE = gql`
     $nMessages: Int!
     $token: String!
   ) {
-    messagesByConversation(
-      conversationId: $conversationId
-      nMessages: $nMessages
-      token: $token
-    ) {
-      sender {
-        username
+    conversationById(conversationId: $conversationId, token: $token) {
+      messages(nMessages: $nMessages) {
+        sender {
+          username
+        }
+        timestamp
+        revision
+        content
       }
-      conversation {
-        id
-      }
-      timestamp
-      revision
-      content
     }
   }
 `;
@@ -67,10 +62,13 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [GetMessages] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
+      console.log("poll res", res);
       // sort messages array with most recent message last
-      const sortedMessages = [...res.messagesByConversation].sort((a, b) => {
-        return new Date(a.timestamp) - new Date(b.timestamp);
-      });
+      const sortedMessages = [...res.conversationById.messages].sort(
+        (a, b) => {
+          return new Date(a.timestamp) - new Date(b.timestamp);
+        }
+      );
       console.log("sorted from poll", sortedMessages);
       setActiveMessages(sortedMessages);
     },
@@ -85,7 +83,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [SendMessage] = useMutation(SEND_MESSAGE, {
     variables: {
       content: messageText,
-      conversationId: activeConvo.conv_id,
+      conversationId: parseInt(activeConvo.conv_id),
       token: token,
     },
     onCompleted: (SendMessage) => {},
@@ -102,7 +100,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         console.log("active", activeConvo);
         const res = await GetMessages({
           variables: {
-            conversationId: activeConvo.conv_id,
+            conversationId: parseInt(activeConvo.conv_id),
             nMessages: 10,
             token: token,
           },
@@ -110,8 +108,9 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
+        console.log("messages", res.data);
         // sort messages array with most recent message last
-        const sortedMessages = [...res.data.messagesByConversation].sort(
+        const sortedMessages = [...res.data.conversationById.messages].sort(
           (a, b) => {
             return new Date(a.timestamp) - new Date(b.timestamp);
           }
@@ -143,16 +142,16 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     <div className="messageview flex flex-col w-full lg:w-5/6 h-screen mx-auto my-auto shadow-md">
       {/* Messages */}
       <div className="flex items-center mx-2 my-2 md:my-3.5">
-        {windowWidth < 768 && <div
-          className="p-2 rounded mt-1 mr-2 cursor-pointer hover:bg-slate-600"
-        >
-          <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
-        </div>}
+        {windowWidth < 768 && (
+          <div className="p-2 rounded mt-1 mr-2 cursor-pointer hover:bg-slate-600">
+            <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
+          </div>
+        )}
         <p className="font-black pl-1 text-2xl">{activeConvo.user}</p>
       </div>
       <div className="scroll grow px-4 md:max-h-full max-h-[85%] overflow-scroll">
         {activeMessages.map((message, index) => (
-          <MessageItem message={message} index={index}/>
+          <MessageItem message={message} index={index} />
         ))}
       </div>
       <div className="flex h pb-2 items-center">
