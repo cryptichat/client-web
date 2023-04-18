@@ -3,28 +3,50 @@ import useWindowSize from "../hooks/useWindowSize";
 import ChatActionsView from "../components/ChatActionsView";
 import ChatMessageView from "../components/ChatMessageView";
 import { ToastContainer } from "react-toastify";
+import { useQuery, gql } from "@apollo/client";
 import "react-toastify/dist/ReactToastify.css";
 
 import "./styles.css";
 
+const GET_ME = gql`
+  query me($token: String!) {
+    me(token: $token) {
+      username
+      publicKey
+    }
+  }
+`;
+
 function ChatMain() {
   const size = useWindowSize();
-
   const [activeConvo, setActiveConvo] = useState({});
-  console.log("from chat main", activeConvo);
-  console.log("screen width", size.width < 768);
+  const [currentUser, setCurrentUser] = useState({});
 
+  const { loading, error, data } = useQuery(GET_ME, {
+    variables: { token: localStorage.getItem("auth-token") },
+    onCompleted: (data) => {
+      setCurrentUser(data.me);
+    },
+  });
+
+  console.log(loading, error, data);
   function renderActionsView() {
     return (
       <ChatActionsView
         activeConvo={activeConvo}
         setActiveConvo={setActiveConvo}
+        user={currentUser}
       />
     );
   }
 
   function renderMessageView() {
-    return <ChatMessageView activeConvo={activeConvo} setActiveConvo={setActiveConvo}/>;
+    return (
+      <ChatMessageView
+        activeConvo={activeConvo}
+        setActiveConvo={setActiveConvo}
+      />
+    );
   }
 
   function renderResponsive() {
@@ -43,7 +65,7 @@ function ChatMain() {
   return (
     <div className="flex w-screen main-chat h-screen divide-solid">
       <ToastContainer theme="dark" />
-      {renderResponsive()}
+      {!loading ? renderResponsive() : <h1>Loading...</h1>}
     </div>
   );
 }

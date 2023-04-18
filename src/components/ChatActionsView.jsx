@@ -40,8 +40,7 @@ const GET_CONVO = gql`
   }
 `;
 
-export default function ChatActionsView({ activeConvo, setActiveConvo }) {
-  const loggedInUsername = localStorage.getItem("dsmessenger-username");
+export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   let token = localStorage.getItem("auth-token");
 
   const [addChatOpen, setAddChatOpen] = useState(false);
@@ -75,7 +74,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
       setUserConversations(
         conv_data["me"]["conversations"].map((convo, index) => {
           let otherUsers = convo["users"].filter(
-            (user) => user["username"] !== loggedInUsername
+            (convoUser) => convoUser["username"] !== user.username
           );
           console.log("other users", otherUsers);
           return {
@@ -86,11 +85,10 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
         })
       );
     }
-  }, [conv_data]);
+  }, [conv_data, user]);
 
   function handleLogout() {
     localStorage.removeItem("auth-token");
-    localStorage.removeItem("dsmessenger-username");
     navigate("/login");
   }
 
@@ -118,7 +116,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
       variables: {
         directMessage: false,
         token: localStorage.getItem("auth-token"),
-        users: [loggedInUsername, ...groupChatUsers],
+        users: [user.username, ...groupChatUsers],
         keys: ["XXX", "XXX"], // Replace this with actual encryption keys
       },
     });
@@ -129,6 +127,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
 
   // END Group Convo Creation
 
+  if (conv_loading) return <p>Loading...</p>;
   return (
     <div className="actionview flex flex-col flex-grow lg:max-w-full border border-[#5a5b5c] border-t-0 border-l-0 border-b-0">
       {/* Convo list */}
@@ -192,7 +191,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
                   variables: {
                     directMessage: true,
                     token: localStorage.getItem("auth-token"),
-                    users: [loggedInUsername, createConvoText],
+                    users: [user.username, createConvoText],
                     keys: ["XXX", "XXX"],
                   },
                 });
@@ -268,7 +267,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
             onClick={handleLogout}
           >
             <BiLogOut className="text-[25px] mr-2" />
-            {loggedInUsername}
+            {user.username}
           </p>
         </a>
       </div>
