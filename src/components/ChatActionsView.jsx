@@ -34,6 +34,7 @@ const GET_CONVO = gql`
         id
         users {
           username
+          publicKey
         }
       }
     }
@@ -73,6 +74,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     if (conv_data) {
       setUserConversations(
         conv_data["me"]["conversations"].map((convo, index) => {
+          console.log(convo);
           let otherUsers = convo["users"].filter(
             (convoUser) => convoUser["username"] !== user.username
           );
@@ -81,6 +83,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
             id: index,
             user: otherUsers[0].username,
             conv_id: convo["id"],
+            publicKey: otherUsers[0].publicKey,
           };
         })
       );
