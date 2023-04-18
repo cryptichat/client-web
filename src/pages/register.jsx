@@ -5,21 +5,18 @@ import { IoPersonAddSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
 import lock192 from "./lock192.png";
 import "./styles.css";
-import Add from "../image/profilephoto.png";
 
 const SIGNUP = gql`
   mutation CreateAccount(
     $username: String!
     $email: String!
-    $password1: String!
-    $password2: String!
+    $password: String!
     $publicKey: String!
   ) {
     createAccount(
       username: $username
       email: $email
-      password1: $password1
-      password2: $password2
+      password: $password
       publickey: $publicKey
     ) {
       accessToken
@@ -35,17 +32,29 @@ const containerVariants = {
 
 const titleVariants = {
   hidden: { y: -50, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
 };
 
 const formVariants = {
   hidden: { y: 50, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
 };
 
 const lock192Variants = {
   hidden: { scale: 0, opacity: 0 },
-  visible: { scale: 1, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
 };
 
 function Register() {
@@ -161,7 +170,10 @@ function Register() {
           required
         />
       </div>
-      <div className="propic px-2 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        className="propic px-2 py-2"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
         <div
           className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
                                   text-[#ffffff] rounded-[5px] items-center 
@@ -181,17 +193,22 @@ function Register() {
           type="submit"
           value="Register"
           class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
-          onClick={() =>
-            signupHandler({
-              variables: {
-                username: formState.uname,
-                email: formState.email,
-                password1: formState.pass1,
-                password2: formState.pass2,
-                publicKey: "XXX",
-              },
-            })
-          }
+          onClick={() => {
+            if (formState.pass1 !== formState.pass2) {
+              console.log("Passwords do not match");
+              setErrors([...errors, { message: "Passwords do not match" }]);
+            } else {
+              setErrors([]);
+              signupHandler({
+                variables: {
+                  username: formState.uname,
+                  email: formState.email,
+                  password: formState.pass1,
+                  publicKey: "XXX",
+                },
+              });
+            }
+          }}
         />
       </div>
       <div>
@@ -222,27 +239,31 @@ function Register() {
       exit="exit"
     >
       <div className="logo">
-        <div 
-          className="flex items-center" 
+        <div
+          className="flex items-center"
           style={{ display: "flex", alignItems: "center" }}
         >
-        <div className=" mx-2 my-5 " style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)", borderRadius: 25 }}>
-        <motion.img
-            src={lock192}
-            width="60px"
-            height="59.928px"
-            alt="ChatApp logo"
-            variants={lock192Variants}
-          /></div>
+          <div
+            className=" mx-2 my-5 "
+            style={{
+              boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)",
+              borderRadius: 25,
+            }}
+          >
+            <motion.img
+              src={lock192}
+              width="60px"
+              height="59.928px"
+              alt="ChatApp logo"
+              variants={lock192Variants}
+            />
+          </div>
           <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
-
         </div>
         <div className="regform w-full bg-white rounded-[8px] shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
           <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white ">
-            
-          
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
               Register
             </h1>
@@ -266,6 +287,6 @@ function Register() {
       </div>
     </motion.div>
   );
-};
+}
 
 export default Register;
