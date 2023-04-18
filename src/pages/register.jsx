@@ -7,6 +7,7 @@ import { IoPersonAddSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
 
 import { ContractContext } from "../utils/ContractProvider";
+import lock192 from "./lock192.png";
 
 import "./styles.css";
 
@@ -14,15 +15,13 @@ const SIGNUP = gql`
   mutation CreateAccount(
     $username: String!
     $email: String!
-    $password1: String!
-    $password2: String!
+    $password: String!
     $publicKey: String!
   ) {
     createAccount(
       username: $username
       email: $email
-      password1: $password1
-      password2: $password2
+      password: $password
       publickey: $publicKey
     ) {
       accessToken
@@ -49,6 +48,15 @@ const formVariants = {
   hidden: { y: 50, opacity: 0 },
   visible: {
     y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
+};
+
+const lock192Variants = {
+  hidden: { scale: 0, opacity: 0 },
+  visible: {
+    scale: 1,
     opacity: 1,
     transition: { duration: 0.5, type: "spring", stiffness: 60 },
   },
@@ -89,76 +97,72 @@ function Register() {
   }
 
   async function handleRegister() {
-    try {
-      // Generate key pair
-      const keyPair = await crypto.subtle.generateKey(
-        {
-          name: "RSA-OAEP",
-          modulusLength: 2048,
-          publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-          hash: "SHA-256",
-        },
-        true,
-        ["encrypt", "decrypt"]
-      );
+    if (formState.pass1 !== formState.pass2) {
+      console.log("Passwords do not match");
+      setErrors([...errors, { message: "Passwords do not match" }]);
+    } else {
+      try {
+        // Generate key pair
+        const keyPair = await crypto.subtle.generateKey(
+          {
+            name: "RSA-OAEP",
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+            hash: "SHA-256",
+          },
+          true,
+          ["encrypt", "decrypt"]
+        );
 
-      // Export public key
-      const publicKeyDer = await crypto.subtle.exportKey(
-        "spki",
-        keyPair.publicKey
-      );
-      const publicKeyPem = arrayBufferToBase64(publicKeyDer);
+        // Export public key
+        const publicKeyDer = await crypto.subtle.exportKey(
+          "spki",
+          keyPair.publicKey
+        );
+        const publicKeyPem = arrayBufferToBase64(publicKeyDer);
 
-      // Export private key
-      const privateKeyJwk = await crypto.subtle.exportKey(
-        "jwk",
-        keyPair.privateKey
-      );
+        // Export private key
+        const privateKeyJwk = await crypto.subtle.exportKey(
+          "jwk",
+          keyPair.privateKey
+        );
 
-      // Sign up
-      await signupHandler({
-        variables: {
-          username: formState.uname,
-          email: formState.email,
-          password1: formState.pass1,
-          password2: formState.pass2,
-          publicKey: publicKeyPem,
-        },
-      });
+        // Sign up
+        await signupHandler({
+          variables: {
+            username: formState.uname,
+            email: formState.email,
+            password: formState.pass1,
+            publicKey: publicKeyPem,
+          },
+        });
 
-      console.log("Account created successfully");
+        console.log("Account created successfully");
 
-      // get private key from contract
-      const contractPrivateKey = await contract.methods.getKey(formState.uname).call();
-      if (contractPrivateKey !== publicKeyPem) {
-        alert("Blockchain integrity check failed. Please try again later.");
+        // Generate AES-GCM key
+        const aesGcmKey = await crypto.subtle.generateKey(
+          { name: "AES-GCM", length: 256 },
+          true,
+          ["wrapKey", "unwrapKey"]
+        );
+
+        // Export the private key as a wrapped key
+        const wrappedPrivateKey = await crypto.subtle.wrapKey(
+          "pkcs8",
+          keyPair.privateKey, // Pass the actual CryptoKey object here
+          aesGcmKey,
+          { name: "AES-GCM", iv: crypto.getRandomValues(new Uint8Array(12)) }
+        );
+
+        // Store the wrapped private key in local storage
+        localStorage.setItem(
+          "privateKey",
+          arrayBufferToBase64(wrappedPrivateKey)
+        );
+        console.log("Private key stored securely in local storage");
+      } catch (error) {
+        console.error(error);
       }
-
-      console.log("key from blockchain: ", contractPrivateKey);
-
-      // Generate AES-GCM key
-      const aesGcmKey = await crypto.subtle.generateKey(
-        { name: "AES-GCM", length: 256 },
-        true,
-        ["wrapKey", "unwrapKey"]
-      );
-
-      // Export the private key as a wrapped key
-      const wrappedPrivateKey = await crypto.subtle.wrapKey(
-        "pkcs8",
-        keyPair.privateKey, // Pass the actual CryptoKey object here
-        aesGcmKey,
-        { name: "AES-GCM", iv: crypto.getRandomValues(new Uint8Array(12)) }
-      );
-
-      // Store the wrapped private key in local storage
-      localStorage.setItem(
-        "privateKey",
-        arrayBufferToBase64(wrappedPrivateKey)
-      );
-      console.log("Private key stored securely in local storage");
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -174,7 +178,7 @@ function Register() {
         </label>
         <input
           type="text"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="uname"
           value={formState.uname}
           onChange={(e) =>
@@ -195,7 +199,7 @@ function Register() {
         </label>
         <input
           type="email"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="email"
           value={formState.email}
           onChange={(e) =>
@@ -216,7 +220,7 @@ function Register() {
         </label>
         <input
           type="password"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="pass1"
           value={formState.pass1}
           onChange={(e) =>
@@ -237,7 +241,7 @@ function Register() {
         </label>
         <input
           type="password"
-          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="pass2"
           value={formState.pass2}
           onChange={(e) =>
@@ -255,7 +259,7 @@ function Register() {
       >
         <div
           className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
-                                  text-[#ffffff] rounded-[10px] items-center 
+                                  text-[#ffffff] rounded-[5px] items-center 
                                     hover:bg-[#000000] hover:text-white transition duration-200"
         >
           <input style={{ display: "none" }} type="file" id="file" />
@@ -301,27 +305,52 @@ function Register() {
       animate="visible"
       exit="exit"
     >
-      <div className="login-form w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-        <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2">
-            Register
+      <div className="logo">
+        <div
+          className="flex items-center"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <div
+            className=" mx-2 my-5 "
+            style={{
+              boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)",
+              borderRadius: 25,
+            }}
+          >
+            <motion.img
+              src={lock192}
+              width="60px"
+              height="59.928px"
+              alt="ChatApp logo"
+              variants={lock192Variants}
+            />
+          </div>
+          <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+            CrypticChat
           </h1>
         </div>
-        {isSubmitted ? (
-          <motion.div>
-            User is successfully registered
-            <div className="button-container">
-              <button
-                onClick={() => navigate("/")}
-                class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Continue
-              </button>
-            </div>
-          </motion.div>
-        ) : (
-          renderForm
-        )}
+        <div className="regform w-full bg-white rounded-[8px] shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
+          <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white ">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
+              Register
+            </h1>
+          </div>
+          {isSubmitted ? (
+            <motion.div>
+              User is successfully registered
+              <div className="button-container">
+                <button
+                  onClick={() => navigate("/")}
+                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Continue
+                </button>
+              </div>
+            </motion.div>
+          ) : (
+            renderForm
+          )}
+        </div>
       </div>
     </motion.div>
   );

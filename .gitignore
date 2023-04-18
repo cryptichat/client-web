@@ -5,7 +5,7 @@
 /.pnp
 .pnp.js
 
-# keys for blockchain
+# blockchain contract
 public/contract.json
 
 # testing
