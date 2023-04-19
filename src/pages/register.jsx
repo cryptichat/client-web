@@ -7,7 +7,7 @@ import { IoPersonAddSharp } from "react-icons/io5";
 import "./styles.css";
 // import Add from "../image/profilephoto.png";
 
-const SIGNUP = gql`
+export const SIGNUP = gql`
   mutation CreateAccount(
     $username: String!
     $email: String!
@@ -193,10 +193,11 @@ function Register() {
                 email: formState.email,
                 password1: formState.pass1,
                 password2: formState.pass2,
-                publicKey: "XXX",
+                publicKey: "XXXt",
               },
             })
           }
+          data-testid="register-button"
         />
       </div>
       <div>
@@ -241,7 +242,7 @@ function Register() {
             alt="ChatApp logo"
             variants={lock192Variants}
           /></div> */}
-          <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+          <h1 className=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
 
@@ -250,7 +251,7 @@ function Register() {
           <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white ">
             
           
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
               Register
             </h1>
           </div>
