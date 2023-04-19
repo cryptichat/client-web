@@ -5,7 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 h1 {
   font-family: Roboto;
 }
@@ -26,32 +25,32 @@ section {
   height: 100vh;
   width: 100vw;
   font-family: "Roboto", Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  background: linear-gradient(45deg,
-      #8b5cf6,
-      #1d2227,
-      #171b1f);
+  background: linear-gradient(45deg, #8b5cf6, #1d2227, #171b1f);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-.container{
+.container {
   position: relative;
   border-radius: 50%;
   width: 100px;
   height: 100px;
   border-radius: 50px;
   box-shadow: 0 2px 0.3 rgba(0, 0, 0, 0.3);
-  }
+  background: linear-gradient(45deg, #58629c, #8b5cf6);
+}
 
-  .regform{
-    width: 300px;
-  }
-
-@keyframes animate {
-  0% {
+@keyframes spin {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+
+  to {
     transform: rotate(360deg);
   }
+}
+
+.regform {
+  width: 300px;
 }
 
 input[type="text"],
@@ -71,14 +70,15 @@ button {
   color: #fff;
   padding: 10px 20px;
   font-family: "Roboto", sans-serif;
+  transition: all 0.2s ease-in-out;
 }
 
-input[type="submit"],
+input[type="submit"]:hover,
 button:hover {
-  background: #8b5cf6;
+  background: #444c72;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease-in-out;
 }
-
-
 
 .button-container {
   display: flex;
@@ -88,7 +88,7 @@ button:hover {
 .login-form {
   background-color: white;
   padding: 2rem;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
   font-family: "Roboto", sans-serif;
 }
 
@@ -100,6 +100,7 @@ button:hover {
   margin-top: 8px;
   color: red;
   font-size: 12px;
+  font-family: "Roboto", sans-serif;
 }
 
 .title {
@@ -132,12 +133,22 @@ button:hover {
   width: 30px;
   height: 30px;
   border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.imgprofile:hover {
+  transform: scale(1.2);
 }
 
 .sendpic {
   width: 30px;
   height: 30px;
   border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.sendpic:hover {
+  transform: scale(1.2);
 }
 
 label {
@@ -179,6 +190,25 @@ label {
   outline: none;
 }
 
+.userblock {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #8b5cf6 transparent;
+}
+
+.userblock::-webkit-scrollbar {
+  width: 10px;
+}
+
+.userblock::-webkit-scrollbar-thumb {
+  background-color: #8b5cf6;
+  border-radius: 5px;
+}
+
+.userblock::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
 .userblock ul li {
   margin-bottom: 5px;
 }
@@ -187,7 +217,12 @@ label {
   display: none;
 }
 
-/* .scroll.grow {
-  overflow: hidden;
-  height: 85%;
-} */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.custom-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
