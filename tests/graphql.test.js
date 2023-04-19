@@ -48,9 +48,9 @@ describe("SIGNUP mutation", () => {
     
       expect(data.createAccount.accessToken).toBeDefined();
     });
-  
+
+    // not matching passwords error tests
     it("should throw 'The passwords do not match' error", async () => {
-      
     
       await expect(client.mutate({
         mutation: createUser,
@@ -66,8 +66,7 @@ describe("SIGNUP mutation", () => {
       });
     });
 
-    it("should throw 'This email has already been registered' error", async () => {
-      
+    it("should throw 'This email has already been registered' error", async () => { 
      
       await expect(client.mutate({
         mutation: createUser,
@@ -86,7 +85,6 @@ describe("SIGNUP mutation", () => {
 
     it("should throw 'This username has already been taken' error", async () => {
       
-      
       await expect(client.mutate({
         mutation: createUser,
         variables: {
@@ -103,7 +101,6 @@ describe("SIGNUP mutation", () => {
     });
 
     it("should throw 'Username must be between 3 and 32 characters' error using public key", async () => {
-      
    
       await expect(client.mutate({
         mutation: createUser,
@@ -115,7 +112,7 @@ describe("SIGNUP mutation", () => {
           publickey: "XXX",
         },
       })).rejects.toThrowError("Username must be between 3 and 32 characters").catch((err) => {
-    
+  
       });
 
     });
