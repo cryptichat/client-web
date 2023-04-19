@@ -66,7 +66,6 @@ function Register() {
   const navigate = useNavigate();
   const { web3, contract } = useContext(ContractContext);
 
-  
   // React States
   const [errors, setErrors] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -160,6 +159,12 @@ function Register() {
           arrayBufferToBase64(wrappedPrivateKey)
         );
         console.log("Private key stored securely in local storage");
+
+        // Export the AES-GCM key and its IV
+        const aesGcmKeyJwk = await crypto.subtle.exportKey("jwk", aesGcmKey);
+
+        // Store the AES-GCM key and its IV in local storage
+        localStorage.setItem("aesGcmKey", JSON.stringify(aesGcmKeyJwk));
       } catch (error) {
         console.error(error);
       }
