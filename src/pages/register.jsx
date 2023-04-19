@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 import { IoPersonAddSharp } from "react-icons/io5";
-import { motion } from "framer-motion";
-import lock192 from "./lock192.png";
+// import { motion } from "framer-motion";
+// import lock192 from "./lock192.png";
 import "./styles.css";
-import Add from "../image/profilephoto.png";
+// import Add from "../image/profilephoto.png";
 
 const SIGNUP = gql`
   mutation CreateAccount(
@@ -49,7 +49,7 @@ const lock192Variants = {
 };
 
 function Register() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // React States
   const [errors, setErrors] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -66,7 +66,7 @@ function Register() {
         setIsSubmitted(true);
         localStorage.setItem("auth-token", createAccount.accessToken);
         localStorage.setItem("dsmessenger-username", formState.uname); // TODO: replace localStorage call with global state management
-        navigate("/");
+        // navigate("/");
       }
     },
     onError: ({ graphQLErrors }) => {
@@ -79,15 +79,16 @@ function Register() {
     <div className="form px-2 mx-3 rounded-[10px]">
       <div className="input-container">
         <label
-          for="text"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="username-input"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
-          Username{" "}
+          Username
         </label>
         <input
           type="text"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="uname"
+          id="username-input"
           value={formState.uname}
           onChange={(e) =>
             setFormState({
@@ -98,16 +99,18 @@ function Register() {
           required
         />
       </div>
+
       <div className="input-container">
         <label
-          for="email"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
-          Email{" "}
+          Email
         </label>
         <input
           type="email"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          id="email"
           name="email"
           value={formState.email}
           onChange={(e) =>
@@ -121,14 +124,15 @@ function Register() {
       </div>
       <div className="input-container">
         <label
-          for="password"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
-          Password{" "}
+          Password
         </label>
         <input
           type="password"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          id="password"
           name="pass1"
           value={formState.pass1}
           onChange={(e) =>
@@ -142,14 +146,15 @@ function Register() {
       </div>
       <div className="input-container">
         <label
-          for="password"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="confirm-password"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
-          Confirm Password{" "}
+          Confirm Password
         </label>
         <input
           type="password"
-          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          id="confirm-password"
           name="pass2"
           value={formState.pass2}
           onChange={(e) =>
@@ -180,7 +185,7 @@ function Register() {
         <input
           type="submit"
           value="Register"
-          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
+          className="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
           onClick={() =>
             signupHandler({
               variables: {
@@ -200,40 +205,42 @@ function Register() {
         ))}
       </div>
 
-      <p class="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p className="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <a
           href="#"
-          class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-          onClick={() => navigate("/login")}
+          className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+          // onClick={() => navigate("/login")}
+          
         >
           Login
         </a>
       </p>
     </div>
+   
   );
 
   return (
-    <motion.div
-      className="app"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
+    // <motion.div
+    //   className="app"
+    //   variants={containerVariants}
+    //   initial="hidden"
+    //   animate="visible"
+    //   exit="exit"
+    // >
       <div className="logo">
         <div 
           className="flex items-center" 
           style={{ display: "flex", alignItems: "center" }}
         >
-        <div className=" mx-2 my-5 " style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)", borderRadius: 25 }}>
+        {/* <div className=" mx-2 my-5 " style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)", borderRadius: 25 }}>
         <motion.img
             src={lock192}
             width="60px"
             height="59.928px"
             alt="ChatApp logo"
             variants={lock192Variants}
-          /></div>
+          /></div> */}
           <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
@@ -248,24 +255,28 @@ function Register() {
             </h1>
           </div>
           {isSubmitted ? (
-            <motion.div>
+            // <motion.div>
+            <div>
               User is successfully registered
               <div className="button-container">
                 <button
-                  onClick={() => navigate("/")}
-                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  // onClick={() => navigate("/")}
+                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Continue
                 </button>
               </div>
-            </motion.div>
+            {/* </motion.div> */}
+            </div>
           ) : (
             renderForm
           )}
         </div>
       </div>
-    </motion.div>
+ 
+    // </motion.div>
   );
+
 };
 
 export default Register;
