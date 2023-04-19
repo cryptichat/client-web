@@ -17,6 +17,12 @@ function MessageItem({ message, index }) {
     "mr-auto": !isSentByCurrentUser,
   });
 
+  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+
+  const messageDate = new Date(message.timestamp).toLocaleDateString(undefined, dateOptions);
+  const messageTime = new Date(message.timestamp).toLocaleTimeString(undefined, timeOptions);
+
   return (
     <motion.div
       className={messageClasses}
@@ -27,6 +33,10 @@ function MessageItem({ message, index }) {
     >
       <p className="text-sm text-white">
         <b>{message.sender.username}</b>
+        <br />
+        <span className="text-gray-400 text-xs">
+          {messageDate} at {messageTime}
+        </span>
         <p>{message.content}</p>
       </p>
     </motion.div>
