@@ -45,6 +45,7 @@ function ChatMain() {
       <ChatMessageView
         activeConvo={activeConvo}
         setActiveConvo={setActiveConvo}
+        user={currentUser}
       />
     );
   }
