@@ -1,11 +1,6 @@
-import React from 'react';
-import { render, fireEvent, waitFor, screen, renderHook } from '@testing-library/react';
-import { MockedProvider } from '@apollo/client/testing';
 import '@testing-library/jest-dom/extend-expect';
-import { act } from "react-dom/test-utils";
-import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from "@apollo/client";
-import { useMutation, gql } from "@apollo/client";
-import { GraphQLError } from 'graphql';
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import {  gql } from "@apollo/client";
 import fetch from 'cross-fetch';
 
 const createUser = gql`
@@ -22,41 +17,33 @@ mutation CreateAccount($username: String!, $email: String!, $password1: String!,
 }
 `;
 
-const LOGIN = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      accessToken
-    }
-  }
-`;
-
 describe("Register mutation", () => {
-    const mockAccessToken = "test_access_token";
     
     const client = new ApolloClient({
       link: new HttpLink({ uri: 'http://127.0.0.1:5000/graphql', fetch }),
       cache: new InMemoryCache(),
       onError: (e) => { console.log(e) },
     });
-  
+
+     // create account test
     it("should return an access token on successful register", async () => {
    
 
       const { data } = await client.mutate({
         mutation: createUser,
         variables: {
-          username: "user4",
-          email: "test4@example.com",
+          username: "test6",
+          email: "test6@example.com",
           password1: "password1",
           password2: "password1",
-          publickey: "test4",
+          publickey: "test6",
         },
       });
     
       expect(data.createAccount.accessToken).toBeDefined();
     });
 
-    // not matching passwords error tests
+    // not matching passwords error test
     it("should throw 'The passwords do not match' error", async () => {
     
       await expect(client.mutate({
@@ -73,6 +60,7 @@ describe("Register mutation", () => {
       });
     });
 
+     // email has already been registered error test
     it("should throw 'This email has already been registered' error", async () => { 
      
       await expect(client.mutate({
@@ -90,6 +78,7 @@ describe("Register mutation", () => {
 
     });
 
+     // username has already been taken error test
     it("should throw 'This username has already been taken' error", async () => {
       
       await expect(client.mutate({
@@ -107,6 +96,7 @@ describe("Register mutation", () => {
 
     });
 
+     // Username characters error test
     it("should throw 'Username must be between 3 and 32 characters' error using public key", async () => {
    
       await expect(client.mutate({
