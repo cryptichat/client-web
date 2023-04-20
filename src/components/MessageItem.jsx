@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import classNames from "classnames";
 
-function MessageItem({ message, index }) {
+function MessageItem({ message, index, lastMessageFromUser }) {
   const isSentByCurrentUser =
     message.sender.username === localStorage.getItem("dsmessenger-username");
 
@@ -17,11 +17,21 @@ function MessageItem({ message, index }) {
     "mr-auto": !isSentByCurrentUser,
   });
 
-  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
   const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
 
   const messageDate = new Date(message.timestamp).toLocaleDateString(undefined, dateOptions);
   const messageTime = new Date(message.timestamp).toLocaleTimeString(undefined, timeOptions);
+
+  let messageInfo = null;
+
+  if (!lastMessageFromUser || message.sender.username !== lastMessageFromUser.sender.username) {
+    messageInfo = (
+      <span className="text-gray-300 text-xs pl-5" >
+        {messageDate} at {messageTime}
+      </span>
+    );
+  }
 
   return (
     <motion.div
@@ -33,10 +43,8 @@ function MessageItem({ message, index }) {
     >
       <p className="text-sm text-white">
         <b>{message.sender.username}</b>
+        {messageInfo}
         <br />
-        <span className="text-gray-400 text-xs">
-          {messageDate} at {messageTime}
-        </span>
         <p>{message.content}</p>
       </p>
     </motion.div>
