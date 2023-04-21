@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
-import Register, { SIGNUP } from '../src/pages/register.jsx';
+import Register from '../src/pages/register.jsx';
 import '@testing-library/jest-dom/extend-expect';
-import { GraphQLError } from 'graphql';
+
 describe('Register component', () => {
   test('renders the register form', () => {
     render(
