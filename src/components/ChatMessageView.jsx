@@ -5,6 +5,7 @@ import { BsFillSendFill } from "react-icons/bs";
 import { BiArrowBack } from "react-icons/bi";
 import { CgAttachment } from "react-icons/cg";
 import useWindowSize from "../hooks/useWindowSize";
+import { decryptSymmetricKey, encryptText, decryptText } from "../utils/crypto";
 
 const GET_MESSAGE = gql`
   query MessagesByConversation(
@@ -54,25 +55,20 @@ const SEND_MESSAGE = gql`
 export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   let token = localStorage.getItem("auth-token");
 
+  console.log("active convo", activeConvo);
   const { width: windowWidth } = useWindowSize();
 
   const [messageText, setMessageText] = useState("");
+  const [symmetricKey, setSymmetricKey] = useState({});
   const [activeMessages, setActiveMessages] = useState([]);
 
   const [GetMessages] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
       console.log("poll res", res);
-      // sort messages array with most recent message last
-      const sortedMessages = [...res.conversationById.messages].sort(
-        (a, b) => {
-          return new Date(a.timestamp) - new Date(b.timestamp);
-        }
-      );
-      console.log("sorted from poll", sortedMessages);
-      setActiveMessages(sortedMessages);
+      processMessages(res.conversationById.messages);
     },
-    pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
+    // pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
@@ -81,11 +77,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   });
 
   const [SendMessage] = useMutation(SEND_MESSAGE, {
-    variables: {
-      content: messageText,
-      conversationId: parseInt(activeConvo.conv_id),
-      token: token,
-    },
     onCompleted: (SendMessage) => {},
     notifyOnNetworkStatusChange: true,
     onError: (err) => {
@@ -94,10 +85,38 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     },
   });
 
+  function processMessages(messages) {
+    const sortedMessages = [...messages].sort((a, b) => {
+      return new Date(a.timestamp) - new Date(b.timestamp);
+    });
+    let decryptedMessages = [];
+    console.log("symmetirc processed", symmetricKey);
+    for (let message of sortedMessages) {
+      decryptText(message.content, symmetricKey).then((res) => {
+        decryptedMessages.push({
+          ...message,
+          content: res,
+        });
+      });
+    }
+    console.log("sorted from poll", sortedMessages);
+    setActiveMessages(decryptedMessages);
+  }
+
   useEffect(() => {
     async function func() {
       if (activeConvo) {
         console.log("active", activeConvo);
+
+        // decrypt symmetric key
+        const decryptedSymmetricKey = await decryptSymmetricKey(
+          activeConvo.aesKey,
+          localStorage.getItem("privateKey")
+        );
+
+        console.log("decrypted symmetric key", decryptedSymmetricKey);
+        setSymmetricKey(decryptedSymmetricKey);
+
         const res = await GetMessages({
           variables: {
             conversationId: parseInt(activeConvo.conv_id),
@@ -108,31 +127,38 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
-        console.log("messages", res.data);
-        // sort messages array with most recent message last
-        const sortedMessages = [...res.data.conversationById.messages].sort(
-          (a, b) => {
-            return new Date(a.timestamp) - new Date(b.timestamp);
-          }
-        );
-        console.log("sorted", sortedMessages);
-        setActiveMessages(sortedMessages);
+        // console.log("messages", res.data);
+        // processMessages(res.data.conversationById.messages);
       }
     }
     func();
   }, [activeConvo]);
 
-  function handleSendMessage() {
+  useEffect(() => {
+    if (Object.keys(symmetricKey).length > 0) {
+      processMessages(activeConvo.messages); // hack until i figure out how to query a single conversation
+    }
+  }, [symmetricKey]);
+
+  async function handleSendMessage() {
     console.log("message to send: " + messageText);
     if (messageText === "") {
       return;
     }
 
-    SendMessage().then((res) => {
+    // encrypt message
+    const encryptedMessage = await encryptText(messageText, symmetricKey);
+    SendMessage({
+      variables: {
+        content: encryptedMessage,
+        conversationId: parseInt(activeConvo.conv_id),
+        token: token,
+      },
+    }).then((res) => {
       console.log("sent message", res.data);
       setActiveMessages([
         ...activeMessages,
-        res.data["createMessage"]["message"],
+        { ...res.data["createMessage"]["message"], content: messageText },
       ]);
       setMessageText("");
     });
