@@ -34,6 +34,14 @@ const GET_CONVO = gql`
     me(token: $token) {
       conversations(nConversations: $nConversations, token: $token) {
         id
+        messages(nMessages: 10) {
+          sender {
+            username
+          }
+          timestamp
+          revision
+          content
+        }
         aesKey(token: $token)
         users {
           username
@@ -100,6 +108,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
             user: otherUsers[0].username,
             conv_id: convo["id"],
             aesKey: convo["aesKey"],
+            messages: convo["messages"],
             publicKey: otherUsers[0].publicKey,
           };
         })

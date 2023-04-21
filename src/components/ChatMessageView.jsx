@@ -89,10 +89,20 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     const sortedMessages = [...messages].sort((a, b) => {
       return new Date(a.timestamp) - new Date(b.timestamp);
     });
+    let decryptedMessages = [];
+    console.log("symmetirc processed", symmetricKey);
+    for (let message of sortedMessages) {
+      decryptText(message.content, symmetricKey).then((res) => {
+        decryptedMessages.push({
+          ...message,
+          content: res,
+        });
+      });
+    }
     console.log("sorted from poll", sortedMessages);
-    setActiveMessages(sortedMessages);
+    setActiveMessages(decryptedMessages);
   }
-  
+
   useEffect(() => {
     async function func() {
       if (activeConvo) {
@@ -117,12 +127,18 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
-        console.log("messages", res.data);
-        processMessages(res.data.conversationById.messages);
+        // console.log("messages", res.data);
+        // processMessages(res.data.conversationById.messages);
       }
     }
     func();
   }, [activeConvo]);
+
+  useEffect(() => {
+    if (Object.keys(symmetricKey).length > 0) {
+      processMessages(activeConvo.messages); // hack until i figure out how to query a single conversation
+    }
+  }, [symmetricKey]);
 
   async function handleSendMessage() {
     console.log("message to send: " + messageText);
@@ -142,7 +158,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       console.log("sent message", res.data);
       setActiveMessages([
         ...activeMessages,
-        res.data["createMessage"]["message"],
+        { ...res.data["createMessage"]["message"], content: messageText },
       ]);
       setMessageText("");
     });
