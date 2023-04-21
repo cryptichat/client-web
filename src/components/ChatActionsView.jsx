@@ -7,6 +7,7 @@ import { BiLogOut } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { BiGroup } from "react-icons/bi";
 import { MdGroupAdd } from "react-icons/md";
+import { generateSymmetricKey, encryptSymmetricKey } from "../utils/crypto";
 
 const CREATE_CONVO = gql`
   mutation CreateConversation(
@@ -202,51 +203,38 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-1
                             text-[#ffffff] rounded-[10px] items-center gap-2
                               hover:bg-[#4c1d95] hover:text-white transition duration-200"
-              onClick={() => {
-                console.log("add user to convo", createConvoText);
-                // get the public key of the user
-                getUserPublicKey({
-                  variables: {
-                    username: createConvoText,
-                  },
-                }).then((res) => {
-                  if (!res.loading) {
-                    console.log("other user key", res.data.user.publicKey);
-                    CreateConvoHandler({
-                      variables: {
-                        directMessage: true,
-                        token: localStorage.getItem("auth-token"),
-                        users: [user.username, createConvoText],
-                        keys: [user.publicKey, res.data.user.publicKey],
-                      },
-                    });
-                  }
-                  // verify other user key with smart contract
-                  // TODO: uncomment this once blockchain bug is fixed
-                  //   contract.methods.getKey(createConvoText).call((error, result) => {
-                  //     if (error) {
-                  //       console.error(error);
-                  //       toast.error("Error verifying user encrpytion key");
-                  //       return;
-                  //     }
-                  //     console.log("other user key from contract", result);
-                  //     if (result === res.data.user.publicKey) {
-                  //       // create convo with other user
-                  //       CreateConvoHandler({
-                  //         variables: {
-                  //           directMessage: true,
-                  //           token: localStorage.getItem("auth-token"),
-                  //           users: [user.username, createConvoText],
-                  //           keys: ["XXX", "XXX"],
-                  //         },
-                  //       });
-                  //     } else {
-                  //       toast.error("User key does not match smart contract");
-                  //     }
-                  //   })
-
-                  // }
-                });
+              onClick={async () => {
+                try {
+                  console.log("add user to convo", createConvoText);
+                  // get the public key of the user
+                  const { data } = await getUserPublicKey({
+                    variables: {
+                      username: createConvoText,
+                    },
+                  });
+                  const key = await generateSymmetricKey();
+                  // encrypt symmetric key with own public key
+                  const selfEncryptedSymmetric = await encryptSymmetricKey(
+                    key,
+                    user.publicKey
+                  );
+                  // encrypt symmetric key with other user's public key
+                  const otherEncryptedSymmetric = await encryptSymmetricKey(
+                    key,
+                    data.user.publicKey
+                  );
+                  // create convo
+                  await CreateConvoHandler({
+                    variables: {
+                      directMessage: true,
+                      token: localStorage.getItem("auth-token"),
+                      users: [user.username, createConvoText],
+                      keys: [selfEncryptedSymmetric, otherEncryptedSymmetric],
+                    },
+                  });
+                } catch (error) {
+                  console.error(error);
+                }
               }}
             >
               Start

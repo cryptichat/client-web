@@ -72,7 +72,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       console.log("sorted from poll", sortedMessages);
       setActiveMessages(sortedMessages);
     },
-    pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
+    // pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
