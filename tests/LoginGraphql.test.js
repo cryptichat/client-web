@@ -1,8 +1,4 @@
-import React from 'react';
-import { render, fireEvent, waitFor, screen, renderHook } from '@testing-library/react';
-import { MockedProvider } from '@apollo/client/testing';
 import '@testing-library/jest-dom/extend-expect';
-import { act } from "react-dom/test-utils";
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { gql } from "@apollo/client";
 import fetch from 'cross-fetch';
@@ -28,7 +24,7 @@ describe("Login mutation", () => {
       const { data } = await client.mutate({
         mutation: LOGIN,
         variables: {
-          username: "test5",
+          username: "test1",
           password: "password1",   
         },
       });
@@ -56,7 +52,7 @@ describe("Login mutation", () => {
         await expect(client.mutate({
           mutation: LOGIN,
           variables: {
-              username: "test2",
+              username: "test1",
               password: "password2",   
           },
         })).rejects.toThrowError("Username or Password is incorrect").catch((err) => {

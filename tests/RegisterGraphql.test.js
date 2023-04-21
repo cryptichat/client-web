@@ -25,18 +25,18 @@ describe("Register mutation", () => {
       onError: (e) => { console.log(e) },
     });
 
-     // create account test
+     //create account test
     it("should return an access token on successful register", async () => {
    
 
       const { data } = await client.mutate({
         mutation: createUser,
         variables: {
-          username: "test6",
-          email: "test6@example.com",
+          username: "test1",
+          email: "test1@example.com",
           password1: "password1",
           password2: "password1",
-          publickey: "test6",
+          publickey: "test1",
         },
       });
     
@@ -67,7 +67,7 @@ describe("Register mutation", () => {
         mutation: createUser,
         variables: {
           username: "test",
-          email: "bob@gamil.com",
+          email: "test1@example.com",
           password1: "password1",
           password2: "password1",
           publickey: "XXXtest",
@@ -84,7 +84,7 @@ describe("Register mutation", () => {
       await expect(client.mutate({
         mutation: createUser,
         variables: {
-          username: "bob",
+          username: "test1",
           email: "test@example.com",
           password1: "password1",
           password2: "password1",
