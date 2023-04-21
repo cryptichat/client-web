@@ -46,6 +46,9 @@ describe("Create Message mutation", () => {
       });
     
       expect(data.createMessage.message.sender.username).toBeDefined();
+      expect(data.createMessage.message.timestamp).toBeDefined();
+      expect(data.createMessage.message.revision).toBeDefined();
+      expect(data.createMessage.message.content).toBeDefined();
     });
 
     it("should throw 'This conversation does not exist' error", async () => {
