@@ -18,9 +18,6 @@ const SEND_MESSAGE = gql`
         sender {
           username
         }
-        conversation {
-          id
-        }
         timestamp
         revision
         content
