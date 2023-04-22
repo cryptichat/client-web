@@ -242,7 +242,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       animate="visible"
     >
       {showPrompt && (
-        <div className="p-60">
+        <div className="p-80">
           <div
             className="welcome-prompt"
             style={{
