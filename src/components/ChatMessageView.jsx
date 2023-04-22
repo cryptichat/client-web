@@ -13,14 +13,21 @@ const GET_MESSAGE = gql`
     $nMessages: Int!
     $token: String!
   ) {
-    conversationById(conversationId: $conversationId, token: $token) {
-      messages(nMessages: $nMessages) {
-        sender {
-          username
+    me(token: $token) {
+      conversations(
+        nConversations: 1
+        token: $token
+        conversationId: $conversationId
+      ) {
+        id
+        messages(nMessages: $nMessages) {
+          sender {
+            username
+          }
+          timestamp
+          revision
+          content
         }
-        timestamp
-        revision
-        content
       }
     }
   }
@@ -85,37 +92,38 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     },
   });
 
-  function processMessages(messages) {
+  async function processMessages(messages) {
     const sortedMessages = [...messages].sort((a, b) => {
       return new Date(a.timestamp) - new Date(b.timestamp);
     });
-    let decryptedMessages = [];
-    console.log("symmetirc processed", symmetricKey);
-    for (let message of sortedMessages) {
-      decryptText(message.content, symmetricKey).then((res) => {
+
+    async function decryptMessages() {
+      const decryptedMessages = [];
+
+      for (let message of sortedMessages) {
+        const decryptedContent = await decryptText(
+          message.content,
+          symmetricKey
+        );
         decryptedMessages.push({
           ...message,
-          content: res,
+          content: decryptedContent,
         });
-      });
+      }
+
+      return decryptedMessages;
     }
-    console.log("sorted from poll", sortedMessages);
-    setActiveMessages(decryptedMessages);
+
+    decryptMessages().then((decryptedMessages) => {
+      console.log("decrypted messages", decryptedMessages);
+      setActiveMessages(decryptedMessages);
+    });
   }
 
   useEffect(() => {
     async function func() {
       if (activeConvo) {
         console.log("active", activeConvo);
-
-        // decrypt symmetric key
-        const decryptedSymmetricKey = await decryptSymmetricKey(
-          activeConvo.aesKey,
-          localStorage.getItem("privateKey")
-        );
-
-        console.log("decrypted symmetric key", decryptedSymmetricKey);
-        setSymmetricKey(decryptedSymmetricKey);
 
         const res = await GetMessages({
           variables: {
@@ -127,18 +135,26 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
-        // console.log("messages", res.data);
-        // processMessages(res.data.conversationById.messages);
+        console.log("messages", res.data);
+        await processMessages(res.data.me.conversations[0].messages);
       }
     }
     func();
-  }, [activeConvo]);
+  }, [symmetricKey]);
 
   useEffect(() => {
-    if (Object.keys(symmetricKey).length > 0) {
-      processMessages(activeConvo.messages); // hack until i figure out how to query a single conversation
+    async function decryptKey() {
+      // decrypt symmetric key
+      const decryptedSymmetricKey = await decryptSymmetricKey(
+        activeConvo.aesKey,
+        localStorage.getItem("privateKey")
+      );
+
+      console.log("decrypted symmetric key", decryptedSymmetricKey);
+      setSymmetricKey(decryptedSymmetricKey);
     }
-  }, [symmetricKey]);
+    decryptKey();
+  }, [activeConvo]);
 
   async function handleSendMessage() {
     console.log("message to send: " + messageText);
