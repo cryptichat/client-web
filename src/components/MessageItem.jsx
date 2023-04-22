@@ -15,6 +15,17 @@ function MessageItem({ message, index, lastMessageFromUser }) {
     "rounded-lg": true,
     "ml-auto": isSentByCurrentUser,
     "mr-auto": !isSentByCurrentUser,
+    "relative": true,
+    "pr-10": true,
+  });
+
+  const arrowClasses = classNames({
+    "absolute top-0": true,
+    "w-10 h-19": true,
+    "border-t-4 border-r-4 border-[#8b5cf6]": isSentByCurrentUser,
+    "border-neutral-800": !isSentByCurrentUser,
+    "right-0": isSentByCurrentUser,
+    "left-0": !isSentByCurrentUser,
   });
 
   const dateOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -41,11 +52,12 @@ function MessageItem({ message, index, lastMessageFromUser }) {
       exit={{ scale: 0 }}
       transition={{ duration: 0.3 }}
     >
+      <div className={arrowClasses}></div>
       <p className="text-sm text-white">
         <b>{message.sender.username}</b>
         {messageInfo}
         <br />
-        <p>{message.content}</p>
+        <span>{message.content}</span>
       </p>
     </motion.div>
   );
