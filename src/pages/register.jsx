@@ -66,7 +66,6 @@ function Register() {
   const navigate = useNavigate();
   const { web3, contract } = useContext(ContractContext);
 
-  
   // React States
   const [errors, setErrors] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -122,8 +121,8 @@ function Register() {
         const publicKeyPem = arrayBufferToBase64(publicKeyDer);
 
         // Export private key
-        const privateKeyJwk = await crypto.subtle.exportKey(
-          "jwk",
+        const privateKeyDer = await crypto.subtle.exportKey(
+          "pkcs8",
           keyPair.privateKey
         );
 
@@ -139,26 +138,8 @@ function Register() {
 
         console.log("Account created successfully");
 
-        // Generate AES-GCM key
-        const aesGcmKey = await crypto.subtle.generateKey(
-          { name: "AES-GCM", length: 256 },
-          true,
-          ["wrapKey", "unwrapKey"]
-        );
-
-        // Export the private key as a wrapped key
-        const wrappedPrivateKey = await crypto.subtle.wrapKey(
-          "pkcs8",
-          keyPair.privateKey, // Pass the actual CryptoKey object here
-          aesGcmKey,
-          { name: "AES-GCM", iv: crypto.getRandomValues(new Uint8Array(12)) }
-        );
-
-        // Store the wrapped private key in local storage
-        localStorage.setItem(
-          "privateKey",
-          arrayBufferToBase64(wrappedPrivateKey)
-        );
+        // Store the private key in local storage
+        localStorage.setItem("privateKey", arrayBufferToBase64(privateKeyDer));
         console.log("Private key stored securely in local storage");
       } catch (error) {
         console.error(error);
