@@ -271,9 +271,9 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               Welcome to Cryptic Chat!
             </motion.p>
             <motion.p variants={itemVariants}>
-              Click on a user or create a conversation by clicking on either the
+              Click on a user or create a conversation by clicking on either the individual messaging icon
               <span className="inline-flex items-center">
-                individual messaging icon{" "}
+                {" "}
                 <BiMessageRoundedAdd className="mr-2 ml-2 text-[25px] text-white" />
               </span>
               <span className="inline-flex items-center">
