@@ -1,0 +1,1 @@
+module.exports = '../src/pages/lock192.png'; 
