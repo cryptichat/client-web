@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import classNames from "classnames";
+import { formatDistanceToNow } from 'date-fns';
 
 function MessageItem({ message, index, lastMessageFromUser }) {
   const isSentByCurrentUser =
@@ -16,12 +17,13 @@ function MessageItem({ message, index, lastMessageFromUser }) {
     "ml-auto": isSentByCurrentUser,
     "mr-auto": !isSentByCurrentUser,
     "relative": true,
-    "pr-10": true,
+    "pr-2": true,
+    "flex flex-col justify-between": true,
   });
 
   const arrowClasses = classNames({
     "absolute top-0": true,
-    "w-10 h-19": true,
+    "w-0 h-0": true,
     "border-t-4 border-r-4 border-[#8b5cf6]": isSentByCurrentUser,
     "border-neutral-800": !isSentByCurrentUser,
     "right-0": isSentByCurrentUser,
@@ -38,7 +40,7 @@ function MessageItem({ message, index, lastMessageFromUser }) {
 
   if (!lastMessageFromUser || message.sender.username !== lastMessageFromUser.sender.username) {
     messageInfo = (
-      <span className="text-gray-300 text-xs pl-5" >
+      <span className="text-gray-300 text-xs pl-5">
         {messageDate} at {messageTime}
       </span>
     );
@@ -52,13 +54,22 @@ function MessageItem({ message, index, lastMessageFromUser }) {
       exit={{ scale: 0 }}
       transition={{ duration: 0.3 }}
     >
+
       <div className={arrowClasses}></div>
-      <p className="text-sm text-white">
-        <b>{message.sender.username}</b>
-        {messageInfo}
-        <br />
+
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-white">
+          <b>{message.sender.username}</b>
+        </p>
+        {messageInfo && (
+          <p className="text-sm text-gray-300">{messageInfo}</p>
+        )}
+      </div>
+
+      <p className="text-sm text-white mt-1">
         <span>{message.content}</span>
       </p>
+
     </motion.div>
   );
 }
