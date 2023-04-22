@@ -47,7 +47,6 @@ function Login() {
     onCompleted: ({ login }) => {
       console.log(login)
       localStorage.setItem("auth-token", login.accessToken);
-      localStorage.setItem("dsmessenger-username", formState.username); // TODO: replace localStorage call with global state management
       navigate("/");
     },
     onError: ({ graphQLErrors }) => {

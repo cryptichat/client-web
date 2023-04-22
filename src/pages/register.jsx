@@ -1,25 +1,25 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
+
+// import { subtle } from "crypto"
 import { IoPersonAddSharp } from "react-icons/io5";
-// import { motion } from "framer-motion";
-// import lock192 from "./lock192.png";
+import { motion } from "framer-motion";
+import lock192 from "./lock192.png";
 import "./styles.css";
-// import Add from "../image/profilephoto.png";
+import Add from "../image/profilephoto.png";
 
 export const SIGNUP = gql`
   mutation CreateAccount(
     $username: String!
     $email: String!
-    $password1: String!
-    $password2: String!
+    $password: String!
     $publicKey: String!
   ) {
     createAccount(
       username: $username
       email: $email
-      password1: $password1
-      password2: $password2
+      password: $password
       publickey: $publicKey
     ) {
       accessToken
@@ -35,21 +35,33 @@ const containerVariants = {
 
 const titleVariants = {
   hidden: { y: -50, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
 };
 
 const formVariants = {
   hidden: { y: 50, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
 };
 
 const lock192Variants = {
   hidden: { scale: 0, opacity: 0 },
-  visible: { scale: 1, opacity: 1, transition: { duration: 0.5, type: "spring", stiffness: 60 } },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: 0.5, type: "spring", stiffness: 60 },
+  },
 };
 
 function Register() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // React States
   const [errors, setErrors] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -73,6 +85,63 @@ function Register() {
       setErrors(graphQLErrors);
     },
   });
+
+  function arrayBufferToBase64(buffer) {
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    return btoa(binary);
+  }
+
+  async function handleRegister() {
+    if (formState.pass1 !== formState.pass2) {
+      console.log("Passwords do not match");
+      setErrors([...errors, { message: "Passwords do not match" }]);
+    } else {
+      try {
+        // Generate key pair
+        const keyPair = await crypto.subtle.generateKey(
+          {
+            name: "RSA-OAEP",
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+            hash: "SHA-256",
+          },
+          true,
+          ["encrypt", "decrypt"]
+        );
+
+        // Export public key
+        const publicKeyDer = await crypto.subtle.exportKey(
+          "spki",
+          keyPair.publicKey
+        );
+        const publicKeyPem = arrayBufferToBase64(publicKeyDer);
+
+        // Export private key
+        const privateKeyDer = await crypto.subtle.exportKey(
+          "pkcs8",
+          keyPair.privateKey
+        );
+
+        // Sign up
+        await signupHandler({
+          variables: {
+            username: formState.uname,
+            email: formState.email,
+            password: formState.pass1,
+            publicKey: publicKeyPem,
+          },
+        });
+
+        console.log("Account created successfully");
+
+        // Store the private key in local storage
+        localStorage.setItem("privateKey", arrayBufferToBase64(privateKeyDer));
+        console.log("Private key stored securely in local storage");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
 
   // JSX code for login form
   const renderForm = (
@@ -166,7 +235,10 @@ function Register() {
           required
         />
       </div>
-      <div className="propic px-2 py-2" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        className="propic px-2 py-2"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
         <div
           className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
                                   text-[#ffffff] rounded-[5px] items-center 
@@ -185,7 +257,7 @@ function Register() {
         <input
           type="submit"
           value="Register"
-          className="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
+          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
           onClick={() =>
             signupHandler({
               variables: {
@@ -193,11 +265,10 @@ function Register() {
                 email: formState.email,
                 password1: formState.pass1,
                 password2: formState.pass2,
-                publicKey: "XXXt",
+                publicKey: "XXX",
               },
             })
           }
-          data-testid="register-button"
         />
       </div>
       <div>
@@ -230,28 +301,27 @@ function Register() {
     //   exit="exit"
     // >
       <div className="logo">
-        <div 
-          className="flex items-center" 
+        <div
+          className="flex items-center"
           style={{ display: "flex", alignItems: "center" }}
         >
-        {/* <div className=" mx-2 my-5 " style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)", borderRadius: 25 }}>
+        <div className=" mx-2 my-5 " style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)", borderRadius: 25 }}>
         <motion.img
             src={lock192}
             width="60px"
             height="59.928px"
             alt="ChatApp logo"
             variants={lock192Variants}
-          /></div> */}
-          <h1 className=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+          /></div>
+          <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
-
         </div>
         <div className="regform w-full bg-white rounded-[8px] shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
           <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white ">
             
           
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
               Register
             </h1>
           </div>
@@ -277,7 +347,6 @@ function Register() {
  
     // </motion.div>
   );
-
 };
 
 export default Register;

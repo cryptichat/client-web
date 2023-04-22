@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import ConvoListItem from "../components/convoListItem";
 import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
+import { ContractContext } from "../utils/ContractProvider";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { BiGroup } from "react-icons/bi";
 import { MdGroupAdd } from "react-icons/md";
+import { generateSymmetricKey, encryptSymmetricKey } from "../utils/crypto";
 
 const CREATE_CONVO = gql`
   mutation CreateConversation(
@@ -29,20 +31,23 @@ const CREATE_CONVO = gql`
 
 const GET_CONVO = gql`
   query ConversationsByUser($nConversations: Int!, $token: String!) {
-    me(token: $token) {
-      conversations(nConversations: $nConversations, token: $token) {
-        id
-        users {
-          username
-        }
-      }
+    conversationsByUser(nConversations: $nConversations, token: $token)
+  }
+`;
+
+const GET_USERS = gql`
+  query ConversationParticipants($conversationId: Int!, $token: String!) {
+    conversationParticipants(conversationId: $conversationId, token: $token) {
+      username
+      publicKey
     }
   }
 `;
 
-export default function ChatActionsView({ activeConvo, setActiveConvo }) {
-  const loggedInUsername = localStorage.getItem("dsmessenger-username");
+export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   let token = localStorage.getItem("auth-token");
+
+  const { web3, contract } = useContext(ContractContext);
 
   const [addChatOpen, setAddChatOpen] = useState(false);
   const [createConvoText, setCreateConvoText] = useState("");
@@ -60,6 +65,16 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
     },
   });
 
+  const [GetUsers] = useLazyQuery(GET_USERS, {
+    fetchPolicy: "cache-and-network",
+    onCompleted: (GetUsers) => { },
+    notifyOnNetworkStatusChange: true,
+    onError: (graphQLErrors) => {
+      console.error(graphQLErrors);
+      toast.error("Internal error, please check console");
+    },
+  });
+
   const {
     loading: conv_loading,
     error: conv_error,
@@ -71,26 +86,43 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   });
 
   useEffect(() => {
-    if (conv_data) {
-      setUserConversations(
-        conv_data["me"]["conversations"].map((convo, index) => {
-          let otherUsers = convo["users"].filter(
-            (user) => user["username"] !== loggedInUsername
-          );
-          console.log("other users", otherUsers);
-          return {
-            id: index,
-            user: otherUsers[0].username,
-            conv_id: convo["id"],
-          };
-        })
-      );
+    async function func() {
+      if (conv_data) {
+        for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
+          const res = await GetUsers({
+            variables: {
+              conversationId: conv_data["conversationsByUser"][i],
+              token: token,
+            },
+            fetchPolicy: "cache-and-network",
+            notifyOnNetworkStatusChange: true,
+          });
+
+          // skip adding convo to array if it already exists
+          if (
+            userConversations.filter(
+              (convo) => convo.conv_id === conv_data["conversationsByUser"][i]
+            ).length > 0
+          ) {
+            continue;
+          }
+
+          setUserConversations([
+            ...userConversations,
+            {
+              id: userConversations.length,
+              user: res.data["conversationParticipants"][0]["username"],
+              conv_id: conv_data["conversationsByUser"][i],
+            },
+          ]);
+        }
+      }
     }
+    func();
   }, [conv_data]);
 
   function handleLogout() {
     localStorage.removeItem("auth-token");
-    localStorage.removeItem("dsmessenger-username");
     navigate("/login");
   }
 
@@ -118,7 +150,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
       variables: {
         directMessage: false,
         token: localStorage.getItem("auth-token"),
-        users: [loggedInUsername, ...groupChatUsers],
+        users: [user.username, ...groupChatUsers],
         keys: ["XXX", "XXX"], // Replace this with actual encryption keys
       },
     });
@@ -129,6 +161,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
 
   // END Group Convo Creation
 
+  if (conv_loading) return <p>Loading...</p>;
   return (
     <div className="actionview flex flex-col flex-grow lg:max-w-full border border-[#5a5b5c] border-t-0 border-l-0 border-b-0">
       {/* Convo list */}
@@ -186,16 +219,38 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
               className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-1
                             text-[#ffffff] rounded-[10px] items-center gap-2
                               hover:bg-[#4c1d95] hover:text-white transition duration-200"
-              onClick={() => {
-                console.log("add user to convo", createConvoText);
-                CreateConvoHandler({
-                  variables: {
-                    directMessage: true,
-                    token: localStorage.getItem("auth-token"),
-                    users: [loggedInUsername, createConvoText],
-                    keys: ["XXX", "XXX"],
-                  },
-                });
+              onClick={async () => {
+                try {
+                  console.log("add user to convo", createConvoText);
+                  // get the public key of the user
+                  const { data } = await getUserPublicKey({
+                    variables: {
+                      username: createConvoText,
+                    },
+                  });
+                  const key = await generateSymmetricKey();
+                  // encrypt symmetric key with own public key
+                  const selfEncryptedSymmetric = await encryptSymmetricKey(
+                    key,
+                    user.publicKey
+                  );
+                  // encrypt symmetric key with other user's public key
+                  const otherEncryptedSymmetric = await encryptSymmetricKey(
+                    key,
+                    data.user.publicKey
+                  );
+                  // create convo
+                  await CreateConvoHandler({
+                    variables: {
+                      directMessage: true,
+                      token: localStorage.getItem("auth-token"),
+                      users: [user.username, createConvoText],
+                      keys: [selfEncryptedSymmetric, otherEncryptedSymmetric],
+                    },
+                  });
+                } catch (error) {
+                  console.error(error);
+                }
               }}
             >
               Start
@@ -268,7 +323,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
             onClick={handleLogout}
           >
             <BiLogOut className="text-[25px] mr-2" />
-            {loggedInUsername}
+            {user.username}
           </p>
         </a>
       </div>
