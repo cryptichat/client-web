@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "bcrypt": "^5.1.0",
     "classnames": "^2.3.2",
+    "date-fns": "^2.29.3",
     "framer-motion": "^10.11.2",
     "graphql": "^16.6.0",
     "link-react": "^3.0.0",
@@ -19,6 +20,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.8.2",
+    "react-spring": "^9.7.1",
     "react-toastify": "^9.1.2",
     "web-vitals": "^2.1.4",
     "web3": "^1.9.0"
