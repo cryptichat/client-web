@@ -51,6 +51,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
   const [createConvoText, setCreateConvoText] = useState("");
   const [userConversations, setUserConversations] = useState([]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+
   // New state to manage the group chat creation UI
   const [addGroupChatOpen, setAddGroupChatOpen] = useState(false);
   const [groupChatUsers, setGroupChatUsers] = useState([]);
@@ -174,6 +177,14 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
         </div>
       </div>
 
+      <input
+        type="text"
+        placeholder="Search messages"
+        value={searchTerm}
+        className="mt-1 py-4 pl-2 mx-4 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700 my-5"
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
       <div className="">
         <div
           className={`py-2 mb-2 rounded-[10px] ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"
@@ -263,7 +274,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo }) {
           </div>
         )}
       </div>
-
       <div className="grow"></div>
       <div
         className="flex py-2 items-center mb-3.5"
