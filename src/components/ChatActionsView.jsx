@@ -202,6 +202,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
           </div>
         </div>
       </div>
+
       <input
         type="text"
         placeholder="Search messages"
@@ -209,65 +210,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
         className="mt-1 py-4 pl-2 mx-4 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700 my-5"
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <div
-        className={`py-2 mb-2 ${
-          (addChatOpen || addGroupChatOpen) && "bg-neutral-800"
-        }`}
-      >
-        {addChatOpen && (
-          <>
-            <input
-              type="text"
-              placeholder="Enter username"
-              className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700"
-              style={{ width: "-webkit-fill-available" }}
-              name="message"
-              onChange={(e) => setCreateConvoText(e.target.value)}
-              required
-            />
-            <a
-              href="#"
-              className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-1
-                            text-[#ffffff] rounded-[10px] items-center gap-2
-                              hover:bg-[#4c1d95] hover:text-white transition duration-200"
-              onClick={async () => {
-                try {
-                  console.log("add user to convo", createConvoText);
-                  // get the public key of the user
-                  const { data } = await getUserPublicKey({
-                    variables: {
-                      username: createConvoText,
-                    },
-                  });
-                  const key = await generateSymmetricKey();
-                  // encrypt symmetric key with own public key
-                  const selfEncryptedSymmetric = await encryptSymmetricKey(
-                    key,
-                    user.publicKey
-                  );
-                  // encrypt symmetric key with other user's public key
-                  const otherEncryptedSymmetric = await encryptSymmetricKey(
-                    key,
-                    data.user.publicKey
-                  );
-                  // create convo
-                  await CreateConvoHandler({
-                    variables: {
-                      directMessage: true,
-                      token: localStorage.getItem("auth-token"),
-                      users: [user.username, createConvoText],
-                      keys: [selfEncryptedSymmetric, otherEncryptedSymmetric],
-                    },
-                  });
-                } catch (error) {
-                  console.error(error);
-                }
-              }}
-            >
-              Start
-            </a>
-          </>
-        )}
 
       <div className="">
         <div
@@ -279,7 +221,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               <input
                 type="text"
                 placeholder="Enter username"
-                className="mt-1 py-4 pl-2 mx-3 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700"
+                className="mt-1 py-4 pl-4 mx-3 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700"
                 style={{ width: "-webkit-fill-available" }}
                 name="message"
                 onChange={(e) => setCreateConvoText(e.target.value)}
@@ -287,19 +229,41 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               />
               <a
                 href="#"
-                className="hidden bg-[#8b5cf6] md:flex p-2 mx-3 mt-3 mb-1
-                            text-white rounded-[10px] items-center
-                              hover:bg-[#4c1d95] transition duration-200"
-                onClick={() => {
-                  console.log("add user to convo", createConvoText);
-                  CreateConvoHandler({
-                    variables: {
-                      directMessage: true,
-                      token: localStorage.getItem("auth-token"),
-                      users: [loggedInUsername, createConvoText],
-                      keys: ["XXX", "XXX"],
-                    },
-                  });
+                className="hidden bg-[#8b5cf6] md:flex border border-[#000000] p-2 mx-2 mt-2 mb-1
+                            text-[#ffffff] rounded-[10px] items-center gap-2
+                              hover:bg-[#4c1d95] hover:text-white transition duration-200"
+                onClick={async () => {
+                  try {
+                    console.log("add user to convo", createConvoText);
+                    // get the public key of the user
+                    const { data } = await getUserPublicKey({
+                      variables: {
+                        username: createConvoText,
+                      },
+                    });
+                    const key = await generateSymmetricKey();
+                    // encrypt symmetric key with own public key
+                    const selfEncryptedSymmetric = await encryptSymmetricKey(
+                      key,
+                      user.publicKey
+                    );
+                    // encrypt symmetric key with other user's public key
+                    const otherEncryptedSymmetric = await encryptSymmetricKey(
+                      key,
+                      data.user.publicKey
+                    );
+                    // create convo
+                    await CreateConvoHandler({
+                      variables: {
+                        directMessage: true,
+                        token: localStorage.getItem("auth-token"),
+                        users: [user.username, createConvoText],
+                        keys: [selfEncryptedSymmetric, otherEncryptedSymmetric],
+                      },
+                    });
+                  } catch (error) {
+                    console.error(error);
+                  }
                 }}
               >
                 Start
@@ -361,7 +325,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
       <div className="grow"></div>
       <div
         className="flex py-2 items-center mb-3.5"
-        style={{ display: "flex", justifyContent: "center" }}
+        style={{ display: "flex", justifyContent: "cente r" }}
       >
         <a
           href="#"
@@ -379,4 +343,4 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
       </div>
     </div>
   );
-}
+};
