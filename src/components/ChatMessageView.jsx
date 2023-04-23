@@ -17,20 +17,22 @@ const GET_MESSAGE = gql`
     $nMessages: Int!
     $token: String!
   ) {
-    messagesByConversation(
-      conversationId: $conversationId
-      nMessages: $nMessages
-      token: $token
-    ) {
-      sender {
-        username
-      }
-      conversation {
+    me(token: $token) {
+      conversations(
+        nConversations: 1
+        token: $token
+        conversationId: $conversationId
+      ) {
         id
+        messages(nMessages: $nMessages) {
+          sender {
+            username
+          }
+          timestamp
+          revision
+          content
+        }
       }
-      timestamp
-      revision
-      content
     }
   }
 `;
@@ -97,12 +99,8 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [GetMessages] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
-      // sort messages array with most recent message last
-      const sortedMessages = [...res.messagesByConversation].sort((a, b) => {
-        return new Date(a.timestamp) - new Date(b.timestamp);
-      });
-      console.log("sorted from poll", sortedMessages);
-      setActiveMessages(sortedMessages);
+      console.log("poll res", res);
+      processMessages(res.conversationById.messages);
     },
     // pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
     notifyOnNetworkStatusChange: true,
@@ -113,11 +111,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   });
 
   const [SendMessage] = useMutation(SEND_MESSAGE, {
-    variables: {
-      content: messageText,
-      conversationId: activeConvo.conv_id,
-      token: token,
-    },
     onCompleted: (SendMessage) => {},
     notifyOnNetworkStatusChange: true,
     onError: (err) => {
@@ -169,14 +162,8 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
-        // sort messages array with most recent message last
-        const sortedMessages = [...res.data.messagesByConversation].sort(
-          (a, b) => {
-            return new Date(a.timestamp) - new Date(b.timestamp);
-          }
-        );
-        console.log("sorted", sortedMessages);
-        setActiveMessages(sortedMessages);
+        console.log("messages", res.data);
+        await processMessages(res.data.me.conversations[0].messages);
       }
     }
     func();

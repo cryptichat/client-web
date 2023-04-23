@@ -4,6 +4,7 @@ import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
 import { ContractContext } from "../utils/ContractProvider";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
+import { CgProfile } from "react-icons/cg";
 import { toast } from "react-toastify";
 import { MdGroupAdd } from "react-icons/md";
 import { useSpring, animated } from "react-spring";
@@ -32,14 +33,30 @@ const CREATE_CONVO = gql`
 
 const GET_CONVO = gql`
   query ConversationsByUser($nConversations: Int!, $token: String!) {
-    conversationsByUser(nConversations: $nConversations, token: $token)
+    me(token: $token) {
+      conversations(nConversations: $nConversations, token: $token) {
+        id
+        messages(nMessages: 10) {
+          sender {
+            username
+          }
+          timestamp
+          revision
+          content
+        }
+        aesKey(token: $token)
+        users {
+          username
+          publicKey
+        }
+      }
+    }
   }
 `;
 
-const GET_USERS = gql`
-  query ConversationParticipants($conversationId: Int!, $token: String!) {
-    conversationParticipants(conversationId: $conversationId, token: $token) {
-      username
+const GET_USER_PUBLIC_KEY = gql`
+  query UserPublicKey($username: String!) {
+    user(username: $username) {
       publicKey
     }
   }
@@ -75,15 +92,8 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     },
   });
 
-  const [GetUsers] = useLazyQuery(GET_USERS, {
-    fetchPolicy: "cache-and-network",
-    onCompleted: (GetUsers) => { },
-    notifyOnNetworkStatusChange: true,
-    onError: (graphQLErrors) => {
-      console.error(graphQLErrors);
-      toast.error("Internal error, please check console");
-    },
-  });
+  const [getUserPublicKey, { error: key_error }] =
+    useLazyQuery(GET_USER_PUBLIC_KEY);
 
   const {
     loading: conv_loading,
@@ -96,40 +106,26 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   });
 
   useEffect(() => {
-    async function func() {
-      if (conv_data) {
-        for (var i = 0; i < conv_data["conversationsByUser"].length; i++) {
-          const res = await GetUsers({
-            variables: {
-              conversationId: conv_data["conversationsByUser"][i],
-              token: token,
-            },
-            fetchPolicy: "cache-and-network",
-            notifyOnNetworkStatusChange: true,
-          });
-
-          // skip adding convo to array if it already exists
-          if (
-            userConversations.filter(
-              (convo) => convo.conv_id === conv_data["conversationsByUser"][i]
-            ).length > 0
-          ) {
-            continue;
-          }
-
-          setUserConversations([
-            ...userConversations,
-            {
-              id: userConversations.length,
-              user: res.data["conversationParticipants"][0]["username"],
-              conv_id: conv_data["conversationsByUser"][i],
-            },
-          ]);
-        }
-      }
+    if (conv_data) {
+      setUserConversations(
+        conv_data["me"]["conversations"].map((convo, index) => {
+          console.log(convo);
+          let otherUsers = convo["users"].filter(
+            (convoUser) => convoUser["username"] !== user.username
+          );
+          console.log("other users", otherUsers);
+          return {
+            id: index,
+            user: otherUsers[0].username,
+            conv_id: convo["id"],
+            aesKey: convo["aesKey"],
+            messages: convo["messages"],
+            publicKey: otherUsers[0].publicKey,
+          };
+        })
+      );
     }
-    func();
-  }, [conv_data]);
+  }, [conv_data, user]);
 
   const navigate = useNavigate();
 
@@ -316,11 +312,13 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
             <animated.ul style={userListAnimation} className="divide-gray-300 truncate">
               {userConversations.map((convo) => {
                 return (
-                  <ConvoListItem
-                    username={convo.user}
-                    active={activeConvo && activeConvo.conv_id === convo.conv_id}
-                    onClick={() => setActiveConvo(convo)}
-                  />
+                  <div className="flex items-center gap-2" onClick={() => setActiveConvo(convo)}>
+                    <CgProfile className="text-[25px]"/>
+                    <ConvoListItem
+                      username={convo.user}
+                      active={activeConvo && activeConvo.conv_id === convo.conv_id}
+                    />
+                  </div>
                 );
               })}
             </animated.ul>
