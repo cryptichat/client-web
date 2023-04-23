@@ -47,6 +47,7 @@ function Login() {
     onCompleted: ({ login }) => {
       console.log(login)
       localStorage.setItem("auth-token", login.accessToken);
+      localStorage.setItem("dsmessenger-username", formState.username); // TODO: replace localStorage call with global state management
       navigate("/");
     },
     onError: ({ graphQLErrors }) => {
@@ -125,11 +126,11 @@ function Login() {
           <div key={index} className="error">{error.message}</div>
         ))}
       </div>
-      <p class="my-2 pl-0.5 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p className="my-2 pl-0.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Don’t have an account yet?{" "}
         <a
           href="#"
-          class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+          className="font-medium text-primary-600 hover:underline dark:text-primary-500"
           onClick={() => navigate("/register")}
         >
           Sign up
@@ -156,7 +157,7 @@ function Login() {
             alt="ChatApp logo"
             variants={lock192Variants}
           /></div>
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-7">
+          <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-7">
             Welcome to CrypticChat
           </h1>
 
@@ -166,7 +167,7 @@ function Login() {
             variants={formVariants}
           >
             <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white" variants={titleVariants}>
-              <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
                 Login to your Account
               </h1>
             </motion.div>
