@@ -29,13 +29,13 @@ cd cryptic-chat
 3. Install the dependencies:
 
 ```bash
-cd cryptic-chat
+npm install
 ```
 
 4. Run the development server:
 
 ```bash
-cd cryptic-chat
+npm start
 ```
 
 5. Open your web browser and navigate to http://localhost:3000 to access the application.
