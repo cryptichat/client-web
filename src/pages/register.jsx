@@ -257,7 +257,7 @@ function Register() {
         <input
           type="submit"
           value="Register"
-          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
+          className="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-[#4c1d95]"
           onClick={() =>
             signupHandler({
               variables: {
@@ -313,7 +313,7 @@ function Register() {
             alt="ChatApp logo"
             variants={lock192Variants}
           /></div>
-          <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+          <h1 className=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
         </div>
@@ -321,7 +321,7 @@ function Register() {
           <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white ">
             
           
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
               Register
             </h1>
           </div>
