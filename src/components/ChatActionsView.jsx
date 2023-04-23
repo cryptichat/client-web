@@ -45,6 +45,7 @@ const GET_CONVO = gql`
           content
         }
         aesKey(token: $token)
+        directMessage
         users {
           username
           publicKey
@@ -117,7 +118,8 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
           );
           return {
             id: index,
-            user: otherUsers[0].username,
+            user: otherUsers,
+            directMessage: convo["directMessage"],
             conv_id: convo["id"],
             aesKey: convo["aesKey"],
             messages: convo["messages"],
@@ -182,7 +184,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     }
 
     // create conversation
-    CreateConvoHandler({
+    await CreateConvoHandler({
       variables: {
         directMessage: false,
         token: token,
@@ -355,6 +357,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               className="divide-gray-300 truncate"
             >
               {userConversations.map((convo) => {
+                console.log(convo)
                 return (
                   <div
                     className="flex items-center gap-2"

@@ -243,6 +243,19 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     });
   }
 
+  function getDisplayName(users) {
+    if (users.length == 1) {
+      return users[0].username
+    }
+    else{
+      let displayName = ""
+      for (let user of users){
+        displayName += user.username + ", "
+      }
+      return displayName.slice(0, -2)
+    }
+  }
+
   const messageIconVariants = {
     hidden: { opacity: 0, scale: 0.5 },
     visible: { opacity: 1, scale: 1 },
@@ -333,7 +346,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
               </div>
             )}
-            <p className="font-black pl-1 text-2xl">{activeConvo.user}</p>
+            <p className="font-black pl-1 text-2xl">{getDisplayName(activeConvo.user)}</p>
           </motion.div>
           <motion.div
             className="scroll grow px-4 md:max-h-full max-h-[85%] overflow-y-scroll custom-scrollbar"
