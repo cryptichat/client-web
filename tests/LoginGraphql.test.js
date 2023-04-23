@@ -24,8 +24,8 @@ describe("Login mutation", () => {
       const { data } = await client.mutate({
         mutation: LOGIN,
         variables: {
-          username: "test1",
-          password: "password1",   
+          username: "user_2",
+          password: "password123",   
         },
       });
     
