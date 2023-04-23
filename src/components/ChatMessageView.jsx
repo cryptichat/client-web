@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useMutation, useLazyQuery, gql } from "@apollo/client";
 import MessageItem from "../components/MessageItem";
 import { BsFillSendFill } from "react-icons/bs";
@@ -79,6 +79,12 @@ const SEND_MESSAGE = gql`
 export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   const [showPrompt, setShowPrompt] = useState(Object.keys(activeConvo).length === 0);
+
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   const welcomePromptStyle = {
     display: 'flex',
@@ -184,6 +190,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           });
         },
       });
+      scrollToBottom();
     }
   }, [activeMessages]);
 
@@ -355,6 +362,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             {activeMessages.map((message, index) => (
               <MessageItem message={message} index={index} />
             ))}
+            <div ref={messagesEndRef} />
           </motion.div>
           <motion.div
             className="flex h pb-2 items-center pr-2 ml-2"
