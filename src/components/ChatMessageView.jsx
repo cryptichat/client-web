@@ -37,6 +37,19 @@ const GET_MESSAGE = gql`
   }
 `;
 
+const MESSAGE_SUBSCRIPTION = gql`
+  subscription MessageSubscription($conversationId: Int!, $token: String!) {
+    newMessage(conversationId: $conversationId, token: $token) {
+      sender {
+        username
+      }
+      timestamp
+      revision
+      content
+    }
+  }
+`;
+
 const SEND_MESSAGE = gql`
   mutation CreateMessage(
     $content: String!
@@ -96,13 +109,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [symmetricKey, setSymmetricKey] = useState({});
   const [activeMessages, setActiveMessages] = useState([]);
 
-  const [GetMessages] = useLazyQuery(GET_MESSAGE, {
+  const [GetMessages, { subscribeToMore }] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
       console.log("poll res", res);
-      processMessages(res.conversationById.messages);
+      processMessages(res.me.conversations[0].messages);
     },
-    // pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
@@ -146,6 +158,38 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       setActiveMessages(decryptedMessages);
     });
   }
+
+  useEffect(() => {
+    if (activeConvo.conv_id) {
+      subscribeToMore({
+        document: MESSAGE_SUBSCRIPTION,
+        variables: {
+          conversationId: parseInt(activeConvo.conv_id),
+          token: token,
+        },
+        shouldResubscribe: true,
+        onError: (err) => console.error(err),
+        updateQuery: (prev, { subscriptionData }) => {
+          console.log("subscription update");
+          if (!subscriptionData.data) return prev;
+          console.log("prev", prev);
+          console.log("subscription data", subscriptionData.data);
+
+          return Object.assign({}, prev, {
+            me: {
+              conversations: [{
+                ...prev.me.conversations[0],
+                messages: [
+                  ...prev.me.conversations[0].messages,
+                  subscriptionData.data.newMessage,
+                ]
+              }]
+            }
+          });
+        },
+      });
+    }
+  }, [activeMessages]);
 
   useEffect(() => {
     async function func() {

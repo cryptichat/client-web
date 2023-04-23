@@ -106,7 +106,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   } = useQuery(GET_CONVO, {
     variables: { nConversations: 10, token: token },
     fetchPolicy: "cache-and-network",
-    pollInterval: 3000,
+    // pollInterval: 3000,
   });
 
   useEffect(() => {
