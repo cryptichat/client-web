@@ -50,7 +50,10 @@ section {
 }
 
 .regform {
-  width: 300px;
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  font-family: "Roboto", sans-serif;
 }
 
 input[type="text"],
