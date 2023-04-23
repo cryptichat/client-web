@@ -84,8 +84,12 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     config: { duration: 200 },
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [CreateConvoHandler] = useMutation(CREATE_CONVO, {
-    onCompleted: ({ createConversation }) => { },
+    onCompleted: ({ createConversation }) => { 
+      setLoading(false);
+    },
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
       toast.error("Error creating conversation, please check console");
@@ -167,6 +171,18 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     setAddGroupChatOpen(false);
   }
 
+  async function handleCreateGroupChat() {
+    if (groupChatUsers.length < 2) {
+      toast.error("A group chat needs at least 2 other participants");
+      return;
+    }
+
+    setLoading(true);
+    // ... the rest of the code for creating a group chat
+    setLoading(false);
+    setAddGroupChatOpen(false);
+  }
+
   // END Group Convo Creation
 
   if (conv_loading) return <p>Loading...</p>;
@@ -235,6 +251,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                   hover:bg-[#4c1d95] transition duration-200"
                 onClick={async () => {
                   try {
+                    setLoading(true);
                     console.log("add user to convo", createConvoText);
                     // get the public key of the user
                     const { data } = await getUserPublicKey({
@@ -262,12 +279,18 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                         keys: [selfEncryptedSymmetric, otherEncryptedSymmetric],
                       },
                     });
+                    setAddChatOpen(false);
                   } catch (error) {
                     console.error(error);
+                    setLoading(false);
                   }
                 }}
               >
-                Start
+                {loading ? (
+                  <div className="spinner inline-block"></div>
+                ) : (
+                  <>Start</>
+                )}
               </a>
             </>
           )}
@@ -298,11 +321,15 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               <a
                 href="#"
                 className="hidden bg-[#8b5cf6] md:flex p-2 mx-3 mt-3 mb-1
-              text-white rounded-[10px] items-center
+                text-white rounded-[10px] items-center
                 hover:bg-[#4c1d95] transition duration-200"
                 onClick={handleCreateGroupChat}
               >
-                Start Group Chat
+                {loading ? (
+                  <div className="spinner inline-block"></div>
+                ) : (
+                  <>Start Group Chat</>
+                )}
               </a>
             </>
           )}
@@ -313,7 +340,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               {userConversations.map((convo) => {
                 return (
                   <div className="flex items-center gap-2" onClick={() => setActiveConvo(convo)}>
-                    <CgProfile className="text-[25px]"/>
+                    <CgProfile className="text-[25px]" />
                     <ConvoListItem
                       username={convo.user}
                       active={activeConvo && activeConvo.conv_id === convo.conv_id}
