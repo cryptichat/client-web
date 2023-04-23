@@ -45,6 +45,7 @@ const GET_CONVO = gql`
           content
         }
         aesKey(token: $token)
+        directMessage
         users {
           username
           publicKey
@@ -73,13 +74,12 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-
   // New state to manage the group chat creation UI
   const [addGroupChatOpen, setAddGroupChatOpen] = useState(false);
   const [groupChatUsers, setGroupChatUsers] = useState([]);
 
   const userListAnimation = useSpring({
-    height: addChatOpen || addGroupChatOpen ? '0px' : 'auto',
+    height: addChatOpen || addGroupChatOpen ? "0px" : "auto",
     opacity: addChatOpen || addGroupChatOpen ? 0 : 1,
     config: { duration: 200 },
   });
@@ -87,7 +87,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   const [loading, setLoading] = useState(false);
 
   const [CreateConvoHandler] = useMutation(CREATE_CONVO, {
-    onCompleted: ({ createConversation }) => { 
+    onCompleted: ({ createConversation }) => {
       setLoading(false);
     },
     onError: ({ graphQLErrors }) => {
@@ -113,14 +113,13 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     if (conv_data) {
       setUserConversations(
         conv_data["me"]["conversations"].map((convo, index) => {
-          console.log(convo);
           let otherUsers = convo["users"].filter(
             (convoUser) => convoUser["username"] !== user.username
           );
-          console.log("other users", otherUsers);
           return {
             id: index,
-            user: otherUsers[0].username,
+            user: otherUsers,
+            directMessage: convo["directMessage"],
             conv_id: convo["id"],
             aesKey: convo["aesKey"],
             messages: convo["messages"],
@@ -151,26 +150,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     setGroupChatUsers([...groupChatUsers, username]);
   }
 
-  function handleCreateGroupChat() {
-    if (groupChatUsers.length < 2) {
-      toast.error("A group chat needs at least 2 other participants");
-      return;
-    }
-
-    // Call CreateConvoHandler with group chat users
-    CreateConvoHandler({
-      variables: {
-        directMessage: false,
-        token: localStorage.getItem("auth-token"),
-        users: [user.username, ...groupChatUsers],
-        keys: ["XXX", "XXX"], // Replace this with actual encryption keys
-      },
-    });
-
-    setGroupChatUsers([]);
-    setAddGroupChatOpen(false);
-  }
-
   async function handleCreateGroupChat() {
     if (groupChatUsers.length < 2) {
       toast.error("A group chat needs at least 2 other participants");
@@ -178,7 +157,42 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     }
 
     setLoading(true);
-    // ... the rest of the code for creating a group chat
+
+    // get public keys for all users
+    let publicKeys = [];
+    for (let i = 0; i < groupChatUsers.length; i++) {
+      let { data } = await getUserPublicKey({
+        variables: { username: groupChatUsers[i] },
+      });
+      publicKeys.push(data["user"]["publicKey"]);
+    }
+
+    // generate symmetric key
+    let symmetricKey = await generateSymmetricKey();
+
+    // encrypt symmetric key with all public keys
+    let encryptedKeys = [];
+
+    const selfEncryptedSymmetric = await encryptSymmetricKey(
+      symmetricKey,
+      user.publicKey
+    );
+
+    for (let i = 0; i < publicKeys.length; i++) {
+      let encryptedKey = await encryptSymmetricKey(symmetricKey, publicKeys[i]);
+      encryptedKeys.push(encryptedKey);
+    }
+
+    // create conversation
+    await CreateConvoHandler({
+      variables: {
+        directMessage: false,
+        token: token,
+        users: [user.username, ...groupChatUsers],
+        keys: [selfEncryptedSymmetric, ...encryptedKeys],
+      }
+    });
+
     setLoading(false);
     setAddGroupChatOpen(false);
   }
@@ -193,8 +207,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
         <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>
         <div className="flex items-center space-x-1 mt-1 mr-3">
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addChatOpen && "bg-slate-600"
-              }`}
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${
+              addChatOpen && "bg-slate-600"
+            }`}
           >
             <BiMessageRoundedAdd
               size={24}
@@ -206,8 +221,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
           </div>
           {/* Add new button to start a group chat */}
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addGroupChatOpen && "bg-slate-600"
-              }`}
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${
+              addGroupChatOpen && "bg-slate-600"
+            }`}
           >
             <MdGroupAdd
               size={24}
@@ -230,8 +246,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
 
       <div className="">
         <div
-          className={`py-2 mb-2 rounded-[10px] ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"
-            }`}
+          className={`py-2 mb-2 rounded-[10px] ${
+            (addChatOpen || addGroupChatOpen) && "bg-neutral-800"
+          }`}
         >
           {addChatOpen && (
             <>
@@ -252,7 +269,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                 onClick={async () => {
                   try {
                     setLoading(true);
-                    console.log("add user to convo", createConvoText);
                     // get the public key of the user
                     const { data } = await getUserPublicKey({
                       variables: {
@@ -336,14 +352,23 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
         </div>
         {!addChatOpen && !addGroupChatOpen && (
           <div className="userblock pl-4 pr-4 mt-[-30px] text-white hover:rounded-md">
-            <animated.ul style={userListAnimation} className="divide-gray-300 truncate">
+            <animated.ul
+              style={userListAnimation}
+              className="divide-gray-300 truncate"
+            >
               {userConversations.map((convo) => {
+                console.log(convo)
                 return (
-                  <div className="flex items-center gap-2" onClick={() => setActiveConvo(convo)}>
+                  <div
+                    className="flex items-center gap-2"
+                    onClick={() => setActiveConvo(convo)}
+                  >
                     <CgProfile className="text-[25px]" />
                     <ConvoListItem
                       username={convo.user}
-                      active={activeConvo && activeConvo.conv_id === convo.conv_id}
+                      active={
+                        activeConvo && activeConvo.conv_id === convo.conv_id
+                      }
                     />
                   </div>
                 );
@@ -373,4 +398,4 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
       </div>
     </div>
   );
-};
+}

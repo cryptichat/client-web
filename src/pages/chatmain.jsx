@@ -29,7 +29,6 @@ function ChatMain() {
     },
   });
 
-  console.log(loading, error, data);
   function renderActionsView() {
     return (
       <ChatActionsView

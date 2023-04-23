@@ -45,7 +45,6 @@ function Login() {
 
   const [loginHandler] = useMutation(LOGIN, {
     onCompleted: ({ login }) => {
-      console.log(login)
       localStorage.setItem("auth-token", login.accessToken);
       navigate("/");
     },
