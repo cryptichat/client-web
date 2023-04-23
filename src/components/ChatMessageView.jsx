@@ -352,7 +352,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             ))}
           </motion.div>
           <motion.div
-            className="flex h pb-2 items-center pr-2 ml-2"
+            className="flex h pb-2 items-center"
             variants={itemVariants}
           >
             <form className="inputContainer flex-1 py-2">
