@@ -4,6 +4,7 @@ import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
 import { ContractContext } from "../utils/ContractProvider";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
+import { CgProfile } from "react-icons/cg";
 import { toast } from "react-toastify";
 import { MdGroupAdd } from "react-icons/md";
 import { useSpring, animated } from "react-spring";
@@ -311,11 +312,13 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
             <animated.ul style={userListAnimation} className="divide-gray-300 truncate">
               {userConversations.map((convo) => {
                 return (
-                  <ConvoListItem
-                    username={convo.user}
-                    active={activeConvo && activeConvo.conv_id === convo.conv_id}
-                    onClick={() => setActiveConvo(convo)}
-                  />
+                  <div className="flex items-center gap-2" onClick={() => setActiveConvo(convo)}>
+                    <CgProfile className="text-[25px]"/>
+                    <ConvoListItem
+                      username={convo.user}
+                      active={activeConvo && activeConvo.conv_id === convo.conv_id}
+                    />
+                  </div>
                 );
               })}
             </animated.ul>
