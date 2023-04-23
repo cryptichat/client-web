@@ -53,3 +53,9 @@ To use Cryptic Chat, follow these steps:
 4. Your messages will be encrypted using end-to-end encryption, ensuring that only you and the intended recipient(s) can read them.
 
 5. To log out, click on your profile icon in the top right corner of the screen and select "Log out".
+
+## Contributors
+
+1. Karthikeyan Arumugam: - StudentID: 201307149
+2. Ishmam Ahmed: - StudentID: 201377974
+3. Oluwatobi Sobola: - StudentID: 201316888
