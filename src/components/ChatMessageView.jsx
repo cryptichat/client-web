@@ -112,7 +112,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [GetMessages, { subscribeToMore }] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
-      console.log("poll res", res);
       processMessages(res.me.conversations[0].messages);
     },
     notifyOnNetworkStatusChange: true,
@@ -154,7 +153,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     }
 
     decryptMessages().then((decryptedMessages) => {
-      console.log("decrypted messages", decryptedMessages);
       setActiveMessages(decryptedMessages);
     });
   }
@@ -170,9 +168,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         shouldResubscribe: true,
         onError: (err) => console.error(err),
         updateQuery: (prev, { subscriptionData }) => {
-          console.log("subscription update");
           if (!subscriptionData.data) return prev;
-          console.log("prev", prev);
           console.log("subscription data", subscriptionData.data);
 
           return Object.assign({}, prev, {
@@ -194,7 +190,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   useEffect(() => {
     async function func() {
       if (activeConvo) {
-        console.log("active", activeConvo);
 
         const res = await GetMessages({
           variables: {
@@ -206,7 +201,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
-        console.log("messages", res.data);
         await processMessages(res.data.me.conversations[0].messages);
       }
     }
@@ -221,14 +215,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         localStorage.getItem("privateKey")
       );
 
-      console.log("decrypted symmetric key", decryptedSymmetricKey);
       setSymmetricKey(decryptedSymmetricKey);
     }
     decryptKey();
   }, [activeConvo]);
 
   async function handleSendMessage() {
-    console.log("message to send: " + messageText);
     if (messageText === "") {
       return;
     }

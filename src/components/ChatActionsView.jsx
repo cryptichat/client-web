@@ -113,11 +113,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     if (conv_data) {
       setUserConversations(
         conv_data["me"]["conversations"].map((convo, index) => {
-          console.log(convo);
           let otherUsers = convo["users"].filter(
             (convoUser) => convoUser["username"] !== user.username
           );
-          console.log("other users", otherUsers);
           return {
             id: index,
             user: otherUsers[0].username,
@@ -252,7 +250,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                 onClick={async () => {
                   try {
                     setLoading(true);
-                    console.log("add user to convo", createConvoText);
                     // get the public key of the user
                     const { data } = await getUserPublicKey({
                       variables: {
