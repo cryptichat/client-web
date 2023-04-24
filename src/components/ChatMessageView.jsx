@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useMutation, useLazyQuery, gql } from "@apollo/client";
 import MessageItem from "../components/MessageItem";
 import { BsFillSendFill } from "react-icons/bs";
@@ -37,6 +37,19 @@ const GET_MESSAGE = gql`
   }
 `;
 
+const MESSAGE_SUBSCRIPTION = gql`
+  subscription MessageSubscription($conversationId: Int!, $token: String!) {
+    newMessage(conversationId: $conversationId, token: $token) {
+      sender {
+        username
+      }
+      timestamp
+      revision
+      content
+    }
+  }
+`;
+
 const SEND_MESSAGE = gql`
   mutation CreateMessage(
     $content: String!
@@ -67,6 +80,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   const [showPrompt, setShowPrompt] = useState(Object.keys(activeConvo).length === 0);
 
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
   const welcomePromptStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -96,13 +115,11 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [symmetricKey, setSymmetricKey] = useState({});
   const [activeMessages, setActiveMessages] = useState([]);
 
-  const [GetMessages] = useLazyQuery(GET_MESSAGE, {
+  const [GetMessages, { subscribeToMore }] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
-      console.log("poll res", res);
-      processMessages(res.conversationById.messages);
+      processMessages(res.me.conversations[0].messages);
     },
-    // pollInterval: Object.keys(activeConvo) != 0 ? 1000 : 0, // only poll if a conversation is open
     notifyOnNetworkStatusChange: true,
     onError: (graphQLErrors) => {
       console.error(graphQLErrors);
@@ -142,15 +159,44 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     }
 
     decryptMessages().then((decryptedMessages) => {
-      console.log("decrypted messages", decryptedMessages);
       setActiveMessages(decryptedMessages);
     });
   }
 
   useEffect(() => {
+    if (activeConvo.conv_id) {
+      subscribeToMore({
+        document: MESSAGE_SUBSCRIPTION,
+        variables: {
+          conversationId: parseInt(activeConvo.conv_id),
+          token: token,
+        },
+        shouldResubscribe: true,
+        onError: (err) => console.error(err),
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          console.log("subscription data", subscriptionData.data);
+
+          return Object.assign({}, prev, {
+            me: {
+              conversations: [{
+                ...prev.me.conversations[0],
+                messages: [
+                  ...prev.me.conversations[0].messages,
+                  subscriptionData.data.newMessage,
+                ]
+              }]
+            }
+          });
+        },
+      });
+      scrollToBottom();
+    }
+  }, [activeMessages]);
+
+  useEffect(() => {
     async function func() {
       if (activeConvo) {
-        console.log("active", activeConvo);
 
         const res = await GetMessages({
           variables: {
@@ -162,7 +208,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
-        console.log("messages", res.data);
         await processMessages(res.data.me.conversations[0].messages);
       }
     }
@@ -177,14 +222,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         localStorage.getItem("privateKey")
       );
 
-      console.log("decrypted symmetric key", decryptedSymmetricKey);
       setSymmetricKey(decryptedSymmetricKey);
     }
     decryptKey();
   }, [activeConvo]);
 
   async function handleSendMessage() {
-    console.log("message to send: " + messageText);
     if (messageText === "") {
       return;
     }
@@ -205,6 +248,19 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       ]);
       setMessageText("");
     });
+  }
+
+  function getDisplayName(users) {
+    if (users.length == 1) {
+      return users[0].username
+    }
+    else{
+      let displayName = ""
+      for (let user of users){
+        displayName += user.username + ", "
+      }
+      return displayName.slice(0, -2)
+    }
   }
 
   const messageIconVariants = {
@@ -242,7 +298,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       animate="visible"
     >
       {showPrompt && (
-        <div className="p-80">
+        <div className="mt-60">
           <div
             className="welcome-prompt"
             style={{
@@ -265,22 +321,22 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               transition={transition}
             />
             <motion.p
-              className="text-[30px] text-white font-bold p-1"
+              className="welcome text-[30px] text-white font-bold p-1"
               variants={itemVariants}
             >
               Welcome to Cryptic Chat!
             </motion.p>
-            <motion.p variants={itemVariants}>
-              Click on a user or create a conversation by clicking on either the individual messaging icon
+            <motion.p className="max-w-[700px]" variants={itemVariants}>
+              <strong>Click</strong> on a user or create a conversation by clicking on either the individual messaging icon
               <span className="inline-flex items-center">
                 {" "}
-                <BiMessageRoundedAdd className="mr-2 ml-2 text-[25px] text-white" />
+                <BiMessageRoundedAdd className="mr-2 ml-2 my-1 border text-[25px] text-white bg-slate-600 rounded-[5px]" />
               </span>
               <span className="inline-flex items-center">
                 or the group messaging icon{" "}
-                <MdGroupAdd className="mr-2 ml-2 text-[25px] text-white" />
+                <MdGroupAdd className="mr-2 ml-2 text-[25px] mb-2 border text-white bg-slate-600 rounded-[5px]" />
               </span>
-              to get started!
+              to <strong>get started</strong>!
             </motion.p>
           </div>
         </div>
@@ -297,7 +353,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
               </div>
             )}
-            <p className="font-black pl-1 text-2xl">{activeConvo.user}</p>
+            <p className="font-black pl-1 text-2xl">{getDisplayName(activeConvo.user)}</p>
           </motion.div>
           <motion.div
             className="scroll grow px-4 md:max-h-full max-h-[85%] overflow-y-scroll custom-scrollbar"
@@ -306,9 +362,10 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             {activeMessages.map((message, index) => (
               <MessageItem message={message} index={index} />
             ))}
+            <div ref={messagesEndRef} />
           </motion.div>
           <motion.div
-            className="flex h pb-2 items-center pr-2 ml-2"
+            className="flex h pb-2 items-center"
             variants={itemVariants}
           >
             <form className="inputContainer flex-1 py-2">
@@ -323,18 +380,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 required
               />
             </form>
-            <motion.div
-              className="sendattach bg-[#8b5cf6] md:flex border border-[#000000] px-2 p-2.5
-                          text-[#ffffff] rounded-[10px] items-center 
-                            hover:bg-[#4c1d95] hover:text-white transition duration-200"
-              variants={itemVariants}
-            >
-              <input style={{ display: "none" }} type="file" id="file" />
-              <label htmlFor="file">
-                {/* <img className="sendpic" src={Add} alt="" /> */}
-                <CgAttachment className="text-[20px] text-white" />
-              </label>
-            </motion.div>
             <motion.div
               onClick={handleSendMessage}
               className="bg-[#8b5cf6] flex border border-[#000000] p-2 mx-2 mt-2 mb-2

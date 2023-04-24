@@ -86,7 +86,6 @@ export async function encryptSymmetricKey(jwkSymmetricKey, base64PublicKey) {
 }
 
 function base64DecodeToArrayBuffer(base64String) {
-  console.log(base64String);
   const binaryString = atob(base64String);
   const buffer = new Uint8Array(binaryString.length);
 
