@@ -104,8 +104,8 @@ describe('Register component', () => {
       request: {
         query: SIGNUP,
         variables: {
-          username: 'testRegster7',
-          email: 'testRegster7@example.com',
+          username: 'testRegster',
+          email: 'testRegster@example.com',
           password: 'password',
           publicKey: publicKeyPem,
         },
