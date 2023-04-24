@@ -7,6 +7,7 @@ module.exports = {
     "^.+\\.jsx?$": "babel-jest",
   },
   testEnvironment: 'jest-environment-jsdom',
-  maxWorkers: 1, // Only use 1 worker
-
+  maxWorkers: 1, 
+  
 };
+

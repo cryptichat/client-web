@@ -2,8 +2,10 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import Login from '../src/pages/login.jsx';
-import { gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, gql } from "@apollo/client";
 import "@testing-library/jest-dom";
+import crypto from 'crypto';
+import fetch from 'cross-fetch';
 
 // Mock useNavigate hook
 jest.mock('react-router-dom', () => ({
@@ -18,9 +20,38 @@ const LOGIN = gql`
   }
 `;
 
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+const SIGNUP = gql`
+  mutation CreateAccount(
+    $username: String!
+    $email: String!
+    $password: String!
+    $publicKey: String!
+  ) {
+    createAccount(
+      username: $username
+      email: $email
+      password: $password
+      publickey: $publicKey
+    ) {
+      accessToken
+    }
+  }
+`;
+
 describe('Login component', () => {
-  const username = 'test5';
-  const password = 'password1';
+  const username = 'testlogin';
+  const password = 'password123';
+  const email = 'testlogin@gmail.com'
 
   const mocks = [
     {
@@ -41,6 +72,12 @@ describe('Login component', () => {
     },
   ];
 
+  const client = new ApolloClient({
+    link: new HttpLink({ uri: 'http://127.0.0.1:5000/graphql', fetch }),
+    cache: new InMemoryCache(),
+    onError: (e) => { console.log(e) },
+  });
+
   it('should render the login form', () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
@@ -54,6 +91,42 @@ describe('Login component', () => {
   });
 
   it('should submit the login form', async () => {
+  
+      // Generate key pair
+      const keyPair = await crypto.subtle.generateKey(
+        {
+          name: "RSA-OAEP",
+          modulusLength: 2048,
+          publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+          hash: "SHA-256",
+        },
+        true,
+        ["encrypt", "decrypt"]
+      );
+
+      // Export public key
+      const publicKeyDer = await crypto.subtle.exportKey(
+        "spki",
+        keyPair.publicKey
+      );
+      const publicKeyPem = arrayBufferToBase64(publicKeyDer);
+
+      // Export private key
+      const privateKeyDer = await crypto.subtle.exportKey(
+        "pkcs8",
+        keyPair.privateKey
+      );
+
+      const { reg } = await client.mutate({
+        mutation: SIGNUP,
+        variables: {
+          username: username,
+          email: email,
+          password: password,
+          publicKey: publicKeyPem,
+        },
+      });
+    
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <Login />

@@ -53,8 +53,6 @@ describe('Register component', () => {
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByTestId("password-input")).toBeInTheDocument();
-    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
-    
     expect(screen.getByText(/register/i)).toBeInTheDocument();
   });
 
@@ -66,10 +64,9 @@ describe('Register component', () => {
       request: {
         query: SIGNUP,
         variables: {
-          username: "testuser",
-          email: "test@example.com",
-          password1: "password",
-          password2: "password1",
+          username: "testRegsterx",
+          email: "testRegsterx@example.com",
+          password: "password123",
           publicKey: "XXXtest",
         },
       },
@@ -86,10 +83,9 @@ describe('Register component', () => {
       </MockedProvider>
     );
 
-    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'testuser' } });
+    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'testuser9' } });
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByTestId("password-input"), { target: { value: 'password' } });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password1' } });
 
     const registerButtons = getAllByText(/register/i);
     fireEvent.click(registerButtons[0]);
@@ -102,8 +98,8 @@ describe('Register component', () => {
     });
   });
 
-    test('successfully registers user and redirects to home page', async () => {
-    const mockAccessToken = 'test_access_token';
+  test('successfully registers user and redirects to home page', async () => {
+    
 
         // Generate key pair
     const keyPair = await crypto.subtle.generateKey(
@@ -134,17 +130,16 @@ describe('Register component', () => {
       request: {
         query: SIGNUP,
         variables: {
-          username: 'testuser4',
-          email: 'test@example.com',
-          password1: 'password',
-          password2: 'password',
+          username: 'testRegster',
+          email: 'testRegster@example.com',
+          password: 'password',
           publicKey: publicKeyPem,
         },
       },
       result: {
         data: {
           createAccount: {
-            accessToken: mockAccessToken,
+            accessToken: "testaccesstoken",
           },
         },
       },
@@ -158,17 +153,14 @@ describe('Register component', () => {
       </MockedProvider>
     );
 
-    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'testuser4' } });
+    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'testuser94' } });
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByTestId("password-input"), { target: { value: 'password' } });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password' } });
 
     const registerButtons = getAllByText(/register/i);
     fireEvent.click(registerButtons[0]);
 
     await waitFor(() => {
-      // expect(localStorage.getItem('auth-token')).toEqual(mockAccessToken);
-      // expect(localStorage.getItem('dsmessenger-username')).toEqual('testuser3');
       expect(window.location.pathname).toEqual('/');
     });
   });
