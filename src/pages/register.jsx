@@ -222,21 +222,6 @@ function Register() {
           required
         />
       </div>
-      <div className="propic px-2 py-2">
-        <div
-          className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
-                               text-[#ffffff] rounded-[5px] items-center 
-                                 hover:bg-[#000000] hover:text-white transition duration-200"
-        >
-          <input style={{ display: "none" }} type="file" id="file" />
-          <label htmlFor="file">
-            <IoPersonAddSharp className="text-[20px] text-white" />
-            <span className="text-[15px] text-white px-2">
-              Add a profile picture
-            </span>
-          </label>
-        </div>
-      </div>
       <div className="button-container p-2">
         <input
           type="submit"
