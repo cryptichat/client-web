@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "./styles.css";
 
-const GET_ME = gql`
+export const GET_ME = gql`
   query me($token: String!) {
     me(token: $token) {
       username

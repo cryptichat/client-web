@@ -1,10 +1,9 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
-import Register from '../src/pages/register.jsx';
+import Register, {SIGNUP} from '../src/pages/register.jsx';
 import '@testing-library/jest-dom/extend-expect';
 import { ContractContext } from '../src/utils/ContractProvider';
-import {  gql } from "@apollo/client";
 import crypto from 'crypto';
 
 function arrayBufferToBase64(buffer) {
@@ -21,24 +20,6 @@ function arrayBufferToBase64(buffer) {
 jest.mock('react-router-dom', () => ({
   useNavigate: () => jest.fn(),
 }));
-
-const SIGNUP = gql`
-  mutation CreateAccount(
-    $username: String!
-    $email: String!
-    $password: String!
-    $publicKey: String!
-  ) {
-    createAccount(
-      username: $username
-      email: $email
-      password: $password
-      publickey: $publicKey
-    ) {
-      accessToken
-    }
-  }
-`;
 
 describe('Register component', () => {
   test('renders the register form', () => {
@@ -64,8 +45,8 @@ describe('Register component', () => {
       request: {
         query: SIGNUP,
         variables: {
-          username: "testRegsterx",
-          email: "testRegsterx@example.com",
+          username: "testRegster",
+          email: "testRegster@example.com",
           password: "password123",
           publicKey: "XXXtest",
         },
@@ -75,7 +56,7 @@ describe('Register component', () => {
 
     const mocks = [mockSignup];
 
-    const { getByLabelText, getByText, getAllByText } = render(
+    const { getAllByText } = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <ContractContext.Provider value={{ web3: {}, contract: {} }}>
           <Register />
@@ -99,7 +80,6 @@ describe('Register component', () => {
   });
 
   test('successfully registers user and redirects to home page', async () => {
-    
 
         // Generate key pair
     const keyPair = await crypto.subtle.generateKey(
@@ -120,12 +100,6 @@ describe('Register component', () => {
     );
     const publicKeyPem = arrayBufferToBase64(publicKeyDer);
 
-    // Export private key
-    const privateKeyDer = await crypto.subtle.exportKey(
-      "pkcs8",
-      keyPair.privateKey
-    );
-
     const mockSignup = {
       request: {
         query: SIGNUP,
@@ -145,7 +119,7 @@ describe('Register component', () => {
       },
     };
 
-    const { getByLabelText, getByText, getAllByText } = render(
+    const { getAllByText } = render(
       <MockedProvider mocks={[mockSignup]} addTypename={false}>
          <ContractContext.Provider value={{ web3: {}, contract: {} }}>
           <Register />
