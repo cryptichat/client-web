@@ -239,7 +239,7 @@ function Register() {
         ))}
       </div>
 
-      <p class="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p className="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <a
           href="#"
@@ -281,7 +281,7 @@ function Register() {
             />
 
           </div>
-          <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+          <h1 className=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
         </div>

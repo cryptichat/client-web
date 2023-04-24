@@ -89,9 +89,9 @@ function Login() {
           required
         />
       </div>
-      <div class="flex items-center justify-between">
-        <div class="flex items-start py-2">
-          <div class="flex items-center h-5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-start py-2">
+          <div className="flex items-center h-5">
             <input
               id="remember"
               aria-describedby="remember"
@@ -123,7 +123,7 @@ function Login() {
           <div key={index} className="error">{error.message}</div>
         ))}
       </div>
-      <p class="my-2 pl-0.5 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p className="my-2 pl-0.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Don’t have an account yet?{" "}
         <a
           href="#"
@@ -162,7 +162,7 @@ function Login() {
             variants={formVariants}
           >
             <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white" variants={titleVariants}>
-              <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
                 Login to your Account
               </h1>
             </motion.div>
