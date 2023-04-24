@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
-import Login from '../src/pages/login.jsx';
+import Login, {LOGIN} from '../src/pages/login.jsx';
+import {SIGNUP} from '../src/pages/register.jsx';
 import { ApolloClient, InMemoryCache, HttpLink, gql } from "@apollo/client";
 import "@testing-library/jest-dom";
 import crypto from 'crypto';
@@ -12,14 +13,6 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => jest.fn(),
 }));
 
-const LOGIN = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      accessToken
-    }
-  }
-`;
-
 function arrayBufferToBase64(buffer) {
   let binary = '';
   const bytes = new Uint8Array(buffer);
@@ -29,24 +22,6 @@ function arrayBufferToBase64(buffer) {
   }
   return btoa(binary);
 }
-
-const SIGNUP = gql`
-  mutation CreateAccount(
-    $username: String!
-    $email: String!
-    $password: String!
-    $publicKey: String!
-  ) {
-    createAccount(
-      username: $username
-      email: $email
-      password: $password
-      publickey: $publicKey
-    ) {
-      accessToken
-    }
-  }
-`;
 
 describe('Login component', () => {
   const username = 'testlogin';
@@ -110,12 +85,6 @@ describe('Login component', () => {
         keyPair.publicKey
       );
       const publicKeyPem = arrayBufferToBase64(publicKeyDer);
-
-      // Export private key
-      const privateKeyDer = await crypto.subtle.exportKey(
-        "pkcs8",
-        keyPair.privateKey
-      );
 
       const { reg } = await client.mutate({
         mutation: SIGNUP,

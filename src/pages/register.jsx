@@ -7,7 +7,7 @@ import { ContractContext } from "../utils/ContractProvider";
 import lock192 from "./lock192.png";
 import "./styles.css";
 
-const SIGNUP = gql`
+export const SIGNUP = gql`
   mutation CreateAccount(
     $username: String!
     $email: String!

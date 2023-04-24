@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import lock192 from "./lock192.png";
 import "./styles.css";
 
-const LOGIN = gql`
+export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       accessToken
