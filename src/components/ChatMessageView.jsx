@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useMutation, useLazyQuery, gql } from "@apollo/client";
 import MessageItem from "../components/MessageItem";
 import { BsFillSendFill } from "react-icons/bs";
@@ -80,6 +80,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   const [showPrompt, setShowPrompt] = useState(Object.keys(activeConvo).length === 0);
 
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
   const welcomePromptStyle = {
     display: 'flex',
     justifyContent: 'center',
@@ -112,7 +118,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [GetMessages, { subscribeToMore }] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
-      console.log("poll res", res);
       processMessages(res.me.conversations[0].messages);
     },
     notifyOnNetworkStatusChange: true,
@@ -154,7 +159,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     }
 
     decryptMessages().then((decryptedMessages) => {
-      console.log("decrypted messages", decryptedMessages);
       setActiveMessages(decryptedMessages);
     });
   }
@@ -170,9 +174,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         shouldResubscribe: true,
         onError: (err) => console.error(err),
         updateQuery: (prev, { subscriptionData }) => {
-          console.log("subscription update");
           if (!subscriptionData.data) return prev;
-          console.log("prev", prev);
           console.log("subscription data", subscriptionData.data);
 
           return Object.assign({}, prev, {
@@ -188,13 +190,13 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           });
         },
       });
+      scrollToBottom();
     }
   }, [activeMessages]);
 
   useEffect(() => {
     async function func() {
       if (activeConvo) {
-        console.log("active", activeConvo);
 
         const res = await GetMessages({
           variables: {
@@ -206,7 +208,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           notifyOnNetworkStatusChange: true,
         });
 
-        console.log("messages", res.data);
         await processMessages(res.data.me.conversations[0].messages);
       }
     }
@@ -221,14 +222,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         localStorage.getItem("privateKey")
       );
 
-      console.log("decrypted symmetric key", decryptedSymmetricKey);
       setSymmetricKey(decryptedSymmetricKey);
     }
     decryptKey();
   }, [activeConvo]);
 
   async function handleSendMessage() {
-    console.log("message to send: " + messageText);
     if (messageText === "") {
       return;
     }
@@ -249,6 +248,19 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       ]);
       setMessageText("");
     });
+  }
+
+  function getDisplayName(users) {
+    if (users.length == 1) {
+      return users[0].username
+    }
+    else{
+      let displayName = ""
+      for (let user of users){
+        displayName += user.username + ", "
+      }
+      return displayName.slice(0, -2)
+    }
   }
 
   const messageIconVariants = {
@@ -341,7 +353,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
               </div>
             )}
-            <p className="font-black pl-1 text-2xl">{activeConvo.user}</p>
+            <p className="font-black pl-1 text-2xl">{getDisplayName(activeConvo.user)}</p>
           </motion.div>
           <motion.div
             className="scroll grow px-4 md:max-h-full max-h-[85%] overflow-y-scroll custom-scrollbar"
@@ -350,6 +362,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             {activeMessages.map((message, index) => (
               <MessageItem message={message} index={index} />
             ))}
+            <div ref={messagesEndRef} />
           </motion.div>
           <motion.div
             className="flex h pb-2 items-center"

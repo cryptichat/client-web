@@ -15,6 +15,18 @@ function ConvoListItem({ username, key, onClick, active }) {
     "rounded-md"
   );
 
+  function getDisplayName(users) {
+    if (users.length == 1) {
+      return users[0].username
+    }
+    else{
+      let displayName = ""
+      for (let user of users){
+        displayName += user.username + ", "
+      }
+      return displayName.slice(0, -2)
+    }
+  }
   return (
     <motion.li
       key={key}
@@ -26,7 +38,7 @@ function ConvoListItem({ username, key, onClick, active }) {
       transition={{ duration: 0.3 }}
     >
       <div className="flex items-center">
-        <p className="w-36 truncate text-left">{username}</p>
+        <p className="w-36 truncate text-left">{getDisplayName(username)}</p>
       </div>
     </motion.li>
   );
