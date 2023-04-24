@@ -160,7 +160,7 @@ function Login() {
     >
       <div className="">
         <div className="chatcontainer"></div>
-        <div className="container mx-auto" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
+        <div className="container mx-auto cursor-pointer" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
           <motion.img
             src={lock192}
             width="100px"
