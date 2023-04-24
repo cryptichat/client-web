@@ -315,16 +315,16 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               Welcome to Cryptic Chat!
             </motion.p>
             <motion.p variants={itemVariants}>
-              Click on a user or create a conversation by clicking on either the individual messaging icon
+              <strong>Click</strong> on a user or create a conversation by clicking on either the individual messaging icon
               <span className="inline-flex items-center">
                 {" "}
-                <BiMessageRoundedAdd className="mr-2 ml-2 my-1 py-1 border text-[26px] text-white bg-slate-600 rounded-[5px]" />
+                <BiMessageRoundedAdd className="mr-2 ml-2 my-1 border text-[25px] text-white bg-slate-600 rounded-[5px]" />
               </span>
               <span className="inline-flex items-center">
                 or the group messaging icon{" "}
-                <MdGroupAdd className="mr-2 ml-2 text-[26px] py-1 mb-1 border text-white bg-slate-600 rounded-[5px]" />
+                <MdGroupAdd className="mr-2 ml-2 text-[25px] mb-2 border text-white bg-slate-600 rounded-[5px]" />
               </span>
-              to get started!
+              to <strong>get started</strong>!
             </motion.p>
           </div>
         </div>
