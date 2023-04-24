@@ -309,7 +309,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               transition={transition}
             />
             <motion.p
-              className="text-[30px] text-white font-bold p-1"
+              className="welcome text-[30px] text-white font-bold p-1"
               variants={itemVariants}
             >
               Welcome to Cryptic Chat!
