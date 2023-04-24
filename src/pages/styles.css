@@ -16,6 +16,10 @@ section {
   min-height: 150vh;
 }
 
+.actionview{
+  justify-content: center;
+}
+
 .app {
   font-family: sans-serif;
   display: flex;
