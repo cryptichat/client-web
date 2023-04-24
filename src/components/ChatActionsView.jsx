@@ -351,18 +351,11 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               {userConversations.map((convo) => {
                 console.log(convo)
                 return (
-                  <div
-                    className="flex items-center gap-2"
+                  <ConvoListItem
+                    username={convo.user}
+                    active={activeConvo && activeConvo.conv_id === convo.conv_id}
                     onClick={() => setActiveConvo(convo)}
-                  >
-                    <CgProfile className="text-[25px]" />
-                    <ConvoListItem
-                      username={convo.user}
-                      active={
-                        activeConvo && activeConvo.conv_id === convo.conv_id
-                      }
-                    />
-                  </div>
+                  />
                 );
               })}
             </animated.ul>

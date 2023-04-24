@@ -140,15 +140,16 @@ function Register() {
     <div className="form">
       <div className="input-container">
         <label
-          for="text"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="username"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Username{" "}
         </label>
         <input
           type="text"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="uname"
+          id = "username"
           value={formState.uname}
           onChange={(e) =>
             setFormState({
@@ -161,14 +162,15 @@ function Register() {
       </div>
       <div className="input-container">
         <label
-          for="email"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Email{" "}
         </label>
         <input
           type="email"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          id = "email"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="email"
           value={formState.email}
           onChange={(e) =>
@@ -182,15 +184,16 @@ function Register() {
       </div>
       <div className="input-container">
         <label
-          for="password"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="password-input"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Password{" "}
         </label>
         <input
           type="password"
-          class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="pass1"
+          data-testid = "password-input"
           value={formState.pass1}
           onChange={(e) =>
             setFormState({
@@ -212,6 +215,7 @@ function Register() {
           type="password"
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="pass2"
+          id="password2"
           value={formState.pass2}
           onChange={(e) =>
             setFormState({
@@ -234,6 +238,7 @@ function Register() {
           <div className="error">{error.message}</div>
         ))}
       </div>
+
       <p className="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <a
@@ -276,13 +281,13 @@ function Register() {
             />
 
           </div>
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+          <h1 className=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
         </div>
         <div className="regform rounded-[8px] shadow dark:border dark:bg-gray-800 dark:border-gray-700 ">
           <div className="title text-xl font-bold text-gray-900 dark:text-white">
-            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white ">
+            <h1 className="text-xl font-bold text-gray-900 md:text-2xl dark:text-white ">
               Register
             </h1>
           </div>
@@ -292,7 +297,7 @@ function Register() {
               <div className="button-container">
                 <button
                   onClick={() => navigate("/")}
-                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Continue
                 </button>
