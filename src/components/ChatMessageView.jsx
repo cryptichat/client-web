@@ -286,7 +286,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       animate="visible"
     >
       {showPrompt && (
-        <div className="p-80">
+        <div className="mt-60">
           <div
             className="welcome-prompt"
             style={{
@@ -367,18 +367,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 required
               />
             </form>
-            <motion.div
-              className="sendattach bg-[#8b5cf6] md:flex border border-[#000000] px-2 p-2.5
-                          text-[#ffffff] rounded-[10px] items-center 
-                            hover:bg-[#4c1d95] hover:text-white transition duration-200"
-              variants={itemVariants}
-            >
-              <input style={{ display: "none" }} type="file" id="file" />
-              <label htmlFor="file">
-                {/* <img className="sendpic" src={Add} alt="" /> */}
-                <CgAttachment className="text-[20px] text-white" />
-              </label>
-            </motion.div>
             <motion.div
               onClick={handleSendMessage}
               className="bg-[#8b5cf6] flex border border-[#000000] p-2 mx-2 mt-2 mb-2
