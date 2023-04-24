@@ -200,6 +200,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   // END Group Convo Creation
 
   if (conv_loading) return <p>Loading...</p>;
+
   return (
     <div className="actionview flex flex-col flex-grow lg:max-w-full border border-[#5a5b5c] border-t-0 border-l-0 border-b-0">
       {/* Convo list */}
@@ -236,19 +237,10 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
         </div>
       </div>
 
-      <input
-        type="text"
-        placeholder="Search messages"
-        value={searchTerm}
-        className="mt-1 py-4 pl-2 mx-4 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700 my-5"
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-
       <div className="">
         <div
-          className={`py-2 mb-2 rounded-[10px] ${
-            (addChatOpen || addGroupChatOpen) && "bg-neutral-800"
-          }`}
+          className={`py-2 mb-2 mt-2 rounded-[10px] ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"
+            }`}
         >
           {addChatOpen && (
             <>
@@ -263,7 +255,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               />
               <a
                 href="#"
-                className="hidden bg-[#8b5cf6] md:flex p-2 mx-3 mt-3 mb-1
+                className="bg-[#8b5cf6] flex p-2 mx-3 mt-3 mb-1
                 text-white rounded-[10px] items-center
                   hover:bg-[#4c1d95] transition duration-200"
                 onClick={async () => {
@@ -303,7 +295,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                 }}
               >
                 {loading ? (
-                  <div className="spinner inline-block"></div>
+                  <div className="convostart"></div>
                 ) : (
                   <>Start</>
                 )}

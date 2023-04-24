@@ -1,14 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
-
-// import { subtle } from "crypto"
 import { IoPersonAddSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
-
 import { ContractContext } from "../utils/ContractProvider";
 import lock192 from "./lock192.png";
-
 import "./styles.css";
 
 const SIGNUP = gql`
@@ -66,7 +62,6 @@ function Register() {
   const navigate = useNavigate();
   const { web3, contract } = useContext(ContractContext);
 
-  // React States
   const [errors, setErrors] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formState, setFormState] = useState({
@@ -81,7 +76,7 @@ function Register() {
       if (createAccount.accessToken) {
         setIsSubmitted(true);
         localStorage.setItem("auth-token", createAccount.accessToken);
-        localStorage.setItem("dsmessenger-username", formState.uname); // TODO: replace localStorage call with global state management
+        localStorage.setItem("dsmessenger-username", formState.uname);
         navigate("/");
       }
     },
@@ -101,7 +96,6 @@ function Register() {
       setErrors([...errors, { message: "Passwords do not match" }]);
     } else {
       try {
-        // Generate key pair
         const keyPair = await crypto.subtle.generateKey(
           {
             name: "RSA-OAEP",
@@ -112,21 +106,17 @@ function Register() {
           true,
           ["encrypt", "decrypt"]
         );
-
-        // Export public key
         const publicKeyDer = await crypto.subtle.exportKey(
           "spki",
           keyPair.publicKey
         );
         const publicKeyPem = arrayBufferToBase64(publicKeyDer);
 
-        // Export private key
         const privateKeyDer = await crypto.subtle.exportKey(
           "pkcs8",
           keyPair.privateKey
         );
 
-        // Sign up
         await signupHandler({
           variables: {
             username: formState.uname,
@@ -138,7 +128,6 @@ function Register() {
 
         console.log("Account created successfully");
 
-        // Store the private key in local storage
         localStorage.setItem("privateKey", arrayBufferToBase64(privateKeyDer));
         console.log("Private key stored securely in local storage");
       } catch (error) {
@@ -147,9 +136,8 @@ function Register() {
     }
   }
 
-  // JSX code for login form
   const renderForm = (
-    <div className="form px-2 mx-3 rounded-[10px]">
+    <div className="form">
       <div className="input-container">
         <label
           for="text"
@@ -215,14 +203,14 @@ function Register() {
       </div>
       <div className="input-container">
         <label
-          for="password"
-          class="block text-sm font-medium text-gray-900 dark:text-white"
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
           Confirm Password{" "}
         </label>
         <input
           type="password"
-          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
           name="pass2"
           value={formState.pass2}
           onChange={(e) =>
@@ -234,28 +222,10 @@ function Register() {
           required
         />
       </div>
-      <div
-        className="propic px-2 py-2"
-        style={{ display: "flex", justifyContent: "center" }}
-      >
-        <div
-          className="addpicture mt-2 p-2 hidden bg-zinc-900 md:flex border border-[#ffffff]
-                                  text-[#ffffff] rounded-[5px] items-center 
-                                    hover:bg-[#000000] hover:text-white transition duration-200"
-        >
-          <input style={{ display: "none" }} type="file" id="file" />
-          <label htmlFor="file">
-            <IoPersonAddSharp className="text-[20px] text-white" />
-            <span className="text-[15px] text-white px-2">
-              Add a profile picture
-            </span>
-          </label>
-        </div>
-      </div>
       <div className="button-container p-2">
         <input
           type="submit"
-          class="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
+          className="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
           onClick={async () => await handleRegister()}
         />
       </div>
@@ -264,12 +234,11 @@ function Register() {
           <div className="error">{error.message}</div>
         ))}
       </div>
-
-      <p class="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p className="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <a
           href="#"
-          class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+          className="font-medium text-primary-600 hover:underline dark:text-primary-500"
           onClick={() => navigate("/login")}
         >
           Login
@@ -280,7 +249,7 @@ function Register() {
 
   return (
     <motion.div
-      className="app"
+      className="app flex items-center justify-center min-h-screen"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -292,7 +261,7 @@ function Register() {
           style={{ display: "flex", alignItems: "center" }}
         >
           <div
-            className=" mx-2 my-5 "
+            className="mx-2 my-5"
             style={{
               boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)",
               borderRadius: 25,
@@ -305,14 +274,15 @@ function Register() {
               alt="ChatApp logo"
               variants={lock192Variants}
             />
+
           </div>
-          <h1 class=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
+          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
             CrypticChat
           </h1>
         </div>
-        <div className="regform w-full bg-white rounded-[8px] shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
-          <div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white ">
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-2 ">
+        <div className="regform rounded-[8px] shadow dark:border dark:bg-gray-800 dark:border-gray-700 ">
+          <div className="title text-xl font-bold text-gray-900 dark:text-white">
+            <h1 class="text-xl font-bold text-gray-900 md:text-2xl dark:text-white ">
               Register
             </h1>
           </div>
@@ -334,6 +304,7 @@ function Register() {
         </div>
       </div>
     </motion.div>
+
   );
 }
 

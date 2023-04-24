@@ -16,6 +16,10 @@ section {
   min-height: 150vh;
 }
 
+.actionview{
+  justify-content: center;
+}
+
 .app {
   font-family: sans-serif;
   display: flex;
@@ -50,7 +54,10 @@ section {
 }
 
 .regform {
-  width: 300px;
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  font-family: "Roboto", sans-serif;
 }
 
 input[type="text"],
@@ -227,7 +234,7 @@ label {
   -ms-overflow-style: none;
 }
 
-.spinner {
+.convostart {
   display: inline-block;
   width: 30px;
   height: 30px;
@@ -240,5 +247,44 @@ label {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Base */
+body {
+  padding: 0;
+  margin: 0!important;
+  background-color: #000!important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.welcome{
+  position: center;
+  color: hsl(0, 0%, 68%);
+  font-weight: bold!important;
+  font-family: "Anonymous Pro", monospace!important;
+  letter-spacing: 7px!important;
+  overflow: hidden;
+  border-right: 2px solid hsl(0, 0%, 80%);
+  white-space: nowrap;
+  animation: typewriter 4s steps(44) 1s 1 normal both,
+    blinkTextCursor 500ms infinite;
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to { width: 45% }
+}
+@keyframes blinkTextCursor {
+  from {
+    border-right-color: hsl(0, 0%, 80%);
+  }
+  to {
+    border-right-color: transparent;
   }
 }

@@ -36,7 +36,6 @@ const lock192Variants = {
 
 function Login() {
   const navigate = useNavigate();
-  // React States
   const [errors, setErrors] = useState([]);
   const [formState, setFormState] = useState({
     username: "",
@@ -53,9 +52,9 @@ function Login() {
       setErrors(graphQLErrors);
     },
   });
-  // JSX code for login form
+
   const renderForm = (
-    <div className="form px-2 mx-2 rounded-[10px]">
+    <div className="form rounded-[10px]">
       <div className="input-container">
         <label
           for="text"
@@ -84,8 +83,7 @@ function Login() {
         >
           Password{" "}
         </label>
-        <input
-          type="password"
+        <input type="password"
           value={formState.password}
           onChange={(e) =>
             setFormState({
@@ -99,7 +97,7 @@ function Login() {
         />
       </div>
       <div class="flex items-center justify-between">
-        <div class="flex items-start py-2">
+        <div class="flex items-start">
           <div class="flex items-center h-5">
             <input
               id="remember"
@@ -139,7 +137,7 @@ function Login() {
           <div className="error">{error.message}</div>
         ))}
       </div>
-      <p class="my-2 pl-0.5 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p class="my-2 text-sm font-light text-gray-500 dark:text-gray-400">
         Don’t have an account yet?{" "}
         <a
           href="#"
@@ -149,47 +147,49 @@ function Login() {
           Sign up
         </a>
       </p>
-    </div>
-  );
+    </div>);
 
   return (
     <motion.div
-      className="app"
+      className="flex justify-center items-center h-screen app"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      <div className="ml-6">
+      <div className="">
         <div className="chatcontainer"></div>
-        <div className="container mx-auto" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
-        <motion.img
+        <div className="container mx-auto cursor-pointer" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
+          <motion.img
             src={lock192}
             width="100px"
             height="99.88px"
             alt="ChatApp logo"
             variants={lock192Variants}
-          /></div>
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-7">
-            Welcome to CrypticChat
-          </h1>
-
-        <div className=" w-full bg-white rounded-[8px] shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          />
+        </div>
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-7 text-center">
+          Welcome to CrypticChat
+        </h1> <div className="w-full max-w-md">
           <motion.div
-            className="login-form w-full bg-white rounded-[8px] shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+            className="border bg-white rounded-[8px] shadow p-6 dark:bg-gray-800 dark:border-gray-700"
             variants={formVariants}
           >
-            <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white" variants={titleVariants}>
-              <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white px-6 mt-3">
+            <motion.div
+              className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center"
+              variants={titleVariants}
+            >
+              <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Login to your Account
               </h1>
             </motion.div>
             {renderForm}
           </motion.div>
         </div>
-        </div>
+      </div>
     </motion.div>
   );
 }
-
 export default Login;
+
+

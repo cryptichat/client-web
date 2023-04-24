@@ -298,7 +298,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
       animate="visible"
     >
       {showPrompt && (
-        <div className="p-80">
+        <div className="mt-60">
           <div
             className="welcome-prompt"
             style={{
@@ -321,22 +321,22 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               transition={transition}
             />
             <motion.p
-              className="text-[30px] text-white font-bold p-1"
+              className="welcome text-[30px] text-white font-bold p-1"
               variants={itemVariants}
             >
               Welcome to Cryptic Chat!
             </motion.p>
-            <motion.p variants={itemVariants}>
-              Click on a user or create a conversation by clicking on either the individual messaging icon
+            <motion.p className="max-w-[700px]" variants={itemVariants}>
+              <strong>Click</strong> on a user or create a conversation by clicking on either the individual messaging icon
               <span className="inline-flex items-center">
                 {" "}
-                <BiMessageRoundedAdd className="mr-2 ml-2 text-[25px] text-white" />
+                <BiMessageRoundedAdd className="mr-2 ml-2 my-1 border text-[25px] text-white bg-slate-600 rounded-[5px]" />
               </span>
               <span className="inline-flex items-center">
                 or the group messaging icon{" "}
-                <MdGroupAdd className="mr-2 ml-2 text-[25px] text-white" />
+                <MdGroupAdd className="mr-2 ml-2 text-[25px] mb-2 border text-white bg-slate-600 rounded-[5px]" />
               </span>
-              to get started!
+              to <strong>get started</strong>!
             </motion.p>
           </div>
         </div>
@@ -365,7 +365,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             <div ref={messagesEndRef} />
           </motion.div>
           <motion.div
-            className="flex h pb-2 items-center pr-2 ml-2"
+            className="flex h pb-2 items-center"
             variants={itemVariants}
           >
             <form className="inputContainer flex-1 py-2">
@@ -380,18 +380,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 required
               />
             </form>
-            <motion.div
-              className="sendattach bg-[#8b5cf6] md:flex border border-[#000000] px-2 p-2.5
-                          text-[#ffffff] rounded-[10px] items-center 
-                            hover:bg-[#4c1d95] hover:text-white transition duration-200"
-              variants={itemVariants}
-            >
-              <input style={{ display: "none" }} type="file" id="file" />
-              <label htmlFor="file">
-                {/* <img className="sendpic" src={Add} alt="" /> */}
-                <CgAttachment className="text-[20px] text-white" />
-              </label>
-            </motion.div>
             <motion.div
               onClick={handleSendMessage}
               className="bg-[#8b5cf6] flex border border-[#000000] p-2 mx-2 mt-2 mb-2
