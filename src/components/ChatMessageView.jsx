@@ -326,7 +326,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             >
               Welcome to Cryptic Chat!
             </motion.p>
-            <motion.p variants={itemVariants}>
+            <motion.p className="max-w-[700px]" variants={itemVariants}>
               <strong>Click</strong> on a user or create a conversation by clicking on either the individual messaging icon
               <span className="inline-flex items-center">
                 {" "}
