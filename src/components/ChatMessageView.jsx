@@ -5,9 +5,9 @@ import { BsFillSendFill } from "react-icons/bs";
 import { BiArrowBack } from "react-icons/bi";
 import { CgAttachment } from "react-icons/cg";
 import useWindowSize from "../hooks/useWindowSize";
-import { BiMessageRoundedAdd } from 'react-icons/bi';
-import { MdGroupAdd } from 'react-icons/md';
-import { motion } from 'framer-motion';
+import { BiMessageRoundedAdd } from "react-icons/bi";
+import { MdGroupAdd } from "react-icons/md";
+import { motion } from "framer-motion";
 import lock192 from "../pages/lock192.png";
 import { decryptSymmetricKey, encryptText, decryptText } from "../utils/crypto";
 
@@ -77,24 +77,26 @@ const SEND_MESSAGE = gql`
 `;
 
 export default function ChatMessageView({ activeConvo, setActiveConvo }) {
-
-  const [showPrompt, setShowPrompt] = useState(Object.keys(activeConvo).length === 0);
-
-  const messagesEndRef = useRef(null)
+  const [showPrompt, setShowPrompt] = useState(
+    Object.keys(activeConvo).length === 0
+  );
+  const [messagesLoading, setMessagesLoading] = useState(false);
+  const messageContainerRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const welcomePromptStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    fontSize: '1.2rem',
-    color: '#666',
-    textAlign: 'center',
-    padding: '20px',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    fontSize: "1.2rem",
+    color: "#666",
+    textAlign: "center",
+    padding: "20px",
   };
 
   const lock192Variants = {
@@ -115,7 +117,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [symmetricKey, setSymmetricKey] = useState({});
   const [activeMessages, setActiveMessages] = useState([]);
 
-  const [GetMessages, { subscribeToMore }] = useLazyQuery(GET_MESSAGE, {
+  const [GetMessages, { subscribeToMore, fetchMore }] = useLazyQuery(GET_MESSAGE, {
     fetchPolicy: "cache-and-network",
     onCompleted: (res) => {
       processMessages(res.me.conversations[0].messages);
@@ -179,14 +181,16 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
           return Object.assign({}, prev, {
             me: {
-              conversations: [{
-                ...prev.me.conversations[0],
-                messages: [
-                  ...prev.me.conversations[0].messages,
-                  subscriptionData.data.newMessage,
-                ]
-              }]
-            }
+              conversations: [
+                {
+                  ...prev.me.conversations[0],
+                  messages: [
+                    ...prev.me.conversations[0].messages,
+                    subscriptionData.data.newMessage,
+                  ],
+                },
+              ],
+            },
           });
         },
       });
@@ -197,7 +201,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   useEffect(() => {
     async function func() {
       if (activeConvo) {
-
         const res = await GetMessages({
           variables: {
             conversationId: parseInt(activeConvo.conv_id),
@@ -252,14 +255,29 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   function getDisplayName(users) {
     if (users.length == 1) {
-      return users[0].username
-    }
-    else{
-      let displayName = ""
-      for (let user of users){
-        displayName += user.username + ", "
+      return users[0].username;
+    } else {
+      let displayName = "";
+      for (let user of users) {
+        displayName += user.username + ", ";
       }
-      return displayName.slice(0, -2)
+      return displayName.slice(0, -2);
+    }
+  }
+
+  function handleScroll() {
+    const messageContainerDiv = messageContainerRef.current;
+    if (
+      messageContainerDiv.scrollTop === 0 &&
+      activeMessages.length > 0 &&
+      !loading
+    ) {
+      console.log("retrieve more messages")
+      setMessagesLoading(true);
+      fetchMore({ variables: { offset: activeMessages.length } }).then(() => {
+        setMessagesLoading(false);
+        console.log("done retrieving more messages")
+      });
     }
   }
 
@@ -269,7 +287,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   };
 
   const transition = {
-    type: 'spring',
+    type: "spring",
     stiffness: 200,
     damping: 20,
   };
@@ -327,7 +345,8 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               Welcome to Cryptic Chat!
             </motion.p>
             <motion.p className="max-w-[700px]" variants={itemVariants}>
-              <strong>Click</strong> on a user or create a conversation by clicking on either the individual messaging icon
+              <strong>Click</strong> on a user or create a conversation by
+              clicking on either the individual messaging icon
               <span className="inline-flex items-center">
                 {" "}
                 <BiMessageRoundedAdd className="mr-2 ml-2 my-1 border text-[25px] text-white bg-slate-900 rounded-[5px]" />
@@ -353,11 +372,15 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 <BiArrowBack size={24} onClick={() => setActiveConvo({})} />
               </div>
             )}
-            <p className="font-black pl-1 text-2xl">{getDisplayName(activeConvo.user)}</p>
+            <p className="font-black pl-1 text-2xl">
+              {getDisplayName(activeConvo.user)}
+            </p>
           </motion.div>
           <motion.div
             className="scroll grow px-4 md:max-h-full max-h-[85%] overflow-y-scroll custom-scrollbar"
             variants={itemVariants}
+            ref={messageContainerRef}
+            onScroll={handleScroll}
           >
             {activeMessages.map((message, index) => (
               <MessageItem message={message} index={index} />
@@ -394,4 +417,5 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         </>
       )}
     </motion.div>
-  )};
+  );
+}
