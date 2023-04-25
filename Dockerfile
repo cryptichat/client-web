@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 COPY package*.json /code/
 WORKDIR /code
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 COPY . /code
 RUN npm run build
 
