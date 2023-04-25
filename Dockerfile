@@ -9,4 +9,5 @@ COPY . /code
 RUN npm run build
 
 FROM docker.io/library/nginx:alpine
-COPY --from=builder /code/build /usr/share/nginx/html
+COPY ci/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /code/build /var/www/html
