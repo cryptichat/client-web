@@ -349,7 +349,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               className="divide-gray-300 truncate"
             >
               {userConversations.map((convo) => {
-                console.log(convo)
                 return (
                   <ConvoListItem
                     username={convo.user}
