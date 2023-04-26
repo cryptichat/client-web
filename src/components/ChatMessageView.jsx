@@ -18,6 +18,7 @@ const GET_MESSAGE = gql`
     $conversationId: Int!
     $nMessages: Int!
     $token: String!
+    $offset: Int!
   ) {
     me(token: $token) {
       conversations(
@@ -26,7 +27,7 @@ const GET_MESSAGE = gql`
         conversationId: $conversationId
       ) {
         id
-        messages(nMessages: $nMessages) {
+        messages(nMessages: $nMessages, offset: $offset) {
           sender {
             username
           }
@@ -216,6 +217,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             conversationId: parseInt(activeConvo.conv_id),
             nMessages: 10,
             token: token,
+            offset: 0,
           },
           fetchPolicy: "cache-and-network",
           notifyOnNetworkStatusChange: true,
@@ -283,12 +285,6 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   function handleScroll() {
     const messageContainerDiv = messageContainerRef.current;
-    // console.log(
-    //   "scrolling",
-    //   messageContainerDiv.scrollTop,
-    //   activeMessages.length,
-    //   moreMessagesLoading
-    // );
     if (
       messageContainerDiv.scrollTop === 0 &&
       activeMessages.length > 0 &&
@@ -296,7 +292,26 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     ) {
       console.log("retrieve more messages");
       setMoreMessagesLoading(true);
-      fetchMore({ variables: { offset: activeMessages.length } }).then(() => {
+      fetchMore({
+        variables: { offset: activeMessages.length },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          console.log("fetch more result", fetchMoreResult);
+          return Object.assign({}, prev, {
+            me: {
+              conversations: [
+                {
+                  ...prev.me.conversations[0],
+                  messages: [
+                    ...fetchMoreResult.me.conversations[0].messages,
+                    ...prev.me.conversations[0].messages,
+                  ],
+                },
+              ],
+            },
+          });
+        },
+      }).then(() => {
         setMoreMessagesLoading(false);
         console.log("done retrieving more messages");
       });
@@ -404,9 +419,11 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             ref={messageContainerRef}
             onScroll={handleScroll}
           >
-            <div className="text-center">
-              <Spinner />
-            </div>
+            {moreMessagesLoading ? (
+              <div className="text-center">
+                <Spinner />
+              </div>
+            ) : null}
             {activeMessages.map((message, index) => (
               <MessageItem message={message} index={index} />
             ))}
