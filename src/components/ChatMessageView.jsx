@@ -10,6 +10,7 @@ import { MdGroupAdd } from "react-icons/md";
 import { motion } from "framer-motion";
 import lock192 from "../pages/lock192.png";
 import { decryptSymmetricKey, encryptText, decryptText } from "../utils/crypto";
+import { toast } from "react-toastify";
 
 const GET_MESSAGE = gql`
   query MessagesByConversation(
@@ -80,7 +81,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [showPrompt, setShowPrompt] = useState(
     Object.keys(activeConvo).length === 0
   );
-  const [messagesLoading, setMessagesLoading] = useState(false);
+  const [moreMessagesLoading, setMoreMessagesLoading] = useState(false);
   const messageContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -117,17 +118,20 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [symmetricKey, setSymmetricKey] = useState({});
   const [activeMessages, setActiveMessages] = useState([]);
 
-  const [GetMessages, { subscribeToMore, fetchMore }] = useLazyQuery(GET_MESSAGE, {
-    fetchPolicy: "cache-and-network",
-    onCompleted: (res) => {
-      processMessages(res.me.conversations[0].messages);
-    },
-    notifyOnNetworkStatusChange: true,
-    onError: (graphQLErrors) => {
-      console.error(graphQLErrors);
-      toast.error("Error retrieving messages, please check console");
-    },
-  });
+  const [GetMessages, { subscribeToMore, fetchMore }] = useLazyQuery(
+    GET_MESSAGE,
+    {
+      fetchPolicy: "cache-and-network",
+      onCompleted: (res) => {
+        processMessages(res.me.conversations[0].messages);
+      },
+      notifyOnNetworkStatusChange: true,
+      onError: (graphQLErrors) => {
+        console.error(graphQLErrors);
+        toast.error("Error retrieving messages, please check console");
+      },
+    }
+  );
 
   const [SendMessage] = useMutation(SEND_MESSAGE, {
     onCompleted: (SendMessage) => {},
@@ -200,7 +204,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   useEffect(() => {
     async function func() {
-      if (activeConvo) {
+      if (
+        Object.keys(activeConvo).length > 0 &&
+        Object.keys(symmetricKey).length > 0
+      ) {
+        console.log("active convo messages view", activeConvo);
+        console.log("attempting to retrieve messages");
         const res = await GetMessages({
           variables: {
             conversationId: parseInt(activeConvo.conv_id),
@@ -219,15 +228,21 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   useEffect(() => {
     async function decryptKey() {
+      console.log("active convo key decryption", activeConvo);
       // decrypt symmetric key
-      const decryptedSymmetricKey = await decryptSymmetricKey(
-        activeConvo.aesKey,
-        localStorage.getItem("privateKey")
-      );
-
-      setSymmetricKey(decryptedSymmetricKey);
+      try {
+        const decryptedSymmetricKey = await decryptSymmetricKey(
+          activeConvo.aesKey,
+          localStorage.getItem("privateKey")
+        );
+        setSymmetricKey(decryptedSymmetricKey);
+      } catch (err) {
+        console.error(err);
+        toast.error("Error decrypting symmetric key, please check console");
+      }
     }
-    decryptKey();
+
+    if (Object.keys(activeConvo).length > 0 && activeConvo.aesKey) decryptKey();
   }, [activeConvo]);
 
   async function handleSendMessage() {
@@ -267,16 +282,22 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
 
   function handleScroll() {
     const messageContainerDiv = messageContainerRef.current;
+    // console.log(
+    //   "scrolling",
+    //   messageContainerDiv.scrollTop,
+    //   activeMessages.length,
+    //   moreMessagesLoading
+    // );
     if (
       messageContainerDiv.scrollTop === 0 &&
       activeMessages.length > 0 &&
-      !loading
+      !moreMessagesLoading
     ) {
-      console.log("retrieve more messages")
-      setMessagesLoading(true);
+      console.log("retrieve more messages");
+      setMoreMessagesLoading(true);
       fetchMore({ variables: { offset: activeMessages.length } }).then(() => {
-        setMessagesLoading(false);
-        console.log("done retrieving more messages")
+        setMoreMessagesLoading(false);
+        console.log("done retrieving more messages");
       });
     }
   }
