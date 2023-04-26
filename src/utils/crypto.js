@@ -100,53 +100,65 @@ export async function decryptSymmetricKey(
   base64EncryptedSymmetricKey,
   base64PrivateKey
 ) {
-  // Safely decode the base64 encoded encrypted symmetric key
-  const encryptedSymmetricKeyBuffer = base64DecodeToArrayBuffer(
-    base64EncryptedSymmetricKey
-  );
+  try {
+    // Safely decode the base64 encoded encrypted symmetric key
+    const encryptedSymmetricKeyBuffer = base64DecodeToArrayBuffer(
+      base64EncryptedSymmetricKey
+    );
 
-  // Safely decode the base64 encoded private key
-  const privateKeyBuffer = base64DecodeToArrayBuffer(base64PrivateKey);
+    // Safely decode the base64 encoded private key
+    const privateKeyBuffer = base64DecodeToArrayBuffer(base64PrivateKey);
 
-  // Import the private key
-  const privateKey = await crypto.subtle.importKey(
-    "pkcs8",
-    privateKeyBuffer,
-    {
-      name: "RSA-OAEP",
-      hash: "SHA-256",
-    },
-    true,
-    ["decrypt"]
-  );
+    // Import the private key
+    const privateKey = await crypto.subtle.importKey(
+      "pkcs8",
+      privateKeyBuffer,
+      {
+        name: "RSA-OAEP",
+        hash: "SHA-256",
+      },
+      true,
+      ["decrypt"]
+    );
+    // Decrypt the encrypted symmetric key with the private key
+    const decryptedSymmetricKeyBuffer = await crypto.subtle.decrypt(
+      {
+        name: "RSA-OAEP",
+      },
+      privateKey,
+      encryptedSymmetricKeyBuffer
+    );
 
-  // Decrypt the encrypted symmetric key with the private key
-  const decryptedSymmetricKeyBuffer = await crypto.subtle.decrypt(
-    {
-      name: "RSA-OAEP",
-    },
-    privateKey,
-    encryptedSymmetricKeyBuffer
-  );
+    // Import the decrypted symmetric key as a JWK
+    const decryptedSymmetricKey = await crypto.subtle.importKey(
+      "raw",
+      decryptedSymmetricKeyBuffer,
+      {
+        name: "AES-GCM",
+      },
+      true,
+      ["encrypt", "decrypt"]
+    );
 
-  // Import the decrypted symmetric key as a JWK
-  const decryptedSymmetricKey = await crypto.subtle.importKey(
-    "raw",
-    decryptedSymmetricKeyBuffer,
-    {
-      name: "AES-GCM",
-    },
-    true,
-    ["encrypt", "decrypt"]
-  );
+    // Export the decrypted symmetric key as a JWK
+    const jwkDecryptedSymmetricKey = await crypto.subtle.exportKey(
+      "jwk",
+      decryptedSymmetricKey
+    );
 
-  // Export the decrypted symmetric key as a JWK
-  const jwkDecryptedSymmetricKey = await crypto.subtle.exportKey(
-    "jwk",
-    decryptedSymmetricKey
-  );
-
-  return jwkDecryptedSymmetricKey;
+    return jwkDecryptedSymmetricKey;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof TypeError) {
+      throw new Error("Failed to decode base64 string: " + error.message);
+    } else if (error instanceof DOMException) {
+      throw new Error(
+        "Failed to import or export crypto key: " + error.message
+      );
+    } else {
+      throw new Error("Failed to decrypt symmetric key: " + error.message);
+    }
+  }
 }
 
 export async function encryptText(plaintext, jwkSymmetricKey) {
