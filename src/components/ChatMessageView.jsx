@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import lock192 from "../pages/lock192.png";
 import { decryptSymmetricKey, encryptText, decryptText } from "../utils/crypto";
 import { toast } from "react-toastify";
+import Spinner from "./Spinner";
 
 const GET_MESSAGE = gql`
   query MessagesByConversation(
@@ -403,6 +404,9 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             ref={messageContainerRef}
             onScroll={handleScroll}
           >
+            <div className="text-center">
+              <Spinner />
+            </div>
             {activeMessages.map((message, index) => (
               <MessageItem message={message} index={index} />
             ))}
