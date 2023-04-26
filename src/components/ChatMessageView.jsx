@@ -200,7 +200,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
           });
         },
       });
-      scrollToBottom();
+      if (!moreMessagesLoading) scrollToBottom();
     }
   }, [activeMessages]);
 
