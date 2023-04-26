@@ -43,9 +43,19 @@ function Login() {
   });
 
   const [loginHandler] = useMutation(LOGIN, {
-    onCompleted: ({ login }) => {
-      localStorage.setItem("auth-token", login.accessToken);
-      localStorage.setItem("dsmessenger-username", formState.username); // TODO: replace localStorage call with global state management
+    onCompleted: async ({ login }) => {
+      // Define a function that returns a Promise to set localStorage items
+      const setLocalStorageItems = () => {
+        return new Promise((resolve) => {
+          localStorage.setItem("auth-token", login.accessToken);
+          localStorage.setItem("dsmessenger-username", formState.username);
+          setTimeout(1000);
+          resolve();
+        });
+      };
+
+      // Call the function and wait for it to complete before navigating
+      await setLocalStorageItems();
       navigate("/");
     },
     onError: ({ graphQLErrors }) => {
