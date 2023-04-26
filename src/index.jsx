@@ -10,11 +10,11 @@ import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:5000/graphql'
+  uri: import.meta.env.VITE_GRAPHQL_URL,
 });
 
 const wsLink = new GraphQLWsLink(createClient({
-  url: 'ws://localhost:5000/graphql/subscriptions',
+  url :`${import.meta.env.VITE_GRAPHQL_WS_URL}/subscriptions`,
 }));
 
 const splitLink = split(
