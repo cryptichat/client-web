@@ -141,15 +141,15 @@ function Register() {
       <div className="input-container">
         <label
           htmlFor="username"
-          className="block text-sm font-medium text-gray-900 dark:text-white"
+          className="block text-sm font-medium text-white"
         >
           Username{" "}
         </label>
         <input
           type="text"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="uname"
-          id = "username"
+          id="username"
           value={formState.uname}
           onChange={(e) =>
             setFormState({
@@ -163,14 +163,14 @@ function Register() {
       <div className="input-container">
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-900 dark:text-white"
+          className="block text-sm font-medium text-gray-900 text-white"
         >
           Email{" "}
         </label>
         <input
           type="email"
-          id = "email"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          id="email"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="email"
           value={formState.email}
           onChange={(e) =>
@@ -185,15 +185,15 @@ function Register() {
       <div className="input-container">
         <label
           htmlFor="password-input"
-          className="block text-sm font-medium text-gray-900 dark:text-white"
+          className="block text-sm font-medium text-gray-900 text-white"
         >
           Password{" "}
         </label>
         <input
           type="password"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="pass1"
-          data-testid = "password-input"
+          data-testid="password-input"
           value={formState.pass1}
           onChange={(e) =>
             setFormState({
@@ -207,13 +207,13 @@ function Register() {
       <div className="input-container">
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-900 dark:text-white"
+          className="block text-sm font-medium text-gray-900 text-white"
         >
           Confirm Password{" "}
         </label>
         <input
           type="password"
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="pass2"
           id="password2"
           value={formState.pass2}
@@ -229,7 +229,7 @@ function Register() {
       <div className="button-container p-2">
         <input
           type="submit"
-          className="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#4c1d95] dark:hover:bg-[#4c1d95] dark:focus:ring-purple-900"
+          className="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-[#4c1d95] hover:bg-[#4c1d95] focus:ring-purple-900"
           onClick={async () => await handleRegister()}
         />
       </div>
@@ -239,11 +239,11 @@ function Register() {
         ))}
       </div>
 
-      <p className="my-2 pl-2.5 text-sm font-light text-gray-500 dark:text-gray-400">
+      <p className="my-2 pl-2.5 text-sm font-light text-gray-500 text-gray-400">
         Already have an account?{" "}
         <a
           href="#"
-          className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+          className="font-medium text-primary-600 hover:underline text-primary-500"
           onClick={() => navigate("/login")}
         >
           Login
@@ -252,64 +252,104 @@ function Register() {
     </div>
   );
 
-  return (
+  // return (
+  //   <motion.div
+  //     className="app flex items-center justify-center min-h-screen"
+  //     variants={containerVariants}
+  //     initial="hidden"
+  //     animate="visible"
+  //     exit="exit"
+  //   >
+  //     <div className="logo">
+  //       <div
+  //         className="flex items-center"
+  //         style={{ display: "flex", alignItems: "center" }}
+  //       >
+  //         <div
+  //           className="mx-2 my-5"
+  //           style={{
+  //             boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)",
+  //             borderRadius: 25,
+  //           }}
+  //         >
+  //           <motion.img
+  //             src={lock192}
+  //             width="60px"
+  //             height="59.928px"
+  //             alt="ChatApp logo"
+  //             variants={lock192Variants}
+  //           />
+
+  //         </div>
+  //         <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white p-2">
+  //           CrypticChat
+  //         </h1>
+  //       </div>
+  //       <div className="w-full max-w-md">
+  //         <div className="rounded-[8px] shadow border bg-gray-800 border-gray-700 ">
+  //           <div className="title text-xl font-bold text-white">
+  //             <h1 className="text-xl font-bold text-white md:text-2xl">
+  //               Register
+  //             </h1>
+  //           </div>
+  //           {isSubmitted ? (
+  //             <motion.div>
+  //               User is successfully registered
+  //               <div className="button-container">
+  //                 <button
+  //                   onClick={() => navigate("/")}
+  //                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center bg-primary-600 hover:bg-primary-700 focus:ring-primary-800"
+  //                 >
+  //                   Continue
+  //                 </button>
+  //               </div>
+  //             </motion.div>
+  //           ) : (
+  //             renderForm
+  //           )}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </motion.div>
+
+  // );
+
+  return(
     <motion.div
-      className="app flex items-center justify-center min-h-screen"
+      className="flex justify-center items-center h-screen app"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      <div className="logo">
-        <div
-          className="flex items-center"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <div
-            className="mx-2 my-5"
-            style={{
-              boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)",
-              borderRadius: 25,
-            }}
-          >
-            <motion.img
-              src={lock192}
-              width="60px"
-              height="59.928px"
-              alt="ChatApp logo"
-              variants={lock192Variants}
-            />
-
-          </div>
-          <h1 className=" text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white p-2">
-            CrypticChat
-          </h1>
+      <div className="">
+        <div className="container mx-auto cursor-pointer" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
+          <motion.img
+            src={lock192}
+            width="100px"
+            height="99.88px"
+            alt="ChatApp logo"
+            variants={lock192Variants}
+          />
         </div>
-        <div className="regform rounded-[8px] shadow dark:border dark:bg-gray-800 dark:border-gray-700 ">
-          <div className="title text-xl font-bold text-gray-900 dark:text-white">
-            <h1 className="text-xl font-bold text-gray-900 md:text-2xl dark:text-white ">
-              Register
-            </h1>
-          </div>
-          {isSubmitted ? (
-            <motion.div>
-              User is successfully registered
-              <div className="button-container">
-                <button
-                  onClick={() => navigate("/")}
-                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
-                  Continue
-                </button>
-              </div>
+        <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white p-7 text-center">
+          Welcome to CrypticChat
+        </h1>
+        <div className="w-full max-w-md">
+          <motion.div
+            className="border rounded-[8px] shadow p-6 bg-gray-800 border-gray-700"
+            variants={formVariants}
+          >
+            <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white" variants={titleVariants}>
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white px-6 mt-3">
+                Create an Account
+              </h1>
             </motion.div>
-          ) : (
-            renderForm
-          )}
+            {renderForm}
+          </motion.div>
         </div>
       </div>
     </motion.div>
-
   );
 }
 
