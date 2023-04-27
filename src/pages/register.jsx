@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
-import { IoPersonAddSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { ContractContext } from "../utils/ContractProvider";
 import lock192 from "./lock192.png";
@@ -60,7 +59,6 @@ const lock192Variants = {
 
 function Register() {
   const navigate = useNavigate();
-  const { web3, contract } = useContext(ContractContext);
 
   const [errors, setErrors] = useState([]);
   const [formState, setFormState] = useState({
@@ -259,68 +257,6 @@ function Register() {
     </div>
   );
 
-  // return (
-  //   <motion.div
-  //     className="app flex items-center justify-center min-h-screen"
-  //     variants={containerVariants}
-  //     initial="hidden"
-  //     animate="visible"
-  //     exit="exit"
-  //   >
-  //     <div className="logo">
-  //       <div
-  //         className="flex items-center"
-  //         style={{ display: "flex", alignItems: "center" }}
-  //       >
-  //         <div
-  //           className="mx-2 my-5"
-  //           style={{
-  //             boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)",
-  //             borderRadius: 25,
-  //           }}
-  //         >
-  //           <motion.img
-  //             src={lock192}
-  //             width="60px"
-  //             height="59.928px"
-  //             alt="ChatApp logo"
-  //             variants={lock192Variants}
-  //           />
-
-  //         </div>
-  //         <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white p-2">
-  //           CrypticChat
-  //         </h1>
-  //       </div>
-  //       <div className="w-full max-w-md">
-  //         <div className="rounded-[8px] shadow border bg-gray-800 border-gray-700 ">
-  //           <div className="title text-xl font-bold text-white">
-  //             <h1 className="text-xl font-bold text-white md:text-2xl">
-  //               Register
-  //             </h1>
-  //           </div>
-  //           {isSubmitted ? (
-  //             <motion.div>
-  //               User is successfully registered
-  //               <div className="button-container">
-  //                 <button
-  //                   onClick={() => navigate("/")}
-  //                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm px-5 py-2.5 text-center bg-primary-600 hover:bg-primary-700 focus:ring-primary-800"
-  //                 >
-  //                   Continue
-  //                 </button>
-  //               </div>
-  //             </motion.div>
-  //           ) : (
-  //             renderForm
-  //           )}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </motion.div>
-
-  // );
-
   return (
     <motion.div
       className="flex justify-center items-center h-screen app"
@@ -350,11 +286,6 @@ function Register() {
             className="border rounded-[8px] shadow p-6 bg-gray-800 border-gray-700 py-1"
             variants={formVariants}
           >
-            <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white" variants={titleVariants}>
-              {/* <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white px-6 mt-3">
-                Create an Account
-              </h1> */}
-            </motion.div>
             {renderForm}
           </motion.div>
         </div>
