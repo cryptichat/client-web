@@ -63,7 +63,6 @@ function Register() {
   const { web3, contract } = useContext(ContractContext);
 
   const [errors, setErrors] = useState([]);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formState, setFormState] = useState({
     uname: "",
     email: "",
@@ -72,11 +71,20 @@ function Register() {
   });
 
   const [signupHandler] = useMutation(SIGNUP, {
-    onCompleted: ({ createAccount }) => {
+    onCompleted: async ({ createAccount }) => {
       if (createAccount.accessToken) {
-        setIsSubmitted(true);
-        localStorage.setItem("auth-token", createAccount.accessToken);
-        localStorage.setItem("dsmessenger-username", formState.uname);
+        // Define a function that returns a Promise to set localStorage items
+        const setLocalStorageItems = () => {
+          return new Promise((resolve) => {
+            localStorage.setItem("auth-token", createAccount.accessToken);
+            localStorage.setItem("dsmessenger-username", formState.username);
+            setTimeout(1000);
+            resolve();
+          });
+        };
+
+        // Call the function and wait for it to complete before navigating
+        await setLocalStorageItems();
         navigate("/");
       }
     },
@@ -314,7 +322,7 @@ function Register() {
 
   // );
 
-  return(
+  return (
     <motion.div
       className="flex justify-center items-center h-screen app"
       variants={containerVariants}
@@ -323,7 +331,10 @@ function Register() {
       exit="exit"
     >
       <div className="">
-        <div className="logo-container mx-auto cursor-pointer" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
+        <div
+          className="logo-container mx-auto cursor-pointer"
+          style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}
+        >
           <motion.img
             src={lock192}
             width="100px"
@@ -340,7 +351,10 @@ function Register() {
             className="border rounded-[8px] shadow p-6 bg-gray-800 border-gray-700"
             variants={formVariants}
           >
-            <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white" variants={titleVariants}>
+            <motion.div
+              className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white"
+              variants={titleVariants}
+            >
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white px-6 mt-3">
                 Create an Account
               </h1>
