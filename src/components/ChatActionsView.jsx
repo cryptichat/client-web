@@ -4,12 +4,12 @@ import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
 import { ContractContext } from "../utils/ContractProvider";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
 import { toast } from "react-toastify";
 import { MdGroupAdd } from "react-icons/md";
 import { useSpring, animated } from "react-spring";
 import { useNavigate } from "react-router-dom";
 import { generateSymmetricKey, encryptSymmetricKey } from "../utils/crypto";
+import Spinner from "./Spinner";
 
 const CREATE_CONVO = gql`
   mutation CreateConversation(
@@ -72,8 +72,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   const [createConvoText, setCreateConvoText] = useState("");
   const [userConversations, setUserConversations] = useState([]);
 
-  const [searchTerm, setSearchTerm] = useState("");
-
   // New state to manage the group chat creation UI
   const [addGroupChatOpen, setAddGroupChatOpen] = useState(false);
   const [groupChatUsers, setGroupChatUsers] = useState([]);
@@ -91,13 +89,17 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
       setLoading(false);
     },
     onError: ({ graphQLErrors }) => {
-      console.error(graphQLErrors);
-      toast.error("Error creating conversation, please check console");
+      console.error("gql", graphQLErrors);
+      if (graphQLErrors.length > 0) {
+        for (let error of graphQLErrors) {
+          toast.error(error.message);
+        }
+      } else toast.error("Error creating conversation, please check console");
+      setLoading(false);
     },
   });
 
-  const [getUserPublicKey, { error: key_error }] =
-    useLazyQuery(GET_USER_PUBLIC_KEY);
+  const [getUserPublicKey] = useLazyQuery(GET_USER_PUBLIC_KEY);
 
   const {
     loading: conv_loading,
@@ -106,7 +108,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   } = useQuery(GET_CONVO, {
     variables: { nConversations: 10, token: token },
     fetchPolicy: "cache-and-network",
-    // pollInterval: 3000,
+    pollInterval: 3000,
   });
 
   useEffect(() => {
@@ -161,9 +163,18 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     // get public keys for all users
     let publicKeys = [];
     for (let i = 0; i < groupChatUsers.length; i++) {
-      let { data } = await getUserPublicKey({
+      let { data, error } = await getUserPublicKey({
         variables: { username: groupChatUsers[i] },
       });
+
+      if (error) {
+        for (let err of error.graphQLErrors) {
+          toast.error(err.message);
+          setLoading(false);
+        }
+        return;
+      }
+
       publicKeys.push(data["user"]["publicKey"]);
     }
 
@@ -184,13 +195,13 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     }
 
     // create conversation
-    await CreateConvoHandler({
+    const newConvo = await CreateConvoHandler({
       variables: {
         directMessage: false,
         token: token,
         users: [user.username, ...groupChatUsers],
         keys: [selfEncryptedSymmetric, ...encryptedKeys],
-      }
+      },
     });
 
     setLoading(false);
@@ -202,7 +213,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   if (conv_loading) return <p>Loading...</p>;
 
   return (
-    <div className="actionview flex flex-col flex-grow lg:max-w-full border border-[#5a5b5c] border-t-0 border-l-0 border-b-0">
+    <div className="justify-center flex flex-col flex-grow lg:max-w-full border border-[#5a5b5c] border-t-0 border-l-0 border-b-0">
       {/* Convo list */}
       <div className="flex items-center justify-between">
         <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>
@@ -239,8 +250,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
 
       <div className="">
         <div
-          className={`py-2 mb-2 mt-2 rounded-xl ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"
-            }`}
+          className={`py-2 mb-2 mt-2 rounded-xl ${
+            (addChatOpen || addGroupChatOpen) && "bg-neutral-800"
+          }`}
         >
           {addChatOpen && (
             <>
@@ -262,11 +274,20 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                   try {
                     setLoading(true);
                     // get the public key of the user
-                    const { data } = await getUserPublicKey({
+                    const { data, error } = await getUserPublicKey({
                       variables: {
                         username: createConvoText,
                       },
                     });
+
+                    if (error) {
+                      for (let err of error.graphQLErrors) {
+                        toast.error(err.message);
+                        setLoading(false);
+                      }
+                      return;
+                    }
+
                     const key = await generateSymmetricKey();
                     // encrypt symmetric key with own public key
                     const selfEncryptedSymmetric = await encryptSymmetricKey(
@@ -288,14 +309,16 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                       },
                     });
                     setAddChatOpen(false);
-                  } catch (error) {
-                    console.error(error);
+                  } catch (errors) {
+                    console.error(errors);
                     setLoading(false);
                   }
                 }}
               >
                 {loading ? (
-                  <div className="convostart"></div>
+                  <div className="w-full flex justify-center self-center">
+                    <Spinner color={"#ffffff"} />
+                  </div>
                 ) : (
                   <>Start</>
                 )}
@@ -334,7 +357,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                 onClick={handleCreateGroupChat}
               >
                 {loading ? (
-                  <div className="spinner inline-block"></div>
+                  <div className="w-full flex justify-center self-center">
+                    <Spinner color={"#ffffff"} />
+                  </div>
                 ) : (
                   <>Start Group Chat</>
                 )}
@@ -352,7 +377,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                 return (
                   <ConvoListItem
                     username={convo.user}
-                    active={activeConvo && activeConvo.conv_id === convo.conv_id}
+                    active={
+                      activeConvo && activeConvo.conv_id === convo.conv_id
+                    }
                     onClick={() => setActiveConvo(convo)}
                   />
                 );
