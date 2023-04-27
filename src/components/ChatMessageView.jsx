@@ -452,11 +452,11 @@ export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
             <div ref={messagesEndRef} />
           </motion.div>
           <motion.div className="flex h pb-2 items-center" variants={itemVariants}>
-            <form className="inputContainer flex-1 py-2">
+            <form className="inputContainer flex-1 my-4 mx-1.5">
               <input
                 type="text"
                 placeholder="Message"
-                className="mt-1 py-5 pl-4 mx-2 bg-gray-100 rounded-xl outline-none text-gray-700"
+                className="pl-4 mx-2 bg-gray-100 rounded-xl outline-none text-gray-700"
                 style={{ width: "-webkit-fill-available" }}
                 name="message"
                 onChange={(e) => setMessageText(e.target.value)}
@@ -476,7 +476,7 @@ export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
             </form>
             <motion.div
               onClick={handleSendMessage}
-              className="bg-[#8b5cf6] flex border border-[#000000] p-2 mx-2 mt-2 mb-2
+              className="bg-[#8b5cf6] flex border border-[#000000] p-2 mt-2 mb-2 mr-10
                             rounded-xl items-center gap-1.5
                               hover:bg-[#4c1d95] text-white transition duration-200"
               variants={itemVariants}

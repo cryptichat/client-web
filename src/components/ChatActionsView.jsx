@@ -375,7 +375,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
             className="flex px-3 scale-90 hover:scale-100 ease-in duration-200"
             onClick={handleLogout}
           >
-            <BiLogOut className="text-[25px] mr-2" />
+            <BiLogOut className="text-[25px] mr-2 mb-3" />
             {user.username}
           </p>
         </a>

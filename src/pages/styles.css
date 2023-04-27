@@ -93,6 +93,14 @@ button:hover {
   transition: all 0.2s ease-in-out;
 }
 
+.emoji-picker {
+  background-color: #ffffff;
+  border: 1px solid #c4c4c4;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+
 .imgprofile {
   width: 30px;
   height: 30px;
@@ -131,7 +139,6 @@ label {
   border-radius: 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
 }
 
 .inputContainer input {
