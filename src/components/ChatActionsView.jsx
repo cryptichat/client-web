@@ -328,7 +328,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               </div>
               <a
                 href="#"
-                className="hidden bg-[#8b5cf6] md:flex p-2 mx-3 mt-3 mb-1
+                className="bg-[#8b5cf6] flex p-2 mx-3 mt-3 mb-1
                 text-white rounded-xl items-center
                 hover:bg-[#4c1d95] transition duration-200"
                 onClick={handleCreateGroupChat}

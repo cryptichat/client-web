@@ -80,7 +80,7 @@ const SEND_MESSAGE = gql`
   }
 `;
 
-export default function ChatMessageView({ activeConvo, setActiveConvo }) {
+export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
   const [showPrompt, setShowPrompt] = useState(
     Object.keys(activeConvo).length === 0
   );
@@ -447,7 +447,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               </div>
             ) : null}
             {activeMessages.map((message, index) => (
-              <MessageItem message={message} index={index} />
+              <MessageItem message={message} index={index} username={user.username}/>
             ))}
             <div ref={messagesEndRef} />
           </motion.div>

@@ -4,9 +4,9 @@ import classNames from "classnames";
 import { formatDistanceToNow } from 'date-fns';
 import { CgProfile } from "react-icons/cg";
 
-function MessageItem({ message, index, lastMessageFromUser }) {
+function MessageItem({ message, index, lastMessageFromUser, username }) {
   const isSentByCurrentUser =
-    message.sender.username === localStorage.getItem("dsmessenger-username");
+    message.sender.username === username;
 
   const messageClasses = classNames({
     "bg-[#8b5cf6] rounded-2xl": isSentByCurrentUser,
