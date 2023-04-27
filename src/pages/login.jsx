@@ -65,9 +65,9 @@ function Login() {
   });
 
   const renderForm = (
-    <div className="form rounded-[10px]">
-      <div className="input-container">
-        <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-900 text-white">Username</label>
+    <div>
+      <div className="flex flex-col mx-2.5 my-4 gap-2">
+        <label htmlFor="username" className="block text-sm font-medium text-white">Username</label>
         <input
           type="text"
           value={formState.username}
@@ -83,8 +83,8 @@ function Login() {
           required
         />
       </div>
-      <div className="input-container">
-        <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-900 text-white">Password</label>
+      <div className="flex flex-col mx-2.5 my-4 gap-2">
+        <label htmlFor="password" className="block text-sm font-medium text-gray-900 text-white">Password</label>
         <input type="password"
           value={formState.password}
           onChange={(e) =>
@@ -116,11 +116,11 @@ function Login() {
         </div>
         <a href="#" className="px-2 text-sm font-medium text-primary-600 hover:underline text-white-300">Forgot password?</a>
       </div>
-      <div className="button-container">
+      <div className="flex justify-center">
         <input
           type="submit"
           value="Login"
-          className="w-full text-white bg-purple-900 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-[5px] text-sm text-center bg-[#4c1d95] hover:bg-[#4c1d95] focus:ring-[#4c1d95]"
+          className="w-full mt-2.5 text-white font-medium rounded text-sm text-center bg-[#8b5cf6] hover:bg-[#4c1d95] py-2 cursor-pointer"
           onClick={() =>
             loginHandler({
               variables: formState,
@@ -133,11 +133,11 @@ function Login() {
           <div key={index} className="error">{error.message}</div>
         ))}
       </div>
-      <p className="my-2 pl-0.5 text-sm font-light text-gray-500 text-gray-400">
+      <p className="mt-4 text-sm text-center font-light text-gray-500">
         Don’t have an account yet?{" "}
         <a
           href="#"
-          className="font-medium text-primary-600 hover:underline text-primary-500"
+          className="font-bold text-primary-600 hover:underline"
           onClick={() => navigate("/register")}
         >
           Sign up
@@ -154,7 +154,7 @@ function Login() {
       exit="exit"
     >
       <div className="">
-        <div className="container mx-auto cursor-pointer" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
+        <div className="logo-container mx-auto cursor-pointer">
           <motion.img
             src={lock192}
             width="100px"
@@ -163,16 +163,16 @@ function Login() {
             variants={lock192Variants}
           />
         </div>
-        <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white p-7 text-center">
+        <h1 className="text-xl font-bold md:text-2xl text-white p-7 text-center">
           Welcome to CrypticChat
         </h1>
         <div className="w-full max-w-md">
           <motion.div
-            className="border rounded-[8px] shadow p-6 bg-gray-800 border-gray-700"
+            className="border rounded-lg shadow p-6 bg-gray-800 border-gray-700"
             variants={formVariants}
           >
-            <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white" variants={titleVariants}>
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white px-6 mt-3">
+            <motion.div variants={titleVariants}>
+              <h1 className="text-xl mb-5 font-bold text-gray-900 md:text-2xl text-white px-6 mt-3">
                 Login to your Account
               </h1>
             </motion.div>

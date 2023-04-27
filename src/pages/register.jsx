@@ -226,10 +226,10 @@ function Register() {
           required
         />
       </div>
-      <div className="button-container p-2">
+      <div className="flex justify-center p-2 my-2">
         <input
           type="submit"
-          className="w-full text-white bg-purple-900 hover:bg-[#4c1d95] focus:ring-4 focus:outline-none focus:ring-[#4c1d95] font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-[#4c1d95] hover:bg-[#4c1d95] focus:ring-purple-900"
+          className="w-full mt-2.5 text-white font-medium rounded text-sm text-center bg-[#8b5cf6] hover:bg-[#4c1d95] py-2 cursor-pointer"
           onClick={async () => await handleRegister()}
         />
       </div>
@@ -323,7 +323,7 @@ function Register() {
       exit="exit"
     >
       <div className="">
-        <div className="container mx-auto cursor-pointer" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
+        <div className="logo-container mx-auto cursor-pointer" style={{ boxShadow: "0 8px 9px rgba(0, 0, 0, 0.5)" }}>
           <motion.img
             src={lock192}
             width="100px"

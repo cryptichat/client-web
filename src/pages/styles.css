@@ -33,13 +33,11 @@ section {
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-.container {
-  position: relative;
-  border-radius: 50%;
+.logo-container {
   width: 100px;
   height: 100px;
   border-radius: 50px;
-  box-shadow: 0 2px 0.3 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 9px rgba(0, 0, 0, 0.5);
   background: linear-gradient(45deg, #58629c, #8b5cf6);
 }
 
@@ -60,29 +58,11 @@ input[type="email"] {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-input[type="submit"],
-button {
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 15px;
-  background: #8b5cf6;
-  border: 1px solid #8b5cf6;
-  color: #fff;
-  padding: 10px 20px;
-  font-family: "Roboto", sans-serif;
-  transition: all 0.2s ease-in-out;
-}
-
 input[type="submit"]:hover,
 button:hover {
-  background: #444c72;
+  /* background: #444c72; */
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.2s ease-in-out;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
 }
 
 .login-form {
@@ -106,15 +86,6 @@ button:hover {
 .title {
   font-size: 25px;
   margin-bottom: 20px;
-  font-family: "Roboto", sans-serif;
-}
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 10px;
-  font-family: "Roboto", sans-serif;
 }
 
 .btn {
