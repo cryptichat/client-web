@@ -4,12 +4,12 @@ import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
 import { ContractContext } from "../utils/ContractProvider";
 import { BiMessageRoundedAdd } from "react-icons/bi";
 import { BiLogOut } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
 import { toast } from "react-toastify";
 import { MdGroupAdd } from "react-icons/md";
 import { useSpring, animated } from "react-spring";
 import { useNavigate } from "react-router-dom";
 import { generateSymmetricKey, encryptSymmetricKey } from "../utils/crypto";
+import Spinner from "./Spinner";
 
 const CREATE_CONVO = gql`
   mutation CreateConversation(
@@ -71,8 +71,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   const [addChatOpen, setAddChatOpen] = useState(false);
   const [createConvoText, setCreateConvoText] = useState("");
   const [userConversations, setUserConversations] = useState([]);
-
-  const [searchTerm, setSearchTerm] = useState("");
 
   // New state to manage the group chat creation UI
   const [addGroupChatOpen, setAddGroupChatOpen] = useState(false);
@@ -176,7 +174,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
         }
         return;
       }
-      
+
       publicKeys.push(data["user"]["publicKey"]);
     }
 
@@ -215,7 +213,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
   if (conv_loading) return <p>Loading...</p>;
 
   return (
-    <div className="actionview flex flex-col flex-grow lg:max-w-full border border-[#5a5b5c] border-t-0 border-l-0 border-b-0">
+    <div className="justify-center flex flex-col flex-grow lg:max-w-full border border-[#5a5b5c] border-t-0 border-l-0 border-b-0">
       {/* Convo list */}
       <div className="flex items-center justify-between">
         <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>
@@ -317,7 +315,13 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                   }
                 }}
               >
-                {loading ? <div className="convostart"></div> : <>Start</>}
+                {loading ? (
+                  <div className="w-full flex justify-center self-center">
+                    <Spinner color={"#ffffff"} />
+                  </div>
+                ) : (
+                  <>Start</>
+                )}
               </a>
             </>
           )}
@@ -353,7 +357,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                 onClick={handleCreateGroupChat}
               >
                 {loading ? (
-                  <div className="spinner inline-block"></div>
+                  <div className="w-full flex justify-center self-center">
+                    <Spinner color={"#ffffff"} />
+                  </div>
                 ) : (
                   <>Start Group Chat</>
                 )}

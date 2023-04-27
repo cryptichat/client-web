@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function Spinner() {
+export default function Spinner({color}) {
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-[#8b5cf6] text-center"
+        className={`inline w-8 h-8 mr-2 text-gray-600 animate-spin fill-[${color}] text-center`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
