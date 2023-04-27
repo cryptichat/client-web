@@ -9,13 +9,14 @@ const emojis = [
 export default function CustomEmojiPicker({ onSelect }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const togglePicker = () => {
+    const togglePicker = (e) => {
+        e.preventDefault();
         setIsOpen(!isOpen);
     };
 
     return (
         <>
-            <button className="emoji-icon-button" onClick={togglePicker}>
+            <button className="emoji-icon-button" onClick={(e) => togglePicker(e)}>
                 <FiSmile size={24} />
             </button>
             {isOpen && (
