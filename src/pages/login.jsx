@@ -146,7 +146,7 @@ function Login() {
 
   return (
     <motion.div
-      className="flex justify-center items-center h-screen app"
+      className="flex justify-center items-center h-screen w-screen app"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -167,7 +167,7 @@ function Login() {
         </h1>
         <div className="w-full max-w-md">
           <motion.div
-            className="border rounded-lg shadow p-6 bg-gray-800 border-gray-700"
+            className="border rounded-lg shadow p-4 bg-gray-800 border-gray-700"
             variants={formVariants}
           >
             <motion.div variants={titleVariants}>
