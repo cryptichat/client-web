@@ -77,7 +77,6 @@ function Register() {
         const setLocalStorageItems = () => {
           return new Promise((resolve) => {
             localStorage.setItem("auth-token", createAccount.accessToken);
-            localStorage.setItem("dsmessenger-username", formState.username);
             setTimeout(1000);
             resolve();
           });

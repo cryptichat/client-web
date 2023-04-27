@@ -48,7 +48,6 @@ function Login() {
       const setLocalStorageItems = () => {
         return new Promise((resolve) => {
           localStorage.setItem("auth-token", login.accessToken);
-          localStorage.setItem("dsmessenger-username", formState.username);
           setTimeout(1000);
           resolve();
         });
