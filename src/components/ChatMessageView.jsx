@@ -12,6 +12,7 @@ import lock192 from "../pages/lock192.png";
 import { decryptSymmetricKey, encryptText, decryptText } from "../utils/crypto";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
+import CustomEmojiPicker from './CustomEmojiPicker';
 
 const GET_MESSAGE = gql`
   query MessagesByConversation(
@@ -86,6 +87,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const [moreMessagesLoading, setMoreMessagesLoading] = useState(false);
   const messageContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const messageBoxRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -136,7 +138,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   );
 
   const [SendMessage] = useMutation(SEND_MESSAGE, {
-    onCompleted: (SendMessage) => {},
+    onCompleted: (SendMessage) => { },
     notifyOnNetworkStatusChange: true,
     onError: (err) => {
       console.error(err);
@@ -318,6 +320,21 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
     }
   }
 
+  const insertAtCursor = (emoji) => {
+    const input = messageBoxRef.current;
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const value = input.value;
+
+    const newValue = value.substring(0, start) + emoji + value.substring(end);
+    setMessageText(newValue);
+
+    // Move the cursor after the inserted emoji
+    const newCursorPosition = start + emoji.length;
+    input.focus();
+    input.setSelectionRange(newCursorPosition, newCursorPosition);
+  };
+
   const messageIconVariants = {
     hidden: { opacity: 0, scale: 0.5 },
     visible: { opacity: 1, scale: 1 },
@@ -343,6 +360,11 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleSendMessage();
   };
 
   return (
@@ -429,10 +451,7 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             ))}
             <div ref={messagesEndRef} />
           </motion.div>
-          <motion.div
-            className="flex h pb-2 items-center"
-            variants={itemVariants}
-          >
+          <motion.div className="flex h pb-2 items-center" variants={itemVariants}>
             <form className="inputContainer flex-1 py-2">
               <input
                 type="text"
@@ -441,15 +460,19 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 style={{ width: "-webkit-fill-available" }}
                 name="message"
                 onChange={(e) => setMessageText(e.target.value)}
+                ref={messageBoxRef}
                 value={messageText}
                 required
+              />
+              <CustomEmojiPicker
+                onSelect={(emoji) => insertAtCursor(emoji)}
               />
             </form>
             <motion.div
               onClick={handleSendMessage}
               className="bg-[#8b5cf6] flex border border-[#000000] p-2 mx-2 mt-2 mb-2
-                            text-[#ffffff] rounded-[10px] items-center gap-1.5
-                              hover:bg-[#4c1d95] hover:text-white transition duration-200"
+                          text-[#ffffff] rounded-[10px] items-center gap-1.5
+                            hover:bg-[#4c1d95] hover:text-white transition duration-200"
               variants={itemVariants}
             >
               Send
@@ -459,5 +482,5 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
         </>
       )}
     </motion.div>
-  );
+  )
 }
