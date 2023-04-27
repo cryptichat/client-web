@@ -314,7 +314,7 @@ function Register() {
 
   // );
 
-  return(
+  return (
     <motion.div
       className="flex justify-center items-center h-screen app"
       variants={containerVariants}
@@ -333,17 +333,17 @@ function Register() {
           />
         </div>
         <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white p-7 text-center">
-          Welcome to CrypticChat
+          Create an Account
         </h1>
         <div className="w-full max-w-md">
           <motion.div
-            className="border rounded-[8px] shadow p-6 bg-gray-800 border-gray-700"
+            className="border rounded-[8px] shadow p-6 bg-gray-800 border-gray-700 py-1"
             variants={formVariants}
           >
             <motion.div className="title text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white" variants={titleVariants}>
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white px-6 mt-3">
+              {/* <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white px-6 mt-3">
                 Create an Account
-              </h1>
+              </h1> */}
             </motion.div>
             {renderForm}
           </motion.div>
