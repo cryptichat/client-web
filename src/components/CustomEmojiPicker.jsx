@@ -26,8 +26,8 @@ export default function CustomEmojiPicker({ onSelect }) {
         onClick={togglePicker}
       >
         <BsEmojiWinkFill
-          className="bg-[#8b5cf6] flex border border-[#000000] p-1 mt-1 rounded-xl items-center hover:bg-[#4c1d95] text-white transition duration-200"
-          size={40}
+          className="bg-[#8b5cf6] flex border border-black p-1 mt-1.5 rounded-xl items-center hover:bg-[#4c1d95] text-white transition duration-200"
+          size={30} style={{ blockSize: '40px', inlineSize: '30px' }}
         />
       </button>
       <AnimatePresence>

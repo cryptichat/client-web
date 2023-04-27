@@ -456,7 +456,7 @@ export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
               <input
                 type="text"
                 placeholder="Message"
-                className="pl-4 mx-2 bg-gray-100 rounded-xl outline-none text-gray-700"
+                className="pl-4 mx-1.5 bg-gray-100 rounded-xl outline-none text-gray-700"
                 style={{ width: "-webkit-fill-available" }}
                 name="message"
                 onChange={(e) => setMessageText(e.target.value)}
