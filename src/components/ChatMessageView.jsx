@@ -408,11 +408,11 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               clicking on either the individual messaging icon
               <span className="inline-flex items-center">
                 {" "}
-                <BiMessageRoundedAdd className="mr-2 ml-2 my-1 border text-[25px] text-white bg-slate-900 rounded-[5px]" />
+                <BiMessageRoundedAdd className="mr-2 ml-2 my-1 border text-[25px] text-white bg-slate-900 rounded" />
               </span>
               <span className="inline-flex items-center">
                 or the group messaging icon{" "}
-                <MdGroupAdd className="mr-2 ml-2 text-[23px] mb-2 border text-white bg-slate-900 rounded-[5px]" />
+                <MdGroupAdd className="mr-2 ml-2 text-[23px] mb-2 border text-white bg-slate-900 rounded" />
               </span>
               to <strong>get started</strong>!
             </motion.p>
@@ -456,11 +456,17 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
               <input
                 type="text"
                 placeholder="Message"
-                className="mt-1 py-5 pl-4 mx-2 bg-gray-100 rounded-[10px] outline-none text-gray-700"
+                className="mt-1 py-5 pl-4 mx-2 bg-gray-100 rounded-xl outline-none text-gray-700"
                 style={{ width: "-webkit-fill-available" }}
                 name="message"
                 onChange={(e) => setMessageText(e.target.value)}
                 ref={messageBoxRef}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
                 value={messageText}
                 required
               />
@@ -471,8 +477,8 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
             <motion.div
               onClick={handleSendMessage}
               className="bg-[#8b5cf6] flex border border-[#000000] p-2 mx-2 mt-2 mb-2
-                          text-[#ffffff] rounded-[10px] items-center gap-1.5
-                            hover:bg-[#4c1d95] hover:text-white transition duration-200"
+                            rounded-xl items-center gap-1.5
+                              hover:bg-[#4c1d95] text-white transition duration-200"
               variants={itemVariants}
             >
               Send
