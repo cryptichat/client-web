@@ -1,8 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 import { motion } from "framer-motion";
-import { ContractContext } from "../utils/ContractProvider";
 import lock192 from "./lock192.png";
 import "./styles.css";
 
@@ -28,15 +27,6 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
   exit: { opacity: 0, transition: { ease: "easeInOut" } },
-};
-
-const titleVariants = {
-  hidden: { y: -50, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, type: "spring", stiffness: 60 },
-  },
 };
 
 const formVariants = {
@@ -152,7 +142,7 @@ function Register() {
         </label>
         <input
           type="text"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="uname"
           id="username"
           value={formState.uname}
@@ -175,7 +165,7 @@ function Register() {
         <input
           type="email"
           id="email"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="email"
           value={formState.email}
           onChange={(e) =>
@@ -196,7 +186,7 @@ function Register() {
         </label>
         <input
           type="password"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="pass1"
           data-testid="password-input"
           value={formState.pass1}
@@ -218,7 +208,7 @@ function Register() {
         </label>
         <input
           type="password"
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-[5px] focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="pass2"
           id="password2"
           value={formState.pass2}
@@ -283,7 +273,7 @@ function Register() {
         </h1>
         <div className="w-full max-w-md">
           <motion.div
-            className="border rounded-[8px] shadow p-6 bg-gray-800 border-gray-700 py-1"
+            className="border rounded-lg shadow p-6 bg-gray-800 border-gray-700 py-1"
             variants={formVariants}
           >
             {renderForm}

@@ -239,7 +239,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
 
       <div className="">
         <div
-          className={`py-2 mb-2 mt-2 rounded-[10px] ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"
+          className={`py-2 mb-2 mt-2 rounded-xl ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"
             }`}
         >
           {addChatOpen && (
@@ -247,7 +247,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               <input
                 type="text"
                 placeholder="Enter username"
-                className="mt-1 py-4 pl-2 mx-3 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700"
+                className="mt-1 py-4 pl-2 mx-3 bg-gray-100 rounded-lg outline-none focus:text-gray-700"
                 style={{ width: "-webkit-fill-available" }}
                 name="message"
                 onChange={(e) => setCreateConvoText(e.target.value)}
@@ -256,7 +256,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               <a
                 href="#"
                 className="bg-[#8b5cf6] flex p-2 mx-3 mt-3 mb-1
-                text-white rounded-[10px] items-center
+                text-white rounded-xl items-center
                   hover:bg-[#4c1d95] transition duration-200"
                 onClick={async () => {
                   try {
@@ -308,7 +308,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               <input
                 type="text"
                 placeholder="Enter usernames"
-                className="mt-1 py-4 pl-2 mx-3 bg-gray-100 rounded-[8px] outline-none focus:text-gray-700"
+                className="mt-1 py-4 pl-2 mx-3 bg-gray-100 rounded-lg outline-none focus:text-gray-700"
                 style={{ width: "-webkit-fill-available" }}
                 name="groupMessage"
                 onKeyDown={(e) => {
@@ -329,7 +329,7 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
               <a
                 href="#"
                 className="hidden bg-[#8b5cf6] md:flex p-2 mx-3 mt-3 mb-1
-                text-white rounded-[10px] items-center
+                text-white rounded-xl items-center
                 hover:bg-[#4c1d95] transition duration-200"
                 onClick={handleCreateGroupChat}
               >

@@ -9,8 +9,8 @@ function MessageItem({ message, index, lastMessageFromUser }) {
     message.sender.username === localStorage.getItem("dsmessenger-username");
 
   const messageClasses = classNames({
-    "bg-[#8b5cf6] rounded-[15px]": isSentByCurrentUser,
-    "bg-neutral-800 rounded-[15px]": !isSentByCurrentUser,
+    "bg-[#8b5cf6] rounded-2xl": isSentByCurrentUser,
+    "bg-neutral-800 rounded-2xl": !isSentByCurrentUser,
     "min-w-[7%] w-fit p-3": true,
     "mb-2": index === 0,
     "my-2": index !== 0,
