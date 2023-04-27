@@ -447,10 +447,13 @@ export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
               </div>
             ) : null}
             {activeMessages.map((message, index) => (
-              <MessageItem message={message} index={index} username={user.username}/>
+              <MessageItem message={message} index={index} username={user.username} />
             ))}
             <div ref={messagesEndRef} />
           </motion.div>
+          {activeMessages.length == 0 && <p className="bg-gray-600 flex border border-black mx-auto p-2
+                            rounded-xl items-center gap-1.5
+                              hover:bg-[#4c1d95] text-white text-xs opacity-70">Messages are end-to-end encrypted. No one outside of this chat, not even Cryptic Chat, can read them.</p>}
           <motion.div className="flex h pb-2 items-center" variants={itemVariants}>
             <form className="inputContainer flex-1 my-4 mx-1.5">
               <input
@@ -476,7 +479,7 @@ export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
             </form>
             <motion.div
               onClick={handleSendMessage}
-              className="bg-[#8b5cf6] flex border border-[#000000] p-2 mt-2 mb-2 mr-10
+              className="bg-[#8b5cf6] flex border border-black p-2 mt-2 mb-2 mr-10
                             rounded-xl items-center gap-1.5
                               hover:bg-[#4c1d95] text-white transition duration-200"
               variants={itemVariants}
