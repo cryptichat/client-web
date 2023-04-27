@@ -236,9 +236,10 @@ export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
       console.log("active convo key decryption", activeConvo);
       // decrypt symmetric key
       try {
+
         const decryptedSymmetricKey = await decryptSymmetricKey(
           activeConvo.aesKey,
-          localStorage.getItem("privateKey")
+          localStorage.getItem(("privateKey:" + user.username))
         );
         setSymmetricKey(decryptedSymmetricKey);
       } catch (err) {

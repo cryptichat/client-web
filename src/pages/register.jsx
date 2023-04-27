@@ -123,7 +123,7 @@ function Register() {
 
         console.log("Account created successfully");
 
-        localStorage.setItem("privateKey", arrayBufferToBase64(privateKeyDer));
+        localStorage.setItem("privateKey:" + formState.uname, arrayBufferToBase64(privateKeyDer));
         console.log("Private key stored securely in local storage");
       } catch (error) {
         console.error(error);
