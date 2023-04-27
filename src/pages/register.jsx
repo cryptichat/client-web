@@ -133,16 +133,16 @@ function Register() {
 
   const renderForm = (
     <div className="form">
-      <div className="input-container">
+      <div className="my-4">
         <label
           htmlFor="username"
-          className="block text-sm font-medium text-white"
+          className="block text-sm font-medium text-white my-2"
         >
           Username{" "}
         </label>
         <input
           type="text"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+          className="border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="uname"
           id="username"
           value={formState.uname}
@@ -155,17 +155,17 @@ function Register() {
           required
         />
       </div>
-      <div className="input-container">
+      <div className="my-4">
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-900 text-white"
+          className="block text-sm font-medium text-white my-2"
         >
           Email{" "}
         </label>
         <input
           type="email"
           id="email"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+          className="border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="email"
           value={formState.email}
           onChange={(e) =>
@@ -177,16 +177,16 @@ function Register() {
           required
         />
       </div>
-      <div className="input-container">
+      <div className="my-4">
         <label
           htmlFor="password-input"
-          className="block text-sm font-medium text-gray-900 text-white"
+          className="block text-sm font-medium text-white my-2"
         >
           Password{" "}
         </label>
         <input
           type="password"
-          className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-white-700 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+          className="border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-600 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
           name="pass1"
           data-testid="password-input"
           value={formState.pass1}
@@ -199,10 +199,10 @@ function Register() {
           required
         />
       </div>
-      <div className="input-container">
+      <div className="my-4">
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-900 text-white"
+          className="block text-sm font-medium text-white my-2"
         >
           Confirm Password{" "}
         </label>
@@ -221,7 +221,7 @@ function Register() {
           required
         />
       </div>
-      <div className="flex justify-center p-2 my-2">
+      <div className="flex justify-center py-2 my-2">
         <input
           type="submit"
           className="w-full mt-2.5 text-white font-medium rounded text-sm text-center bg-[#8b5cf6] hover:bg-[#4c1d95] py-2 cursor-pointer"
@@ -234,11 +234,11 @@ function Register() {
         ))}
       </div>
 
-      <p className="my-2 pl-2.5 text-sm font-light text-gray-500 text-gray-400">
+      <p className="my-2 text-sm font-light text-gray-500">
         Already have an account?{" "}
         <a
           href="#"
-          className="font-medium text-primary-600 hover:underline text-primary-500"
+          className="font-bold text-primary-600 hover:underline"
           onClick={() => navigate("/login")}
         >
           Login
@@ -249,7 +249,7 @@ function Register() {
 
   return (
     <motion.div
-      className="flex justify-center items-center h-screen app"
+      className="flex justify-center items-center h-screen w-screen app"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -268,7 +268,7 @@ function Register() {
             variants={lock192Variants}
           />
         </div>
-        <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white p-7 text-center">
+        <h1 className="text-xl font-bold md:text-2xl text-white p-7 text-center">
           Create an Account
         </h1>
         <div className="w-full max-w-md">
