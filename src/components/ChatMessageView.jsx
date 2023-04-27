@@ -441,6 +441,12 @@ export default function ChatMessageView({ activeConvo, setActiveConvo }) {
                 style={{ width: "-webkit-fill-available" }}
                 name="message"
                 onChange={(e) => setMessageText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
                 value={messageText}
                 required
               />
