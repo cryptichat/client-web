@@ -163,19 +163,14 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     // get public keys for all users
     let publicKeys = [];
     for (let i = 0; i < groupChatUsers.length; i++) {
-      let { data, error } = await getUserPublicKey({
-        variables: { username: groupChatUsers[i] },
-      });
-
-      if (error) {
-        for (let err of error.graphQLErrors) {
-          toast.error(err.message);
+      try {
+        let data  = await contract.methods.getKey(groupChatUsers[i]).call();
+        publicKeys.push(data);
+      } catch {
+          toast.error("User not found");
           setLoading(false);
-        }
-        return;
+          return;
       }
-
-      publicKeys.push(data["user"]["publicKey"]);
     }
 
     // generate symmetric key
@@ -184,9 +179,10 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     // encrypt symmetric key with all public keys
     let encryptedKeys = [];
 
+    const selfPublicKey = await contract.methods.getKey(user.username).call();
     const selfEncryptedSymmetric = await encryptSymmetricKey(
       symmetricKey,
-      user.publicKey
+      selfPublicKey
     );
 
     for (let i = 0; i < publicKeys.length; i++) {
@@ -271,33 +267,31 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                 text-white rounded-xl items-center
                   hover:bg-[#4c1d95] transition duration-200"
                 onClick={async () => {
+                  let userPublicKey = "";
                   try {
                     setLoading(true);
                     // get the public key of the user
-                    const { data, error } = await getUserPublicKey({
-                      variables: {
-                        username: createConvoText,
-                      },
-                    });
-
-                    if (error) {
-                      for (let err of error.graphQLErrors) {
-                        toast.error(err.message);
-                        setLoading(false);
-                      }
+                    try {
+                      console.log(createConvoText);
+                      userPublicKey  = await contract.methods.getKey(createConvoText).call();
+                    } catch (error) {
+                      toast.error("User not found");
+                      setLoading(false);
+                      console.error(error);
                       return;
                     }
 
                     const key = await generateSymmetricKey();
                     // encrypt symmetric key with own public key
+                    const selfPublicKey = await contract.methods.getKey(user.username).call();
                     const selfEncryptedSymmetric = await encryptSymmetricKey(
                       key,
-                      user.publicKey
+                      selfPublicKey
                     );
                     // encrypt symmetric key with other user's public key
                     const otherEncryptedSymmetric = await encryptSymmetricKey(
                       key,
-                      data.user.publicKey
+                      userPublicKey
                     );
                     // create convo
                     await CreateConvoHandler({
