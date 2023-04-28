@@ -45,17 +45,17 @@ function Login() {
   const [loginHandler] = useMutation(LOGIN, {
     onCompleted: async ({ login }) => {
       // Define a function that returns a Promise to set localStorage items
-      const setLocalStorageItems = () => {
-        return new Promise((resolve) => {
-          localStorage.setItem("auth-token", login.accessToken);
-          setTimeout(1000);
-          resolve();
-        });
-      };
+      // const setLocalStorageItems = () => {
+      // return new Promise((resolve) => {
+      //   setTimeout(1000);
+      //   resolve();
+      // });
+      // };
 
       // Call the function and wait for it to complete before navigating
-      await setLocalStorageItems();
-      navigate("/");
+      localStorage.setItem("auth-token", login.accessToken);
+      //await setLocalStorageItems();
+      window.location.href = "/";
     },
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
