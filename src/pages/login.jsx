@@ -44,19 +44,8 @@ function Login() {
 
   const [loginHandler] = useMutation(LOGIN, {
     onCompleted: async ({ login }) => {
-      // Define a function that returns a Promise to set localStorage items
-      // const setLocalStorageItems = () => {
-      // return new Promise((resolve) => {
-      //   setTimeout(1000);
-      //   resolve();
-      // });
-      // };
-
-      // Call the function and wait for it to complete before navigating
       localStorage.setItem("auth-token", login.accessToken);
-      //await setLocalStorageItems();
       navigate("/");
-      //window.location.href = "/";
     },
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
