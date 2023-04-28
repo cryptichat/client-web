@@ -125,6 +125,7 @@ function Register() {
 
         localStorage.setItem("privateKey:" + formState.uname, arrayBufferToBase64(privateKeyDer));
         console.log("Private key stored securely in local storage");
+        window.location.href = window.location.hostname;
       } catch (error) {
         console.error(error);
       }
