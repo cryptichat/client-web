@@ -63,7 +63,6 @@ function Register() {
       if (createAccount.accessToken) {
         // Define a function that returns a Promise to set localStorage items
         localStorage.setItem("auth-token", createAccount.accessToken);
-        navigate("/");
       }
     },
     onError: ({ graphQLErrors }) => {
