@@ -61,9 +61,8 @@ function Register() {
   const [signupHandler] = useMutation(SIGNUP, {
     onCompleted: async ({ createAccount }) => {
       if (createAccount.accessToken) {
-        // Define a function that returns a Promise to set localStorage items
         localStorage.setItem("auth-token", createAccount.accessToken);
-        window.location.href = "/";
+        navigate("/");
       }
     },
     onError: ({ graphQLErrors }) => {
