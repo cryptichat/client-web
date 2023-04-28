@@ -272,7 +272,6 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                     setLoading(true);
                     // get the public key of the user
                     try {
-                      console.log(createConvoText);
                       userPublicKey  = await contract.methods.getKey(createConvoText).call();
                     } catch (error) {
                       toast.error("User not found");
