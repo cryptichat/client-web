@@ -17,7 +17,6 @@ const ContractProvider = ({ children }) => {
       setWeb3(web3);
       const contractABI = abi.abi || data.abi;
       const contractAddress = import.meta.env.VITE_DEPLOYED_CONTRACT_ADDRESS || data.networks["5777"].address;
-      console.log(contractAddress);
       const contract = new web3.eth.Contract(contractABI, contractAddress);
       setContract(contract);
     }
