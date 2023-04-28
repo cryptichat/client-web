@@ -223,12 +223,17 @@ body {
     blinkTextCursor 500ms infinite;
 }
 
+
+
 @keyframes typewriter {
   from {
     width: 0;
   }
-  to { width: 36% }
+ to{ width: 90vw;
+  max-width: 600px;
 }
+}
+
 @keyframes blinkTextCursor {
   from {
     border-right-color: hsl(0, 0%, 80%);
