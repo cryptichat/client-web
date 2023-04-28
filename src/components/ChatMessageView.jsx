@@ -80,7 +80,7 @@ const SEND_MESSAGE = gql`
   }
 `;
 
-export default function ChatMessageView({ activeConvo, setActiveConv, user }) {
+export default function ChatMessageView({ activeConvo, setActiveConvo, user }) {
   const [showPrompt, setShowPrompt] = useState(
     Object.keys(activeConvo).length === 0
   );
