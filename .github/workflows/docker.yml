@@ -35,6 +35,8 @@ jobs:
         env:
           VITE_GRAPHQL_URL: ${{ secrets.GRAPHQL_URL }}
           VITE_GRAPHQL_WS_URL: ${{ secrets.GRAPHQL_WS_URL }}
+          VITE_DEPLOYED_CONTRACT_ADDRESS: ${{ secrets.DEPLOYED_CONTRACT_ADDRESS }}
+          VITE_WEB3_PROVIDER_URL: ${{ secrets.WEB3_PROVIDER_URL }}
         with:
           context: .
           file: ./Dockerfile
