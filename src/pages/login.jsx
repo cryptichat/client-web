@@ -55,7 +55,8 @@ function Login() {
       // Call the function and wait for it to complete before navigating
       localStorage.setItem("auth-token", login.accessToken);
       //await setLocalStorageItems();
-      window.location.href = "/";
+      navigate("/");
+      //window.location.href = "/";
     },
     onError: ({ graphQLErrors }) => {
       console.error(graphQLErrors);
