@@ -63,11 +63,12 @@ function Register() {
       if (createAccount.accessToken) {
         // Define a function that returns a Promise to set localStorage items
         const setLocalStorageItems = () => {
-          return new Promise((resolve) => {
-            localStorage.setItem("auth-token", createAccount.accessToken);
-            setTimeout(1000);
-            resolve();
-          });
+          // return new Promise((resolve) => {
+          localStorage.setItem("auth-token", createAccount.accessToken);
+          // setTimeout(1000);
+          //   resolve();
+          // });
+
         };
 
         // Call the function and wait for it to complete before navigating
