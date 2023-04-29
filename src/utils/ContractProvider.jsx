@@ -13,6 +13,7 @@ const ContractProvider = ({ children }) => {
       //const data = await response.json();
       const abi = await (await fetch('/abi.json')).json();
       const providerURL = import.meta.env.VITE_WEB3_PROVIDER_URL || "http://localhost:8545";
+      console.log(import.meta.env.VITE_GRAPHQL_URL);
       console.log("providerURL", providerURL);
       const web3 = new Web3(providerURL);
       setWeb3(web3);
