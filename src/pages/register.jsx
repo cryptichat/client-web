@@ -59,7 +59,7 @@ function Register() {
   });
 
   const [signupHandler] = useMutation(SIGNUP, {
-    onCompleted: async ({ createAccount }) => {
+    onCompleted: ({ createAccount }) => {
       if (createAccount.accessToken) {
         localStorage.setItem("auth-token", createAccount.accessToken);
         navigate("/");

@@ -43,7 +43,7 @@ function Login() {
   });
 
   const [loginHandler] = useMutation(LOGIN, {
-    onCompleted: async ({ login }) => {
+    onCompleted: ({ login }) => {
       localStorage.setItem("auth-token", login.accessToken);
       navigate("/");
     },
