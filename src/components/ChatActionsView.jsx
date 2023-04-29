@@ -164,12 +164,12 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
     let publicKeys = [];
     for (let i = 0; i < groupChatUsers.length; i++) {
       try {
-        let data  = await contract.methods.getKey(groupChatUsers[i]).call();
+        let data = await contract.methods.getKey(groupChatUsers[i]).call();
         publicKeys.push(data);
       } catch {
-          toast.error("User not found");
-          setLoading(false);
-          return;
+        toast.error("User not found");
+        setLoading(false);
+        return;
       }
     }
 
@@ -215,9 +215,8 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
         <p className="font-black mt-4 mb-3 pl-4 text-2xl">Chats</p>
         <div className="flex items-center space-x-1 mt-1 mr-3">
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${
-              addChatOpen && "bg-slate-600"
-            }`}
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addChatOpen && "bg-slate-600"
+              }`}
           >
             <BiMessageRoundedAdd
               size={24}
@@ -229,9 +228,8 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
           </div>
           {/* Add new button to start a group chat */}
           <div
-            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${
-              addGroupChatOpen && "bg-slate-600"
-            }`}
+            className={`p-1 rounded cursor-pointer hover:bg-slate-600 ${addGroupChatOpen && "bg-slate-600"
+              }`}
           >
             <MdGroupAdd
               size={24}
@@ -246,9 +244,8 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
 
       <div className="">
         <div
-          className={`py-2 mb-2 mt-2 rounded-xl ${
-            (addChatOpen || addGroupChatOpen) && "bg-neutral-800"
-          }`}
+          className={`py-2 mb-2 mt-2 rounded-xl ${(addChatOpen || addGroupChatOpen) && "bg-neutral-800"
+            }`}
         >
           {addChatOpen && (
             <>
@@ -272,7 +269,9 @@ export default function ChatActionsView({ activeConvo, setActiveConvo, user }) {
                     setLoading(true);
                     // get the public key of the user
                     try {
-                      userPublicKey  = await contract.methods.getKey(createConvoText).call();
+                      console.log(contract);
+                      userPublicKey = await contract.methods.getKey(createConvoText).call();
+
                     } catch (error) {
                       toast.error("User not found");
                       setLoading(false);
