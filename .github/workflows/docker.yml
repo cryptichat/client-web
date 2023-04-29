@@ -48,6 +48,6 @@ jobs:
       - name: Deploy to production
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: ci/playbook.yml
-          directory: ci
+          playbook: ${{ github.workspace }}/ci/playbook.yml
+          directory: ${{ github.workspace }}/ci
           key: ${{ secrets.SSH_PRIVATE_KEY }}
