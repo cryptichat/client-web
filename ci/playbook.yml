@@ -6,7 +6,7 @@
   tasks:
   - name: Pull container
     ansible.builtin.shell:
-      cmd: "docker pull ghcr.io/cryptichat/client-web:main"
+      cmd: "docker pull '{{ lookup('ansible.builtin.env', 'DOCKER_METADATA_OUTPUT_TAGS') }}'"
   - name: Re-run out of date containers
     ansible.builtin.shell:
       cmd: "docker-compose up -d"
