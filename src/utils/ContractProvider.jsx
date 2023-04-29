@@ -13,7 +13,7 @@ const ContractProvider = ({ children }) => {
       //const data = await response.json();
       const abi = await (await fetch('/abi.json')).json();
       const providerURL = "https://eth-sepolia.g.alchemy.com/v2/fhotvZ8l6jNOTuEkxd8W6pVO_PKf6ns6";
-      const contractAddress = 0xEe60E00665a03F58fed80082C241F3c820867372;
+      const contractAddress = "0xEe60E00665a03F58fed80082C241F3c820867372";
       console.log("providerURL", providerURL);
       const web3 = new Web3(providerURL);
       setWeb3(web3);
