@@ -4,6 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { motion } from "framer-motion";
 import lock192 from "./lock192.png";
 import "./styles.css";
+import Spinner from "../components/Spinner";
 
 export const SIGNUP = gql`
   mutation CreateAccount(
@@ -50,6 +51,7 @@ const lock192Variants = {
 function Register() {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
   const [formState, setFormState] = useState({
     uname: "",
@@ -76,9 +78,11 @@ function Register() {
   }
 
   async function handleRegister() {
+    setLoading(true);
     if (formState.pass1 !== formState.pass2) {
       console.log("Passwords do not match");
       setErrors([...errors, { message: "Passwords do not match" }]);
+      setLoading(false);
     } else {
       try {
         const keyPair = await crypto.subtle.generateKey(
@@ -116,8 +120,10 @@ function Register() {
 
         localStorage.setItem("privateKey:" + formState.uname, arrayBufferToBase64(privateKeyDer));
         console.log("Private key stored securely in local storage");
+        setLoading(false);
       } catch (error) {
         console.error(error);
+        setLoading(false);
       }
     }
   }
@@ -213,12 +219,17 @@ function Register() {
         />
       </div>
       <div className="flex justify-center py-2 my-2">
-        <input
-          type="submit"
-          className="w-full mt-2.5 text-white font-medium rounded text-sm text-center bg-[#8b5cf6] hover:bg-[#4c1d95] py-2 cursor-pointer"
-          onClick={async () => await handleRegister()}
-        />
+        {loading ? (
+          <Spinner />
+        ) : (
+          <input
+            type="submit"
+            className="w-full mt-2.5 text-white font-medium rounded text-sm text-center bg-[#8b5cf6] hover:bg-[#4c1d95] py-2 cursor-pointer"
+            onClick={async () => await handleRegister()}
+          />
+        )}
       </div>
+
       <div>
         {errors.map((error) => (
           <div className="error">{error.message}</div>
