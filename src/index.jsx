@@ -13,15 +13,6 @@ const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URL,
 });
 
-
-const providerURL = import.meta.env.VITE_WEB3_PROVIDER_URL || "http://localhost:8545";
-const contractAddress = import.meta.env.VITE_DEPLOYED_CONTRACT_ADDRESS; //|| data.networks["5777"].address;
-const test = import.meta.env.VITE_GRAPHQL_WS_URL;
-console.log("test", test);
-console.log("providerURL", providerURL);
-console.log("contractAddress", contractAddress);
-
-
 const wsLink = new GraphQLWsLink(createClient({
   url: `${import.meta.env.VITE_GRAPHQL_WS_URL}/subscriptions`,
 }));

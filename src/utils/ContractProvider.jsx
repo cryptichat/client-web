@@ -3,11 +3,6 @@ import Web3 from "web3";
 
 const ContractContext = createContext();
 
-
-const providerURL = import.meta.env.VITE_WEB3_PROVIDER_URL;
-const contractAddress = import.meta.env.VITE_DEPLOYED_CONTRACT_ADDRESS; //|| data.networks["5777"].address;
-
-
 const ContractProvider = ({ children }) => {
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
@@ -17,7 +12,8 @@ const ContractProvider = ({ children }) => {
       //const response = await fetch("/contract.json");
       //const data = await response.json();
       const abi = await (await fetch('/abi.json')).json();
-      //      console.log(import.meta.env.VITE_GRAPHQL_URL);
+      const providerURL = "https://eth-sepolia.g.alchemy.com/v2/fhotvZ8l6jNOTuEkxd8W6pVO_PKf6ns6";
+      const contractAddress = 0xEe60E00665a03F58fed80082C241F3c820867372;
       console.log("providerURL", providerURL);
       const web3 = new Web3(providerURL);
       setWeb3(web3);
