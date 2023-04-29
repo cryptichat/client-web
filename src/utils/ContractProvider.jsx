@@ -11,7 +11,7 @@ const ContractProvider = ({ children }) => {
     async function init() {
       var prod = true;
       if (prod) {//please add dev env
-        const abi = await fetch('/abi.json').json();
+        const abi = await (await fetch('/abi.json')).json();
         const providerURL = import.meta.env.VITE_WEB3_PROVIDER_URL || "http://localhost:8545";
         const web3 = new Web3(providerURL);
         const contractABI = abi.abi || data.abi;
