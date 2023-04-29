@@ -4,7 +4,7 @@ import Web3 from "web3";
 const ContractContext = createContext();
 
 
-const providerURL = import.meta.env.VITE_WEB3_PROVIDER_URL || "http://localhost:8545";
+const providerURL = import.meta.env.VITE_WEB3_PROVIDER_URL;
 const contractAddress = import.meta.env.VITE_DEPLOYED_CONTRACT_ADDRESS; //|| data.networks["5777"].address;
 
 
