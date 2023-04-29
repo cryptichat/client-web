@@ -45,6 +45,7 @@ function Login() {
   const [loginHandler] = useMutation(LOGIN, {
     onCompleted: ({ login }) => {
       localStorage.setItem("auth-token", login.accessToken);
+      setTimeout(3000);
       navigate("/");
     },
     onError: ({ graphQLErrors }) => {

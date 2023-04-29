@@ -64,6 +64,7 @@ function Register() {
     onCompleted: ({ createAccount }) => {
       if (createAccount.accessToken) {
         localStorage.setItem("auth-token", createAccount.accessToken);
+        setTimeout(3000);
         navigate("/");
       }
     },
