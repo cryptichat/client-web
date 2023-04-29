@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BsEmojiWinkFill } from 'react-icons/bs';
 
 const emojis = [
-  '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇'
+  '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '😏', '😒', '🔪', '❤️', '🥰', '🦁', '🤷‍♀️', '🥺', '🙄', '🥹'
 ];
 
 const emojiVariants = {
