@@ -5,7 +5,7 @@ import ChatMain from "./pages/chatmain";
 
 import { ContractProvider } from "./utils/ContractProvider";
 
-const loggedIn = localStorage.getItem("auth-token") ? true : false;
+function loggedIn() { return localStorage.getItem("auth-token") ? true : false; }
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
           <Route
             path="/"
             element={
-              loggedIn ? <ChatMain /> : <Navigate replace to={"/login"} />
+              loggedIn() ? <ChatMain /> : <Navigate replace to={"/login"} />
             }
           />
           <Route path="login" element={<Login />} />
