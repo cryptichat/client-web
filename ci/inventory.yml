@@ -1,0 +1,5 @@
+virtualmachines:
+  hosts:
+    cryptichat:
+      ansible_host: cryptichat.benmitchell.dev
+      ansible_user: crispyrice
