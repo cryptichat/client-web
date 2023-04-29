@@ -48,5 +48,6 @@ jobs:
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: ${{ github.workspace }}/ci/playbook.yml
-          inventory: ${{ github.workspace }}/ci/inventory.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          options: |
+            -i ${{ github.workspace }}/ci/inventory.yml
