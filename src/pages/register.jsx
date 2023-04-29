@@ -225,6 +225,7 @@ function Register() {
         ) : (
           <input
             type="submit"
+            value="Register"
             className="w-full mt-2.5 text-white font-medium rounded text-sm text-center bg-[#8b5cf6] hover:bg-[#4c1d95] py-2 cursor-pointer"
             onClick={async () => await handleRegister()}
           />
