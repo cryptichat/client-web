@@ -5,7 +5,7 @@ import ChatMessageView from "../components/ChatMessageView";
 import { ToastContainer } from "react-toastify";
 import { useQuery, gql } from "@apollo/client";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 
 export const GET_ME = gql`
@@ -28,6 +28,13 @@ function ChatMain() {
       setCurrentUser(data.me);
     },
   });
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!localStorage.getItem("auth-token")) {
+      navigate("/login", { replace: true });
+    }
+  }, []);
 
   function renderActionsView() {
     return (
