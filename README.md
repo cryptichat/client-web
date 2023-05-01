@@ -59,11 +59,13 @@ To use Cryptic Chat, follow these steps:
 
 5. To log out, click on your profile icon in the top right corner of the screen and select "Log out".
 
+<br>
 ## Frameworks
 	
     ![React](https://img.shields.io/badge/react%20-%2320232a.svg?&style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
     ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+<br>
 
 ## Contributors
 
