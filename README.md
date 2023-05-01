@@ -51,13 +51,13 @@ To use Cryptic Chat, follow these steps:
 
 1. Register for an account or log in with your existing credentials.
 
-2. After logging in, you will see a list of available conversations on the left side of the screen. Click on a conversation to open it, or create a new conversation by clicking the individual messaging icon (BiMessageRoundedAdd) or the group messaging icon (MdGroupAdd).
+2. After logging in, you will see a list of available conversations on the left side of the screen. Click on a conversation to open it, or create a new conversation by clicking the individual messaging icon or the group messaging icon.
 
-3. To send a message, type your message in the input field at the bottom of the screen and click the "Send" button. You can also attach files by clicking the attachment icon (CgAttachment).
+3. To send a message, type your message in the input field at the bottom of the screen and click the "Send" button. You can also use emojis by clicking the emoji icon.
 
 4. Your messages will be encrypted using end-to-end encryption, ensuring that only you and the intended recipient(s) can read them.
 
-5. To log out, click on your profile icon in the top right corner of the screen and select "Log out".
+5. To log out, click on your username in the bottom left corner of the screen.
 
 <br>
 
