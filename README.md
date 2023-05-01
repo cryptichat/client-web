@@ -1,5 +1,10 @@
 # Cryptic Chat
 
+<p align="left">
+	<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&width=435&lines=Welcome to Cryptic Chat!;" alt="Typing SVG" /></a>
+
+<br>
+
 Cryptic Chat is a secure and encrypted chat application built with ReactJS, Tailwind CSS, and Apollo Client. It allows users to communicate privately and securely using end-to-end encryption, ensuring that their conversations remain confidential and protected from unauthorized access.
 
 ## Features
