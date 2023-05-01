@@ -60,13 +60,26 @@ To use Cryptic Chat, follow these steps:
 5. To log out, click on your profile icon in the top right corner of the screen and select "Log out".
 
 <br>
-## Frameworks
-	
+
+## Tools
+
+<br>
+
+- **Softwares**:
+
+    ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
+
+    ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+
+- **Frameworks**:
+
     ![React](https://img.shields.io/badge/react%20-%2320232a.svg?&style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
     ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-<br>
 
+    
+<br>
+	
 ## Contributors
 
 1. Karthikeyan Arumugam: - StudentID: 201307149
